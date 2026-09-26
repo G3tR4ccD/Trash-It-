@@ -7,5 +7,6 @@ public class ItemData : ScriptableObject
     public string itemDescription;
     public string itemPrice;
     public Sprite itemIcon;
+    public string itemID;
 
 }

@@ -14,6 +14,7 @@ public class Movement : MonoBehaviour
     public Camera camera;
     public float mouseSensitivity = 0.1f;
 
+
     bool isSprinting = false;
 
 
