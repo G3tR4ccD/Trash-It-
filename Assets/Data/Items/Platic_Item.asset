@@ -16,3 +16,4 @@ MonoBehaviour:
   itemDescription: 
   itemPrice: 5
   itemIcon: {fileID: 0}
+  itemID: plastic

@@ -16,3 +16,4 @@ MonoBehaviour:
   itemDescription: 
   itemPrice: 1
   itemIcon: {fileID: 0}
+  itemID: plastic_flakes
