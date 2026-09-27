@@ -8,23 +8,17 @@ public class Chunk : MonoBehaviour
     private byte[,,] voxels;
     private List<Vector3> vertices = new List<Vector3>();
     private List<int> triangles = new List<int>();
+    private Mesh mesh;
 
     void Start()
     {
 
         voxels = new byte[chunkSize, chunkSize, chunkSize];
         FillVoxels();
-        BuildMesh();
 
-        Mesh mesh = new Mesh();
+        mesh = new Mesh();
 
-        mesh.SetVertices(vertices);
-        mesh.SetTriangles(triangles, 0);
-
-        mesh.RecalculateNormals();
-
-        GetComponent<MeshFilter>().mesh = mesh;
-        GetComponent<MeshCollider>().sharedMesh = mesh;
+        RebuildMesh();
 
     }
     void AddFace(Vector3 a, Vector3 b, Vector3 c, Vector3 d)
@@ -118,6 +112,50 @@ public class Chunk : MonoBehaviour
             }
         }
     }    
+
+    void RebuildMesh()
+    {
+        vertices.Clear();
+        triangles.Clear();
+        mesh.Clear();
+
+        BuildMesh();
+
+        mesh.SetVertices(vertices);
+        mesh.SetTriangles(triangles, 0);
+
+        mesh.RecalculateNormals();
+
+        GetComponent<MeshFilter>().mesh = mesh;
+        GetComponent<MeshCollider>().sharedMesh = null;
+        GetComponent<MeshCollider>().sharedMesh = mesh;
+
+    }
+
+    public int DigSphere(Vector3 center, float radius)
+    {
+        int voxelsDug = 0;
+        for (int x = 0; x < chunkSize; x++)
+        {
+            for (int y = 0; y < chunkSize; y++)
+            {
+                for (int z = 0; z < chunkSize; z++)
+                {
+                    Vector3 voxelPosition = new Vector3(x + 0.5f, y + 0.5f, z + 0.5f);
+                    if (IsSolid(x, y, z) && Vector3.Distance(voxelPosition, center) <= radius)
+                    {
+                        voxels[x, y, z] = 0; // set to air
+                        voxelsDug++;
+                    }
+                }
+            }
+        }
+        if (voxelsDug > 0)
+        {
+            RebuildMesh();
+        }
+        return voxelsDug;
+    }
 
 
 }

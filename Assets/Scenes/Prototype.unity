@@ -1039,8 +1039,8 @@ GameObject:
   - component: {fileID: 1375070301}
   - component: {fileID: 1375070300}
   - component: {fileID: 1375070299}
-  - component: {fileID: 1375070298}
   - component: {fileID: 1375070302}
+  - component: {fileID: 1375070298}
   m_Layer: 0
   m_Name: Chunk
   m_TagString: Untagged
@@ -2646,6 +2646,7 @@ GameObject:
   - component: {fileID: 5762035261519009666}
   - component: {fileID: 5762035261519009669}
   - component: {fileID: 5762035261519009670}
+  - component: {fileID: 5762035261519009671}
   m_Layer: 20
   m_Name: Player
   m_TagString: Untagged
@@ -3617,7 +3618,19 @@ MonoBehaviour:
     m_ActionId: 634de0f1-52ff-4ed7-b677-0498368e0ee4
     m_ActionName: 'Player/Look[/Mouse/delta]'
   - m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 5762035261519009671}
+        m_TargetAssemblyTypeName: PlayerDigging, Assembly-CSharp
+        m_MethodName: OnDig
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
     m_ActionId: 14d6332f-88d5-4f69-9a94-08a7f2e6eb73
     m_ActionName: 'Player/Dig[/Mouse/leftButton]'
   - m_PersistentCalls:
@@ -3714,6 +3727,25 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1ecde58e6719db24182827cc3ecae240, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Inventory
+--- !u!114 &5762035261519009671
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5756702288810265147}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c45b0ac3668dee24fbe1edd24728c495, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerDigging
+  playerCamera: {fileID: 1618009151}
+  digReach: 5
+  digCooldown: 0.5
+  digRadius: 1.5
+  inventory: {fileID: 5762035261519009670}
+  item1: {fileID: 11400000, guid: b29ca063d63133c4e969b591ad37b34a, type: 2}
+  item2: {fileID: 11400000, guid: 2808aa01acba5df41951fd4655ed1640, type: 2}
 --- !u!4 &5762040838836845993
 Transform:
   m_ObjectHideFlags: 0
