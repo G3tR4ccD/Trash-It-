@@ -12,8 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6f82539197a41064dbaebcaeff18ce9b, type: 3}
   m_Name: Platic_Item
   m_EditorClassIdentifier: Assembly-CSharp::ItemData
-  displayName: Plastic
+  displayName: Plastic Sheet
   itemDescription: 
-  itemPrice: 5
+  itemPrice: 250
   itemIcon: {fileID: 0}
   itemID: plastic

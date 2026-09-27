@@ -10,10 +10,10 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 6f82539197a41064dbaebcaeff18ce9b, type: 3}
-  m_Name: Cardboard_Item
+  m_Name: MoltenPlastic_Item
   m_EditorClassIdentifier: Assembly-CSharp::ItemData
-  displayName: Cardboard Sheet
+  displayName: Molten Plastic
   itemDescription: 
   itemPrice: 100
   itemIcon: {fileID: 0}
-  itemID: cardboard
+  itemID: molten_plastic

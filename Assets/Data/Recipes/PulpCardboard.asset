@@ -10,12 +10,12 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 96c0de26b0b11634380e00794e3cc0e3, type: 3}
-  m_Name: MakePlastic_Recipe
+  m_Name: PulpCardboard
   m_EditorClassIdentifier: Assembly-CSharp::RecipeData
-  recipeName: Make Plastic
-  recipeDescription: 
+  recipeName: Pulp Cardboard
+  recipeDescription: Mixes "Soggy Cardboard" into "Cardboard Pulp"
   ingredients:
-  - {fileID: 11400000, guid: bd2a929d5cd3dd649a4936be3f3428f8, type: 2}
-  ingredientsCount: 5
-  resultItem: {fileID: 11400000, guid: f7be1e939cdad36499445195ada4339d, type: 2}
+  - {fileID: 11400000, guid: b29ca063d63133c4e969b591ad37b34a, type: 2}
+  ingredientsCount: 10
+  resultItem: {fileID: 11400000, guid: 1cf4724f0acbe1a46ac07ab062b6a438, type: 2}
   resultItemCount: 1

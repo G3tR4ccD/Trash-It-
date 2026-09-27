@@ -32,7 +32,7 @@ public class PlayerInteraction : MonoBehaviour
         }
         if (currentTarget != null)
         {
-            interactionText.text = $"Press {interactAction.action.GetBindingDisplayString()} to interact with {hit.collider.gameObject.name}";
+            interactionText.text = $"Press {interactAction.action.GetBindingDisplayString()} to interact with {currentTarget.GetDisplayName()}";
         }
         else
         {

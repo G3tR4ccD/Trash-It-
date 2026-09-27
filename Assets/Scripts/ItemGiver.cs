@@ -18,4 +18,8 @@ public class ItemGiver : MonoBehaviour, IInteractable
             Debug.LogWarning("Player inventory or item is not assigned.");
         }
     }
+    public string GetDisplayName()
+    {
+        return $"{item.displayName} Bag ({amount})";
+    }
 }

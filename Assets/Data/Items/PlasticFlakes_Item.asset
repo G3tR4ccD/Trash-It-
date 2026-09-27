@@ -14,6 +14,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::ItemData
   displayName: Plastic Flakes
   itemDescription: 
-  itemPrice: 1
+  itemPrice: 15
   itemIcon: {fileID: 0}
   itemID: plastic_flakes

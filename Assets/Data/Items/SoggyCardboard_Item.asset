@@ -14,6 +14,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::ItemData
   displayName: Soggy Cardboard
   itemDescription: 
-  itemPrice: 
+  itemPrice: 1
   itemIcon: {fileID: 0}
   itemID: soggy_cardboard

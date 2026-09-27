@@ -3,23 +3,33 @@ using UnityEngine;
 
 public class Inventory : MonoBehaviour
 {
+    public int maxCapacity = 10;
     private Dictionary<ItemData, int> items = new Dictionary<ItemData, int>();
 
-    public void InsertItem(ItemData item, int quantity)
+    public int InsertItem(ItemData item, int quantity)
     {
         if (quantity <= 0)
         {
-            return;   // invalid quantity, so it failed
+            return 0;   // invalid quantity, nothing added
+        }
+
+        int amountToAdd = Mathf.Min(quantity, GetFreeSpace());
+
+        if (amountToAdd <= 0)
+        {
+            return 0;   // pockets full
         }
 
         if (items.ContainsKey(item))
         {
-            items[item] += quantity;
+            items[item] += amountToAdd;
         }
         else
         {
-            items[item] = quantity;
+            items[item] = amountToAdd;
         }
+
+        return amountToAdd;   // how many actually went in
     }
 
 
@@ -52,5 +62,25 @@ public class Inventory : MonoBehaviour
             return quantity;
         }
         return 0;
+    }
+
+    public int GetTotalItemCount()
+    {
+        int total = 0;
+        foreach (int amount in items.Values)
+        {
+            total += amount;
+        }
+        return total;
+    }
+
+    public int GetFreeSpace()
+    {
+        return maxCapacity - GetTotalItemCount();
+    }
+
+    public bool IsFull()
+    {
+        return GetTotalItemCount() >= maxCapacity;
     }
 }
