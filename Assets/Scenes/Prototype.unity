@@ -1061,6 +1061,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Chunk
   chunkSize: 16
+  noiseScale: 3
+  noiseStrength: 2
+  grit: 0.5
 --- !u!23 &1375070299
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -3744,6 +3747,7 @@ MonoBehaviour:
   digCooldown: 0.5
   digRadius: 1.5
   inventory: {fileID: 5762035261519009670}
+  digStrength: 200
   item1: {fileID: 11400000, guid: b29ca063d63133c4e969b591ad37b34a, type: 2}
   item2: {fileID: 11400000, guid: 2808aa01acba5df41951fd4655ed1640, type: 2}
 --- !u!4 &5762040838836845993

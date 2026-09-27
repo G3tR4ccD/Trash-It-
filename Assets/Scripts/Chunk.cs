@@ -53,6 +53,7 @@ public class Chunk : MonoBehaviour
         RebuildMesh();
 
     }
+
     bool IsSolid(int x, int y, int z)
     {
         return GetDensity(x, y, z) >= isoLevel;
@@ -120,25 +121,41 @@ public class Chunk : MonoBehaviour
 
     }
 
-    public int DigSphere(Vector3 center, float radius)
+
+
+    public int DigSphere(Vector3 center, float radius, float strength)
     {
         int voxelsDug = 0;
+        bool changed = false;
+
         for (int x = 0; x < chunkSize; x++)
         {
             for (int y = 0; y < chunkSize; y++)
             {
                 for (int z = 0; z < chunkSize; z++)
                 {
-                    Vector3 voxelPosition = new Vector3(x + 0.5f, y + 0.5f, z + 0.5f);
-                    if (IsSolid(x, y, z) && Vector3.Distance(voxelPosition, center) <= radius)
+                    float distance = Vector3.Distance(new Vector3(x, y, z), center);
+                    if (distance > radius) continue;   // outside the scoop, skip
+
+                    float falloff = 1 - distance / radius;
+                    float amount = strength * falloff;
+
+                    bool wasSolid = IsSolid(x, y, z);
+
+                    float newDensity = voxels[x, y, z] - amount;
+                    voxels[x, y, z] = (byte)Mathf.Clamp(newDensity, 0, 255);
+                    changed = true;
+
+                    // it counts as "dug" only if it just crossed from solid to air
+                    if (wasSolid && !IsSolid(x, y, z))
                     {
-                        voxels[x, y, z] = 0; // set to air
                         voxelsDug++;
                     }
                 }
             }
         }
-        if (voxelsDug > 0)
+
+        if (changed)
         {
             RebuildMesh();
         }

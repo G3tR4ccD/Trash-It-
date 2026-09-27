@@ -9,6 +9,8 @@ public class PlayerDigging : MonoBehaviour
     public float digRadius = 1f;
     public Inventory inventory;
 
+    public float digStrength = 200f;
+
 
     private bool isDigging = false;
     private float lastDigTime = 0f;
@@ -40,16 +42,19 @@ public class PlayerDigging : MonoBehaviour
                 if (chunk != null)
                 {
                     Vector3 localHitPoint = hit.point - hit.normal * 0.5f - chunk.transform.position;
-                    int dug = chunk.DigSphere(localHitPoint, digRadius);
+                    int dug = chunk.DigSphere(localHitPoint, digRadius, digStrength);
+
+                    lastDigTime = Time.time;
+
                     if (dug > 0)
                     {
-                        lastDigTime = Time.time;
                         GameManager.Instance.trashRemaining -= dug;
                         GiveLoot(dug);
                     }
                 }
             }
         }
+        
 
     }
 
