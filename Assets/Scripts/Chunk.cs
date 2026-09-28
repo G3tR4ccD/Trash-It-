@@ -200,7 +200,7 @@ public class Chunk : MonoBehaviour
                 Vector3Int posA = cubePos + cornerOffsets[cornerA];
                 Vector3Int posB = cubePos + cornerOffsets[cornerB];
 
-                float densityA = GetDensity(posA.x, posA.y, posA.z);   // won't compile yet, see below
+                float densityA = GetDensity(posA.x, posA.y, posA.z);
                 float densityB = GetDensity(posB.x, posB.y, posB.z);
 
                 float t = (isoLevel - densityA) / (densityB - densityA);
