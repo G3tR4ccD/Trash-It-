@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 96c0de26b0b11634380e00794e3cc0e3, type: 3}
-  m_Name: RawPlastic
+  m_Name: SmeltPlastic
   m_EditorClassIdentifier: Assembly-CSharp::RecipeData
   recipeName: Smelt to Molten Plastic
   recipeDescription: Smelts down "Plastic Flakes" into "Molten Plastic"

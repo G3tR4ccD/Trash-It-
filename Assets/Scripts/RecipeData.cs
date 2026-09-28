@@ -9,4 +9,5 @@ public class RecipeData : ScriptableObject
     public int ingredientsCount;
     public ItemData resultItem;
     public int resultItemCount;
+    public float processingTime = 5f;
 }

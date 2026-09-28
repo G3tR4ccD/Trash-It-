@@ -1,0 +1,19 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c3b5a7b6d1dfd324e9140adeddcbaf21, type: 3}
+  m_Name: Press
+  m_EditorClassIdentifier: Assembly-CSharp::MachineData
+  displayName: Press
+  machineID: press
+  recipes:
+  - {fileID: 11400000, guid: 6586fac58b8d62248a782937073000bb, type: 2}
+  - {fileID: 11400000, guid: 035058ed65515714fa1b9dcf2c4f02be, type: 2}
