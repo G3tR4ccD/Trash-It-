@@ -8,8 +8,7 @@ public class PlayerDigging : MonoBehaviour
     public float digCooldown = 0.5f;
     public float digRadius = 1f;
     public Inventory inventory;
-    
-
+    public MountainManager mountainManager;
     public float digStrength = 200f;
 
 
@@ -47,24 +46,20 @@ public class PlayerDigging : MonoBehaviour
             Ray ray = playerCamera.ScreenPointToRay(new Vector3(Screen.width / 2, Screen.height / 2));
             if (Physics.Raycast(ray, out RaycastHit hit, digReach))
             {
-                Chunk chunk = hit.collider.GetComponent<Chunk>();
-                if (chunk != null)
+                Vector3 worldHitPoint = hit.point - hit.normal * 0.5f;
+                Vector3 dropPosition = hit.point + hit.normal * 0.5f;
+
+                int dug = mountainManager.DigAt(worldHitPoint, digRadius, digStrength);
+                lastDigTime = Time.time;
+
+                if (dug > 0)
                 {
-                    Vector3 localHitPoint = hit.point - hit.normal * 0.5f - chunk.transform.position;
-                    Vector3 dropPosition = hit.point + hit.normal * 0.5f;
-
-                    int dug = chunk.DigSphere(localHitPoint, digRadius, digStrength);
-                    lastDigTime = Time.time;
-
-                    if (dug > 0)
-                    {
-                        GameManager.Instance.trashRemaining -= dug;
-                        GiveLoot(dug, dropPosition);
-                    }
+                    GameManager.Instance.trashRemaining -= dug * GameManager.Instance.bagsPerVoxel;
+                    GiveLoot(dug, dropPosition);
                 }
             }
         }
-        
+
 
     }
 

@@ -10,10 +10,9 @@ public class Chunk : MonoBehaviour
     private List<int> triangles = new List<int>();
     private Mesh mesh;
     private const byte isoLevel = 128;   // the threshold for solid vs. air
-
     byte GetDensity(int x, int y, int z)
     {
-        if (x < 0 || y < 0 || z < 0 || x >= chunkSize || y >= chunkSize || z >= chunkSize)
+        if (x < 0 || y < 0 || z < 0 || x > chunkSize || y >= chunkSize || z > chunkSize)
         {
             return 0;   // outside the grid is air
         }
@@ -40,18 +39,21 @@ public class Chunk : MonoBehaviour
     public float noiseScale = 0.2f;     // size of the lumps (smaller = bigger lumps)
     public float noiseStrength = 2f;    // how tall the lumps are
     public float grit = 0.3f;           // small random roughness on top
+    public Texture2D heightMap;
+    public float maxHeight = 20f;
+    public Vector2Int chunkCoord;
+    public int totalGridSize;
 
 
-    void Start()
+
+    public void Initialize()
     {
-
-        voxels = new byte[chunkSize, chunkSize, chunkSize];
+        voxels = new byte[chunkSize + 1, chunkSize, chunkSize + 1];
         FillVoxels();
 
         mesh = new Mesh();
 
         RebuildMesh();
-
     }
 
     bool IsSolid(int x, int y, int z)
@@ -61,27 +63,34 @@ public class Chunk : MonoBehaviour
 
     void FillVoxels()
     {
-        Vector3 center = new Vector3(8, 0, 8);
-        float radius = 7f;
-
-        for (int x = 0; x < chunkSize; x++)
+        for (int x = 0; x <= chunkSize; x++)
         {
             for (int y = 0; y < chunkSize; y++)
             {
-                for (int z = 0; z < chunkSize; z++)
+                for (int z = 0; z <= chunkSize; z++)
                 {
-                    float distance = Vector3.Distance(new Vector3(x, y, z), center);
-                    float inside = radius - distance;
+                    float worldX = chunkCoord.x * chunkSize + x;
+                    float worldZ = chunkCoord.y * chunkSize + z;
+
+                    float u = worldX / (float)totalGridSize;
+                    float v = worldZ / (float)totalGridSize;
+
+                    Color pixel = heightMap.GetPixelBilinear(u, v);
+                    float brightness = pixel.grayscale;
+                    float surfaceHeight = brightness * maxHeight;
+
+                    float inside = surfaceHeight - y;
 
                     // big smooth lumps
-                    float noise = Mathf.PerlinNoise(x * noiseScale, z * noiseScale);   // gives 0 to 1
-                    noise = noise * 2 - 1;                                  // now -1 to 1
+                    float noise = Mathf.PerlinNoise(x * noiseScale, z * noiseScale);
+                    noise = noise * 2 - 1;
                     inside += noise * noiseStrength;
 
                     // small random grit
-                    inside += Random.Range(-grit, grit);
+                    float grittyNoise = Mathf.PerlinNoise(worldX * 5f, worldZ * 5f) * 2 - 1;
+                    inside += grittyNoise * grit;
 
-                    float density = 128 + inside * 128 / radius;
+                    float density = 128 + inside * 128 / maxHeight;
                     voxels[x, y, z] = (byte)Mathf.Clamp(density, 0, 255);
                 }
             }
@@ -90,11 +99,11 @@ public class Chunk : MonoBehaviour
 
     void BuildMesh()
     {
-        for (int x = -1; x < chunkSize; x++)
+        for (int x = 0; x < chunkSize; x++)
         {
             for (int y = -1; y < chunkSize; y++)
             {
-                for (int z = -1; z < chunkSize; z++)
+                for (int z = 0; z < chunkSize; z++)
                 {
                     MarchCube(x, y, z);
                 }
@@ -121,18 +130,34 @@ public class Chunk : MonoBehaviour
 
     }
 
-
-
     public int DigSphere(Vector3 center, float radius, float strength)
     {
         int voxelsDug = 0;
         bool changed = false;
 
-        for (int x = 0; x < chunkSize; x++)
+        int minX = Mathf.FloorToInt(center.x - radius);
+        int maxX = Mathf.CeilToInt(center.x + radius);
+
+        int minZ = Mathf.FloorToInt(center.z - radius);
+        int maxZ = Mathf.CeilToInt(center.z + radius);
+
+        int minY = Mathf.FloorToInt(center.y - radius);
+        int maxY = Mathf.CeilToInt(center.y + radius);
+
+        minX = Mathf.Clamp(minX, 0, chunkSize);
+        maxX = Mathf.Clamp(maxX, 0, chunkSize);
+
+        minZ = Mathf.Clamp(minZ, 0, chunkSize);
+        maxZ = Mathf.Clamp(maxZ, 0, chunkSize);
+
+        minY = Mathf.Clamp(minY, 0, chunkSize - 1);
+        maxY = Mathf.Clamp(maxY, 0, chunkSize - 1);
+
+        for (int x = minX; x <= maxX; x++)
         {
-            for (int y = 0; y < chunkSize; y++)
+            for (int y = minY; y <= maxY; y++)
             {
-                for (int z = 0; z < chunkSize; z++)
+                for (int z = minZ; z <= maxZ; z++)
                 {
                     float distance = Vector3.Distance(new Vector3(x, y, z), center);
                     if (distance > radius) continue;   // outside the scoop, skip
@@ -213,5 +238,24 @@ public class Chunk : MonoBehaviour
             triangles.Add(start + 2);
         }
     }
+    public int CountSolidVoxels()
+    {
+        int count = 0;
 
+        for (int x = 0; x <= chunkSize; x++)
+        {
+            for (int y = 0; y < chunkSize; y++)
+            {
+                for (int z = 0; z <= chunkSize; z++)
+                {
+                    if (IsSolid(x, y, z))
+                    {
+                        count++;
+                    }
+                }
+            }
+        }
+
+        return count;
+    }
 }
