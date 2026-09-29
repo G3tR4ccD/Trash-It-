@@ -83,4 +83,10 @@ public class Inventory : MonoBehaviour
     {
         return GetTotalItemCount() >= maxCapacity;
     }
+
+    public Dictionary<ItemData, int> GetAllItems()
+    {
+        return new Dictionary<ItemData, int>(items);
+    }
+
 }
