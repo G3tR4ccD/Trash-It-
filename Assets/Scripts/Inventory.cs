@@ -4,6 +4,8 @@ using UnityEngine;
 public class Inventory : MonoBehaviour
 {
     public int maxCapacity = 10;
+    public event System.Action OnInventoryChanged;
+
     private Dictionary<ItemData, int> items = new Dictionary<ItemData, int>();
 
     public int InsertItem(ItemData item, int quantity)
@@ -28,7 +30,8 @@ public class Inventory : MonoBehaviour
         {
             items[item] = amountToAdd;
         }
-
+        
+        OnInventoryChanged?.Invoke();   
         return amountToAdd;   // how many actually went in
     }
 
@@ -52,6 +55,7 @@ public class Inventory : MonoBehaviour
             items.Remove(item);
         }
 
+        OnInventoryChanged?.Invoke();
         return true;   // it worked
     }
 

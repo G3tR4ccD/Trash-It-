@@ -281,6 +281,45 @@
                     "isPartOfComposite": false
                 }
             ]
+        },
+        {
+            "name": "UI",
+            "id": "7fcc6df0-e1e2-4a1d-ac8f-d79eb3bc3430",
+            "actions": [
+                {
+                    "name": "Close Shop",
+                    "type": "Button",
+                    "id": "6d1c26ef-4483-46db-bd52-0219ee3b6fe5",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "cd351a47-de3e-4a32-8fb8-7db46fc1f0ea",
+                    "path": "<Keyboard>/u",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Close Shop",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "16aca1d1-f7c3-4308-b6fe-b67e7b8681e8",
+                    "path": "<Keyboard>/e",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Close Shop",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
         }
     ],
     "controlSchemes": []
