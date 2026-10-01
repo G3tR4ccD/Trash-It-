@@ -72,10 +72,6 @@ Not built yet:
 - The world is one 16 by 16 by 16 chunk. Multiple chunks are next.
 - Item prices exist on the data assets but aren't used yet.
 
-## How I built it
-
-<!-- Change this to match how you actually built the project. -->
-I followed tutorials and asked Claude (an AI assistant) for help when I got stuck. I tested and adjusted the results in my own project.
 
 ## What I practiced
 
