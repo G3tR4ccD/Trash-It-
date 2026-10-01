@@ -16,3 +16,4 @@ MonoBehaviour:
   baseCost: 200
   multiplier: 1.5
   upgradeType: 0
+  upgradeID: dig_radius

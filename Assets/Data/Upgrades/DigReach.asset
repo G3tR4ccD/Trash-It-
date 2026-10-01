@@ -16,3 +16,4 @@ MonoBehaviour:
   baseCost: 75
   multiplier: 1.5
   upgradeType: 2
+  upgradeID: dig_reach

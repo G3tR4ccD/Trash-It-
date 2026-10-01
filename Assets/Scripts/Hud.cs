@@ -8,10 +8,12 @@ public class HUD : MonoBehaviour
     public TextMeshProUGUI backpackText;
     public Inventory playerInventory;
     public Image backpackFillImage;
+    public TextMeshProUGUI trashText;
 
     void Update()
     {
         coinsText.text = $"{GameManager.Instance.coins}";
+        trashText.text = $"{FormatNumber(GameManager.Instance.trashRemaining)}";
     }
 
     void OnEnable()
@@ -33,5 +35,22 @@ public class HUD : MonoBehaviour
         backpackFillImage.fillAmount = fillAmount;
 
         Debug.Log($"Fill updated: {playerInventory.GetTotalItemCount()}/{playerInventory.maxCapacity} = {fillAmount}");
+    }
+
+    string FormatNumber(long number)
+    {
+        if (number >= 1_000_000_000)
+        {
+            return (number / 1_000_000_000f).ToString("0.0") + "B";
+        }
+        if (number >= 1_000_000)
+        {
+            return (number / 1_000_000f).ToString("0.0") + "M";
+        }
+        if (number >= 1_000)
+        {
+            return (number / 1_000f).ToString("0.0") + "K";
+        }
+        return number.ToString();
     }
 }

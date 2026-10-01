@@ -16,3 +16,4 @@ MonoBehaviour:
   baseCost: 100
   multiplier: 1.5
   upgradeType: 4
+  upgradeID: backpack_size

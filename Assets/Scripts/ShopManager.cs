@@ -5,6 +5,7 @@ using UnityEngine.InputSystem;
 public class ShopManager : MonoBehaviour, IInteractable
 {
     private Dictionary<UpgradeData, int> purchaseCounts = new Dictionary<UpgradeData, int>();
+
     public PlayerDigging playerDigging;
     public Inventory playerInventory;
     public PlayerInput playerInput;
@@ -14,6 +15,8 @@ public class ShopManager : MonoBehaviour, IInteractable
     public UpgradeData backpackUpgrade;
     public GameObject shopPanel;
     public GameObject tooltipText;
+    public ItemDatabase itemDatabase;
+    public MountainManager mountainManager;
 
     public void BuyDigRadius() 
     { 
@@ -144,11 +147,123 @@ public class ShopManager : MonoBehaviour, IInteractable
         Cursor.visible = false;
 
         tooltipText.gameObject.SetActive(false);
+
+        SaveGame();
     }
 
     public void OnCloseShop(InputAction.CallbackContext context)
     {
         if (!context.performed) return;
         CloseShop();
+    }
+
+    public SaveData BuildSaveData()
+    {
+        SaveData data = new SaveData();
+        data.coins = GameManager.Instance.coins;
+        data.upgrades = new List<UpgradeSaveEntry>();
+
+        data.inventory = new List<ItemSaveEntry>();
+
+        data.modifiedChunks = mountainManager.BuildChunkSaveData();
+
+        foreach (var entry in playerInventory.GetAllItems())
+        {
+            ItemSaveEntry itemEntry = new ItemSaveEntry
+            {
+                itemID = entry.Key.itemID,
+                quantity = entry.Value
+            };
+            data.inventory.Add(itemEntry);
+        }
+
+        foreach (var entry in purchaseCounts)
+        {
+            UpgradeSaveEntry upgradeEntry = new UpgradeSaveEntry
+            {
+                upgradeID = entry.Key.upgradeID,
+                purchaseCount = entry.Value
+            };
+            data.upgrades.Add(upgradeEntry);
+        }
+
+        return data;
+    }
+
+    public void SaveGame()
+    {
+        SaveData data = BuildSaveData();
+        string json = JsonUtility.ToJson(data);
+        string path = Application.persistentDataPath + "/save.json";
+
+        System.IO.File.WriteAllText(path, json);
+        Debug.Log("Saved to " + path);
+    }
+    public void LoadGame()
+    {
+        string path = Application.persistentDataPath + "/save.json";
+
+        if (!System.IO.File.Exists(path))
+        {
+            Debug.Log("No save file found.");
+            return;
+        }
+
+        string json = System.IO.File.ReadAllText(path);
+        SaveData data = JsonUtility.FromJson<SaveData>(json);
+
+        GameManager.Instance.coins = data.coins;
+
+        foreach (var entry in data.upgrades)
+        {
+            UpgradeData upgrade = FindUpgradeByID(entry.upgradeID);
+
+            if (upgrade == null)
+            {
+                Debug.LogWarning("Could not find upgrade with ID: " + entry.upgradeID);
+                continue;
+            }
+
+            purchaseCounts[upgrade] = entry.purchaseCount;
+
+            for (int i = 0; i < entry.purchaseCount; i++)
+            {
+                ApplyUpgrade(upgrade);
+            }
+        }
+
+        foreach (var entry in data.inventory)
+        {
+            ItemData item = itemDatabase.FindByID(entry.itemID);
+
+            if (item == null)
+            {
+                Debug.LogWarning("Could not find item with ID: " + entry.itemID);
+                continue;
+            }
+
+            playerInventory.InsertItem(item, entry.quantity);
+
+        }
+    }
+
+    private UpgradeData FindUpgradeByID(string id)
+    {
+        if (digRadiusUpgrade.upgradeID == id) return digRadiusUpgrade;
+        if (digSpeedUpgrade.upgradeID == id) return digSpeedUpgrade;
+        if (digReachUpgrade.upgradeID == id) return digReachUpgrade;
+        if (backpackUpgrade.upgradeID == id) return backpackUpgrade;
+        return null;
+    }
+
+    void Start()
+    {
+        LoadGame();
+        InvokeRepeating(nameof(SaveGame), 30f, 30f);
+    }
+
+    void OnApplicationQuit()
+    {
+        SaveGame();
     }
 }

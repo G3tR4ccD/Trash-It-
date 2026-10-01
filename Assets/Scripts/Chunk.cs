@@ -5,6 +5,15 @@ using System.Collections.Generic;
 public class Chunk : MonoBehaviour
 {
     public int chunkSize = 16;
+    public float noiseScale = 0.2f;     // size of the lumps (smaller = bigger lumps)
+    public float noiseStrength = 2f;    // how tall the lumps are
+    public float grit = 0.3f;           // small random roughness on top
+    public Texture2D heightMap;
+    public float maxHeight = 20f;
+    public Vector2Int chunkCoord;
+    public int totalGridSize;
+    public bool isModified = false; // Flag to indicate if the chunk has been modified
+
     private byte[,,] voxels;
     private List<Vector3> vertices = new List<Vector3>();
     private List<int> triangles = new List<int>();
@@ -36,15 +45,12 @@ public class Chunk : MonoBehaviour
     { 0, 4 }, { 1, 5 }, { 2, 6 }, { 3, 7 },   // edges 8-11: vertical pillars
     };
 
-    public float noiseScale = 0.2f;     // size of the lumps (smaller = bigger lumps)
-    public float noiseStrength = 2f;    // how tall the lumps are
-    public float grit = 0.3f;           // small random roughness on top
-    public Texture2D heightMap;
-    public float maxHeight = 20f;
-    public Vector2Int chunkCoord;
-    public int totalGridSize;
 
-
+    public void InitializeFromSave(byte[] voxelData)
+    {
+        mesh = new Mesh();
+        SetVoxelBytes(voxelData);
+    }
 
     public void Initialize()
     {
@@ -52,6 +58,7 @@ public class Chunk : MonoBehaviour
         FillVoxels();
 
         mesh = new Mesh();
+
 
         RebuildMesh();
     }
@@ -182,6 +189,7 @@ public class Chunk : MonoBehaviour
 
         if (changed)
         {
+            isModified = true; // Mark the chunk as modified
             RebuildMesh();
         }
         return voxelsDug;
@@ -257,5 +265,51 @@ public class Chunk : MonoBehaviour
         }
 
         return count;
+    }
+
+    public byte[] GetVoxelBytes()
+    {
+        int sizeX = chunkSize + 1;
+        int sizeY = chunkSize;
+        int sizeZ = chunkSize + 1;
+        byte[] flat = new byte[sizeX * sizeY * sizeZ];
+
+        int index = 0;
+
+        for (int x = 0; x < sizeX; x++)
+        {
+            for (int y = 0; y < sizeY; y++)
+            {
+                for (int z = 0; z < sizeZ; z++)
+                {
+                    flat[index++] = voxels[x, y, z];
+                }
+            }
+        }
+
+        return flat;
+    }
+
+    public void SetVoxelBytes(byte[] flat)
+    {
+        int sizeX = chunkSize + 1;
+        int sizeY = chunkSize;
+        int sizeZ = chunkSize + 1;
+        voxels = new byte[sizeX, sizeY, sizeZ];
+
+        int index = 0;
+
+        for (int x = 0; x < sizeX; x++)
+        {
+            for (int y = 0; y < sizeY; y++)
+            {
+                for (int z = 0; z < sizeZ; z++)
+                {
+                    voxels[x, y, z] = flat[index++];
+                }
+            }
+        }
+        isModified = true;
+        RebuildMesh();
     }
 }

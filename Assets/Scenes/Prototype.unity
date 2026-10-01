@@ -152,6 +152,7 @@ MonoBehaviour:
   backpackText: {fileID: 1040686072}
   playerInventory: {fileID: 5762035261519009670}
   backpackFillImage: {fileID: 1808148405}
+  trashText: {fileID: 484856682}
 --- !u!4 &44859107
 Transform:
   m_ObjectHideFlags: 0
@@ -753,6 +754,8 @@ MonoBehaviour:
   backpackUpgrade: {fileID: 11400000, guid: 167c74e9d94ee7741910d11306565eef, type: 2}
   shopPanel: {fileID: 530893817}
   tooltipText: {fileID: 1290110509}
+  itemDatabase: {fileID: 11400000, guid: 1c0987dfa406b5f4594ee4f851382502, type: 2}
+  mountainManager: {fileID: 1800094600}
 --- !u!1 &255479289
 GameObject:
   m_ObjectHideFlags: 0
@@ -4876,8 +4879,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::MountainManager
   chunkPrefab: {fileID: 7176523837923976550, guid: 34af37baa709de440b6a53da32cdddf7, type: 3}
-  gridWidth: 8
-  gridDepth: 8
+  gridWidth: 12
+  gridDepth: 12
   heightMap: {fileID: 2800000, guid: 5913320f809f34c4f8f8b7abc0c01861, type: 3}
 --- !u!4 &1800094601
 Transform:

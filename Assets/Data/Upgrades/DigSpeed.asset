@@ -16,3 +16,4 @@ MonoBehaviour:
   baseCost: 50
   multiplier: 1.5
   upgradeType: 1
+  upgradeID: dig_speed
