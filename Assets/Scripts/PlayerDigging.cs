@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
+using System.Collections.Generic;
 
 public class PlayerDigging : MonoBehaviour
 {
@@ -10,13 +11,12 @@ public class PlayerDigging : MonoBehaviour
     public Inventory inventory;
     public MountainManager mountainManager;
     public float digStrength = 200f;
+    public LootTable[] lootTables;
 
 
     private bool isDigging = false;
     private float lastDigTime = 0f;
 
-    [SerializeField] private ItemData item1;
-    [SerializeField] private ItemData item2;
     [SerializeField] private TrashPickup trashPickupPrefab;
 
 
@@ -49,18 +49,27 @@ public class PlayerDigging : MonoBehaviour
                 Vector3 worldHitPoint = hit.point - hit.normal * 0.5f;
                 Vector3 dropPosition = hit.point + hit.normal * 0.5f;
 
-                int dug = mountainManager.DigAt(worldHitPoint, digRadius, digStrength);
+                int[] dug = mountainManager.DigAt(worldHitPoint, digRadius, digStrength);
                 lastDigTime = Time.time;
 
-                if (dug > 0)
+                int total = 0;
+                foreach (int count in dug)
                 {
-                    GameManager.Instance.trashRemaining -= dug * GameManager.Instance.bagsPerVoxel;
+                    total += count;
+                }
+
+                if (total > 0)
+                {
+                    GameManager.Instance.trashRemaining -= total * GameManager.Instance.bagsPerVoxel;
                     GiveLoot(dug, dropPosition);
                 }
+                else
+                {
+                    Debug.Log("Nothing dug.");
+                }
+                Debug.Log("Dug per layer: " + string.Join(", ", dug));
             }
         }
-
-
     }
 
     public void Awake()
@@ -68,39 +77,39 @@ public class PlayerDigging : MonoBehaviour
         inventory = GetComponent<Inventory>();
     }
 
-    private void GiveLoot(int amount, Vector3 dropPosition)
+    private void GiveLoot(int[] dugPerLayer, Vector3 dropPosition)
     {
-        // 1. roll the dice
-        int item1Count = 0;
-        int item2Count = 0;
+        Dictionary<ItemData, int> found = new Dictionary<ItemData, int>();
 
-        for (int i = 0; i < amount; i++)
+        for (int layer = 0; layer < dugPerLayer.Length; layer++)
         {
-            if (Random.value < 0.6f)
+            for (int n = 0; n < dugPerLayer[layer]; n++)
             {
-                item1Count++;
+                ItemData item = lootTables[layer].Roll();
+                if (item != null)
+                {
+                    if (!found.ContainsKey(item))
+                    {
+                        found[item] = 0;
+                    }
+                    found[item]++;
+                }
             }
-            else
+        }
+
+        foreach (KeyValuePair<ItemData, int> entry in found)
+        {
+            int amount = entry.Value;
+            int added = inventory.InsertItem(entry.Key, amount);
+            int leftover = amount - added;
+
+            Debug.Log($"Added {added} of {entry.Key.displayName} to inventory.");
+
+            if (leftover > 0)
             {
-                item2Count++;
+                SpawnBag(entry.Key, leftover, dropPosition);
             }
         }
-
-        // 2. add what fits
-        int added1 = inventory.InsertItem(item1, item1Count);
-        int added2 = inventory.InsertItem(item2, item2Count);
-
-        // 3. bag up the rest
-        if (item1Count - added1 > 0)
-        {
-            SpawnBag(item1, item1Count - added1, dropPosition);
-        }
-        if (item2Count - added2 > 0)
-        {
-            SpawnBag(item2, item2Count - added2, dropPosition);
-        }
-
-        Debug.Log($"Dug {amount}. {item1.displayName}: {inventory.GetItemQuantity(item1)}, {item2.displayName}: {inventory.GetItemQuantity(item2)}, {GameManager.Instance.trashRemaining}");
     }
 
     private void SpawnBag(ItemData item, int amount, Vector3 position)

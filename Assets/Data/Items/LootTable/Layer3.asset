@@ -1,0 +1,21 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7cbe399d28a10c549b90ca69baeeb438, type: 3}
+  m_Name: Layer3
+  m_EditorClassIdentifier: Assembly-CSharp::LootTable
+  lootItems:
+  - itemName: {fileID: 11400000, guid: b29ca063d63133c4e969b591ad37b34a, type: 2}
+    weight: 65
+  - itemName: {fileID: 11400000, guid: 2808aa01acba5df41951fd4655ed1640, type: 2}
+    weight: 30
+  - itemName: {fileID: 11400000, guid: 35ef2f5d92cfdcf47a45d1457c0cc03b, type: 2}
+    weight: 5

@@ -1,0 +1,22 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 96c0de26b0b11634380e00794e3cc0e3, type: 3}
+  m_Name: SmeltMetal
+  m_EditorClassIdentifier: Assembly-CSharp::RecipeData
+  recipeName: Smelt "Metal Scrap" to "Molten Metal"
+  recipeDescription: 
+  ingredients:
+  - {fileID: 11400000, guid: 72651618bd995c943846569024161bb0, type: 2}
+  ingredientsCount: 10
+  resultItem: {fileID: 11400000, guid: f89aa26130e03ea45baa4c7d1d1d196d, type: 2}
+  resultItemCount: 1
+  processingTime: 15

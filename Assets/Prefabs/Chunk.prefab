@@ -69,6 +69,10 @@ MeshRenderer:
   m_RendererPriority: 0
   m_Materials:
   - {fileID: 2100000, guid: 65df2034ede0309438ff03d348dcb7c3, type: 2}
+  - {fileID: 2100000, guid: 5382e317cfdceb146b3a9501a921434f, type: 2}
+  - {fileID: 2100000, guid: 67c00d4bba3c0994e8caeacde8279adb, type: 2}
+  - {fileID: 2100000, guid: 23e97b6db0c608645b8503bd55321183, type: 2}
+  - {fileID: 2100000, guid: a2ba929793ec0904680f1205004b3a48, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -127,10 +131,23 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Chunk
   chunkSize: 16
+  chunkHeight: 64
   noiseScale: 3
   noiseStrength: 2
   grit: 0.7
-  heightMap: {fileID: 2800000, guid: 66e1e5050d4573d4aae67374018e0834, type: 3}
-  maxHeight: 16
+  heightMap: {fileID: 2800000, guid: 82ac9034f32a7d745827c920b3ffcb36, type: 3}
+  maxHeight: 64
   chunkCoord: {x: 0, y: 0}
   totalGridSize: 0
+  isModified: 0
+  layerdepths:
+  - 4
+  - 10
+  - 18
+  - 20
+  layerdensity:
+  - 1
+  - 2
+  - 3
+  - 4
+  - 7

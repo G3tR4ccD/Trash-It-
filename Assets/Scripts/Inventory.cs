@@ -93,4 +93,10 @@ public class Inventory : MonoBehaviour
         return new Dictionary<ItemData, int>(items);
     }
 
+    public void IncreaseCapacity(int amount)
+    {
+        maxCapacity += amount;
+        OnInventoryChanged?.Invoke();
+    }
+
 }

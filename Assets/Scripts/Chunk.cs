@@ -1,10 +1,11 @@
-using UnityEngine;
 using System.Collections.Generic;
+using UnityEngine;
 
 [RequireComponent(typeof(MeshFilter), typeof(MeshRenderer), typeof(MeshCollider))]
 public class Chunk : MonoBehaviour
 {
     public int chunkSize = 16;
+    public int chunkHeight = 16;
     public float noiseScale = 0.2f;     // size of the lumps (smaller = bigger lumps)
     public float noiseStrength = 2f;    // how tall the lumps are
     public float grit = 0.3f;           // small random roughness on top
@@ -14,14 +15,19 @@ public class Chunk : MonoBehaviour
     public int totalGridSize;
     public bool isModified = false; // Flag to indicate if the chunk has been modified
 
+    public float[] layerdepths = {4f, 10f, 18f, 20f};
+    public float[] layerhardness = { 1f, 2f, 3f, 4f, 7f };
+
+
     private byte[,,] voxels;
+    private byte[,,] layers;
     private List<Vector3> vertices = new List<Vector3>();
-    private List<int> triangles = new List<int>();
+    private List<int>[] layerTriangles;
     private Mesh mesh;
     private const byte isoLevel = 128;   // the threshold for solid vs. air
     byte GetDensity(int x, int y, int z)
     {
-        if (x < 0 || y < 0 || z < 0 || x > chunkSize || y >= chunkSize || z > chunkSize)
+        if (x < 0 || y < 0 || z < 0 || x > chunkSize || y >= chunkHeight || z > chunkSize)
         {
             return 0;   // outside the grid is air
         }
@@ -49,16 +55,20 @@ public class Chunk : MonoBehaviour
     public void InitializeFromSave(byte[] voxelData)
     {
         mesh = new Mesh();
+
+        FillLayers();
+
         SetVoxelBytes(voxelData);
     }
 
     public void Initialize()
     {
-        voxels = new byte[chunkSize + 1, chunkSize, chunkSize + 1];
+        voxels = new byte[chunkSize + 1, chunkHeight, chunkSize + 1];
         FillVoxels();
 
-        mesh = new Mesh();
+        FillLayers();
 
+        mesh = new Mesh();
 
         RebuildMesh();
     }
@@ -72,19 +82,14 @@ public class Chunk : MonoBehaviour
     {
         for (int x = 0; x <= chunkSize; x++)
         {
-            for (int y = 0; y < chunkSize; y++)
+            for (int y = 0; y < chunkHeight; y++)
             {
                 for (int z = 0; z <= chunkSize; z++)
                 {
                     float worldX = chunkCoord.x * chunkSize + x;
                     float worldZ = chunkCoord.y * chunkSize + z;
 
-                    float u = worldX / (float)totalGridSize;
-                    float v = worldZ / (float)totalGridSize;
-
-                    Color pixel = heightMap.GetPixelBilinear(u, v);
-                    float brightness = pixel.grayscale;
-                    float surfaceHeight = brightness * maxHeight;
+                    float surfaceHeight = SurfaceAt(worldX, worldZ);
 
                     float inside = surfaceHeight - y;
 
@@ -108,7 +113,7 @@ public class Chunk : MonoBehaviour
     {
         for (int x = 0; x < chunkSize; x++)
         {
-            for (int y = -1; y < chunkSize; y++)
+            for (int y = -1; y < chunkHeight; y++)
             {
                 for (int z = 0; z < chunkSize; z++)
                 {
@@ -121,13 +126,20 @@ public class Chunk : MonoBehaviour
     void RebuildMesh()
     {
         vertices.Clear();
-        triangles.Clear();
+        for (int i = 0; i < layerTriangles.Length; i++)
+        {
+            layerTriangles[i].Clear();
+        }
         mesh.Clear();
 
         BuildMesh();
 
         mesh.SetVertices(vertices);
-        mesh.SetTriangles(triangles, 0);
+        mesh.subMeshCount = layerTriangles.Length;
+        for (int i = 0; i < layerTriangles.Length; i++)
+        {
+            mesh.SetTriangles(layerTriangles[i], i);
+        }
 
         mesh.RecalculateNormals();
 
@@ -137,9 +149,9 @@ public class Chunk : MonoBehaviour
 
     }
 
-    public int DigSphere(Vector3 center, float radius, float strength)
+    public int[] DigSphere(Vector3 center, float radius, float strength)
     {
-        int voxelsDug = 0;
+        int[] voxelsDug = new int[layerhardness.Length];
         bool changed = false;
 
         int minX = Mathf.FloorToInt(center.x - radius);
@@ -157,8 +169,8 @@ public class Chunk : MonoBehaviour
         minZ = Mathf.Clamp(minZ, 0, chunkSize);
         maxZ = Mathf.Clamp(maxZ, 0, chunkSize);
 
-        minY = Mathf.Clamp(minY, 0, chunkSize - 1);
-        maxY = Mathf.Clamp(maxY, 0, chunkSize - 1);
+        minY = Mathf.Clamp(minY, 0, chunkHeight - 1);
+        maxY = Mathf.Clamp(maxY, 0, chunkHeight - 1);
 
         for (int x = minX; x <= maxX; x++)
         {
@@ -170,7 +182,9 @@ public class Chunk : MonoBehaviour
                     if (distance > radius) continue;   // outside the scoop, skip
 
                     float falloff = 1 - distance / radius;
-                    float amount = strength * falloff;
+                    int layer = layers[x, y, z];
+                    float hardness = layerhardness[layer];
+                    float amount = strength * falloff / hardness;
 
                     bool wasSolid = IsSolid(x, y, z);
 
@@ -181,7 +195,7 @@ public class Chunk : MonoBehaviour
                     // it counts as "dug" only if it just crossed from solid to air
                     if (wasSolid && !IsSolid(x, y, z))
                     {
-                        voxelsDug++;
+                        voxelsDug[layer]++;
                     }
                 }
             }
@@ -217,6 +231,18 @@ public class Chunk : MonoBehaviour
         int caseIndex = GetCaseIndex(x, y, z);
         Vector3Int cubePos = new Vector3Int(x, y, z);
 
+        int layer = 0;
+        for (int i = 0; i < 8; i++)
+        {
+            if ((caseIndex & (1 << i)) != 0)   // is corner i solid?
+            {
+                Vector3Int cornerPos = cubePos + cornerOffsets[i];
+                layer = Mathf.Max(layer, layers[cornerPos.x, cornerPos.y, cornerPos.z]);
+
+
+            }
+        }
+
         // walk through the row, one triangle (3 edges) at a time
         for (int i = 0; MarchingTables.triTable[caseIndex, i] != -1; i += 3)
         {
@@ -240,10 +266,10 @@ public class Chunk : MonoBehaviour
 
                 vertices.Add(Vector3.Lerp(posA, posB, t));
             }
+            layerTriangles[layer].Add(start + 0);
+            layerTriangles[layer].Add(start + 1);
+            layerTriangles[layer].Add(start + 2);
 
-            triangles.Add(start + 0);
-            triangles.Add(start + 1);
-            triangles.Add(start + 2);
         }
     }
     public int CountSolidVoxels()
@@ -252,7 +278,7 @@ public class Chunk : MonoBehaviour
 
         for (int x = 0; x <= chunkSize; x++)
         {
-            for (int y = 0; y < chunkSize; y++)
+            for (int y = 0; y < chunkHeight; y++)
             {
                 for (int z = 0; z <= chunkSize; z++)
                 {
@@ -270,7 +296,7 @@ public class Chunk : MonoBehaviour
     public byte[] GetVoxelBytes()
     {
         int sizeX = chunkSize + 1;
-        int sizeY = chunkSize;
+        int sizeY = chunkHeight;
         int sizeZ = chunkSize + 1;
         byte[] flat = new byte[sizeX * sizeY * sizeZ];
 
@@ -293,7 +319,7 @@ public class Chunk : MonoBehaviour
     public void SetVoxelBytes(byte[] flat)
     {
         int sizeX = chunkSize + 1;
-        int sizeY = chunkSize;
+        int sizeY = chunkHeight;
         int sizeZ = chunkSize + 1;
         voxels = new byte[sizeX, sizeY, sizeZ];
 
@@ -311,5 +337,61 @@ public class Chunk : MonoBehaviour
         }
         isModified = true;
         RebuildMesh();
+    }
+
+    private void Awake()
+    {
+         layerTriangles = new List<int>[layerdepths.Length + 1];
+
+        for (int i = 0; i < layerTriangles.Length; i++)
+        {
+            layerTriangles[i] = new List<int>();
+        }
+    }
+
+    float SurfaceAt(float worldx, float worldz)
+    {
+        float u = worldx / (float)totalGridSize;
+        float v = worldz / (float)totalGridSize;
+        Color pixel = heightMap.GetPixelBilinear(u, v);
+        float brightness = pixel.grayscale;
+        float surfaceHeight = brightness * maxHeight;
+        return surfaceHeight;
+    }
+
+    void FillLayers()
+    {
+        layers = new byte[chunkSize + 1, chunkHeight, chunkSize + 1];
+
+        for (int x = 0; x <= chunkSize; x++)
+        {
+            for (int z = 0; z <= chunkSize; z++)
+            {
+                float worldX = chunkCoord.x * chunkSize + x;
+                float worldZ = chunkCoord.y * chunkSize + z;
+                
+                float surfaceHeight = SurfaceAt(worldX, worldZ);
+
+                for (int y = 0; y < chunkHeight; y++)
+                {
+                    float depth = surfaceHeight - y;
+
+                    int layer = 0;
+                    for (int i = 0; i < layerdepths.Length; i++)
+                    {
+                        if (depth > layerdepths[i])
+                        {
+                            layer = i + 1;
+                        }
+                        else
+                        {
+                            break;
+                        }
+                    }
+                    layers[x, y, z] = (byte)layer;
+                }
+            }
+        }
+        Debug.Log("Layers filled for chunk " + chunkCoord);
     }
 }

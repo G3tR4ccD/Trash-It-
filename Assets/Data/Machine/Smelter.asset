@@ -16,3 +16,5 @@ MonoBehaviour:
   machineID: smelter
   recipes:
   - {fileID: 11400000, guid: 044158840174a224ca30142cc8976b99, type: 2}
+  - {fileID: 11400000, guid: 28be40a40809cd441832a2797433d5a8, type: 2}
+  - {fileID: 11400000, guid: fb484dcf000869647915114309aa42b5, type: 2}

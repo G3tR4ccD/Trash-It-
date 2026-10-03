@@ -37,4 +37,9 @@ public class SellTooltip : MonoBehaviour, IPointerEnterHandler, IPointerExitHand
             tooltipText.transform.position = mousePosition + new Vector2(20, 20);
         }
     }
+
+    private void OnDisable()
+    {
+        isHovering = false;
+    }
 }

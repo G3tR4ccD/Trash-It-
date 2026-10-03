@@ -102,20 +102,20 @@ public class ShopManager : MonoBehaviour, IInteractable
         switch (upgrade.upgradeType)
         {
           case UpgradeData.UpgradeType.DigRadius:
-                 playerDigging.digRadius += 0.2f;
-                    break;
-               case UpgradeData.UpgradeType.DigSpeed:
-                  playerDigging.digCooldown = Mathf.Max(0.05f, playerDigging.digCooldown - 0.05f);
-                 break;
-             case UpgradeData.UpgradeType.DigReach:
-                 playerDigging.digReach += 0.5f; 
-                 break;
-             case UpgradeData.UpgradeType.BackpackSize:
-                 playerInventory.maxCapacity += 10; 
-                  break;
-            case UpgradeData.UpgradeType.MachineSpeed:
-              // this one's harder, let's hold off on it for now
-                 break; 
+            playerDigging.digRadius += 0.2f;
+            break;
+          case UpgradeData.UpgradeType.DigSpeed:
+            playerDigging.digCooldown = Mathf.Max(0.05f, playerDigging.digCooldown - 0.05f);
+            break;
+          case UpgradeData.UpgradeType.DigReach:
+            playerDigging.digReach += 0.5f; 
+            break;
+          case UpgradeData.UpgradeType.BackpackSize:
+            playerInventory.IncreaseCapacity(10);
+            break;
+          case UpgradeData.UpgradeType.MachineSpeed:
+            // this one's harder, let's hold off on it for now
+            break; 
         }
     }
     public string GetDisplayName()

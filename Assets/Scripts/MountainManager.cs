@@ -51,9 +51,9 @@ public class MountainManager : MonoBehaviour
         GameManager.Instance.bagsPerVoxel = GameManager.Instance.trashRemaining / totalSolidVoxels;
     }
 
-    public int DigAt(Vector3 worldPosition, float radius, float strength)
+    public int[] DigAt(Vector3 worldPosition, float radius, float strength)
     {
-        int totalDug = 0;
+        int[] totalDug = new int[chunkPrefab.layerhardness.Length];
         int chunkSize = chunkPrefab.chunkSize;
 
         // figure out which chunk coordinates the dig sphere could overlap
@@ -71,8 +71,11 @@ public class MountainManager : MonoBehaviour
                 {
                     // Convert world position to local position in the chunk
                     Vector3 localPosition = worldPosition - chunk.transform.position;
-                    int dug = chunk.DigSphere(localPosition, radius, strength);
-                    totalDug += dug;
+                    int[] dug = chunk.DigSphere(localPosition, radius, strength);
+                    for (int i = 0; i < totalDug.Length; i++)
+                    {
+                        totalDug[i] += dug[i];
+                    }
                 }
             }
         }
