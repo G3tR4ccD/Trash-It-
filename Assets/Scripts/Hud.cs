@@ -34,7 +34,6 @@ public class HUD : MonoBehaviour
         float fillAmount = (float)playerInventory.GetTotalItemCount() / playerInventory.maxCapacity;
         backpackFillImage.fillAmount = fillAmount;
 
-        Debug.Log($"Fill updated: {playerInventory.GetTotalItemCount()}/{playerInventory.maxCapacity} = {fillAmount}");
     }
 
     string FormatNumber(long number)

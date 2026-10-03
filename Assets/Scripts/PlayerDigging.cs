@@ -36,7 +36,6 @@ public class PlayerDigging : MonoBehaviour
     {
         if (inventory.IsFull() && isDigging)
         {
-            Debug.Log("Pockets full!");
             isDigging = false;
             return;
         }
@@ -59,15 +58,14 @@ public class PlayerDigging : MonoBehaviour
                 }
 
                 if (total > 0)
-                {
-                    GameManager.Instance.trashRemaining -= total * GameManager.Instance.bagsPerVoxel;
-                    GiveLoot(dug, dropPosition);
-                }
+                    {
+                        GameManager.Instance.trashRemaining -= total * GameManager.Instance.bagsPerVoxel;
+                        GiveLoot(dug, dropPosition);
+                    }
                 else
                 {
                     Debug.Log("Nothing dug.");
                 }
-                Debug.Log("Dug per layer: " + string.Join(", ", dug));
             }
         }
     }
@@ -77,7 +75,7 @@ public class PlayerDigging : MonoBehaviour
         inventory = GetComponent<Inventory>();
     }
 
-    private void GiveLoot(int[] dugPerLayer, Vector3 dropPosition)
+    public Dictionary<ItemData, int> RollLoot(int[] dugPerLayer)
     {
         Dictionary<ItemData, int> found = new Dictionary<ItemData, int>();
 
@@ -96,14 +94,17 @@ public class PlayerDigging : MonoBehaviour
                 }
             }
         }
+        return found;
+    }
 
+    private void GiveLoot(int[] dugPerLayer, Vector3 dropPosition)
+    {
+        Dictionary<ItemData, int> found = RollLoot(dugPerLayer);
         foreach (KeyValuePair<ItemData, int> entry in found)
         {
             int amount = entry.Value;
             int added = inventory.InsertItem(entry.Key, amount);
             int leftover = amount - added;
-
-            Debug.Log($"Added {added} of {entry.Key.displayName} to inventory.");
 
             if (leftover > 0)
             {

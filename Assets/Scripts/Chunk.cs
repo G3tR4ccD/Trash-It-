@@ -14,9 +14,9 @@ public class Chunk : MonoBehaviour
     public Vector2Int chunkCoord;
     public int totalGridSize;
     public bool isModified = false; // Flag to indicate if the chunk has been modified
-
     public float[] layerdepths = {4f, 10f, 18f, 20f};
     public float[] layerhardness = { 1f, 2f, 3f, 4f, 7f };
+    public int maxNeighborsToRemove = 2;
 
 
     private byte[,,] voxels;
@@ -172,6 +172,7 @@ public class Chunk : MonoBehaviour
         minY = Mathf.Clamp(minY, 0, chunkHeight - 1);
         maxY = Mathf.Clamp(maxY, 0, chunkHeight - 1);
 
+        // 1. the dig itself
         for (int x = minX; x <= maxX; x++)
         {
             for (int y = minY; y <= maxY; y++)
@@ -201,11 +202,32 @@ public class Chunk : MonoBehaviour
             }
         }
 
+        // 2. cleanup: remove thin leftover spikes
+        for (int x = minX; x <= maxX; x++)
+        {
+            for (int y = minY; y <= maxY; y++)
+            {
+                for (int z = minZ; z <= maxZ; z++)
+                {
+                    // skip the shared border voxels between chunks
+                    if (x == 0 || x == chunkSize || z == 0 || z == chunkSize) continue;
+
+                    if (IsSolid(x, y, z) && CountSolidNeighbors(x, y, z) <= maxNeighborsToRemove)
+                    {
+                        voxels[x, y, z] = 0;
+                        changed = true;
+                    }
+                }
+            }
+        }
+
+        // 3. rebuild the mesh once, then report what was dug
         if (changed)
         {
-            isModified = true; // Mark the chunk as modified
+            isModified = true;
             RebuildMesh();
         }
+
         return voxelsDug;
     }
 
@@ -392,6 +414,32 @@ public class Chunk : MonoBehaviour
                 }
             }
         }
-        Debug.Log("Layers filled for chunk " + chunkCoord);
+    }
+
+    int CountSolidNeighbors(int x, int y, int z)
+    {
+        int count = 0;
+
+        for (int dx = -1; dx <= 1; dx++)
+        {
+            for (int dy = -1; dy <= 1; dy++)
+            {
+                for (int dz = -1; dz <= 1; dz++)
+                {
+                    if (Mathf.Abs(dx) + Mathf.Abs(dy) + Mathf.Abs(dz) != 1) continue; // only check direct neighbors
+                    int nx = x + dx;
+                    int ny = y + dy;
+                    int nz = z + dz;
+                    if (nx >= 0 && nx <= chunkSize && ny >= 0 && ny < chunkHeight && nz >= 0 && nz <= chunkSize)
+                    {
+                        if (IsSolid(nx, ny, nz))
+                        {
+                            count++;
+                        }
+                    }
+                }
+            }
+        }
+        return count;
     }
 }

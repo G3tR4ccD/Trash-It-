@@ -47,7 +47,6 @@ public class MountainManager : MonoBehaviour
             totalSolidVoxels += chunk.CountSolidVoxels();
         }
 
-        Debug.Log($"Total solid voxels: {totalSolidVoxels}");
         GameManager.Instance.bagsPerVoxel = GameManager.Instance.trashRemaining / totalSolidVoxels;
     }
 

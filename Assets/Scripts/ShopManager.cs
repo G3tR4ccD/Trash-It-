@@ -48,10 +48,8 @@ public class ShopManager : MonoBehaviour, IInteractable
                 GameManager.Instance.coins += totalPrice;
                 playerInventory.RemoveItem(item, quantity);
 
-                Debug.Log($"Sold {quantity} x {item.displayName} for {totalPrice} coins.");
             }
         }
-        Debug.Log($"Coins: {GameManager.Instance.coins}");
     }
 
     public int GetSellValue()
@@ -131,7 +129,6 @@ public class ShopManager : MonoBehaviour, IInteractable
     {
         playerInput.SwitchCurrentActionMap("UI");
 
-        Debug.Log("Opening shop");
         shopPanel.SetActive(true);
         Cursor.lockState = CursorLockMode.None;
         Cursor.visible = true;
@@ -141,7 +138,6 @@ public class ShopManager : MonoBehaviour, IInteractable
     {
         playerInput.SwitchCurrentActionMap("Player");
 
-        Debug.Log("Closing shop");
         shopPanel.SetActive(false);
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
@@ -197,7 +193,6 @@ public class ShopManager : MonoBehaviour, IInteractable
         string path = Application.persistentDataPath + "/save.json";
 
         System.IO.File.WriteAllText(path, json);
-        Debug.Log("Saved to " + path);
     }
     public void LoadGame()
     {
@@ -205,7 +200,6 @@ public class ShopManager : MonoBehaviour, IInteractable
 
         if (!System.IO.File.Exists(path))
         {
-            Debug.Log("No save file found.");
             return;
         }
 
@@ -220,7 +214,6 @@ public class ShopManager : MonoBehaviour, IInteractable
 
             if (upgrade == null)
             {
-                Debug.LogWarning("Could not find upgrade with ID: " + entry.upgradeID);
                 continue;
             }
 
@@ -238,7 +231,6 @@ public class ShopManager : MonoBehaviour, IInteractable
 
             if (item == null)
             {
-                Debug.LogWarning("Could not find item with ID: " + entry.itemID);
                 continue;
             }
 

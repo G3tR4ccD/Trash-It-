@@ -99,4 +99,13 @@ public class Inventory : MonoBehaviour
         OnInventoryChanged?.Invoke();
     }
 
+    public void TransferAllTo(Inventory other)
+    {
+        foreach (KeyValuePair<ItemData, int> entry in GetAllItems())
+        {
+            int transferredAmount = other.InsertItem(entry.Key, entry.Value);
+            RemoveItem(entry.Key, transferredAmount);
+        }
+
+    }
 }
