@@ -44,6 +44,7 @@ public class ShopManager : MonoBehaviour, IInteractable
     public Transform helperSpawnPoint;   // an empty object on the floor near the bin
     public Transform helperStartPoint;   // an empty object over the mountain
     public Inventory dropoffBin;
+    public Transform binStandPoint;
     public List<ItemRoute> itemRoutes;
 
     // page navigation methods
@@ -133,7 +134,12 @@ public class ShopManager : MonoBehaviour, IInteractable
 
     public void SellWares()
     {
-        Dictionary<ItemData, int> snapshot = playerInventory.GetAllItems();
+        SellInventory(playerInventory);
+    }
+
+    public void SellInventory(Inventory inventory)
+    {
+        Dictionary<ItemData, int> snapshot = inventory.GetAllItems();
 
         foreach (KeyValuePair<ItemData, int> entry in snapshot)
         {
@@ -143,8 +149,7 @@ public class ShopManager : MonoBehaviour, IInteractable
             {
                 int totalPrice = item.itemPrice * quantity;
                 GameManager.Instance.coins += totalPrice;
-                playerInventory.RemoveItem(item, quantity);
-
+                inventory.RemoveItem(item, quantity);
             }
         }
     }
@@ -229,11 +234,11 @@ public class ShopManager : MonoBehaviour, IInteractable
             DiggerHelper newHelper = Instantiate(diggerHelperPrefab, helperSpawnPoint.position, Quaternion.identity);
             newHelper.Setup(mountainManager, playerDigging, dropoffBin, helperStartPoint.position);
             break;
-          case UpgradeData.UpgradeType.CarrierHelper:
-            CarrierHelper newCarrier = Instantiate(carrierHelperPrefab, helperSpawnPoint.position, Quaternion.identity);
-            newCarrier.Setup(dropoffBin, playerInventory, itemRoutes);
-            break;
-          case  UpgradeData.UpgradeType.HelperDigRadius:
+            case UpgradeData.UpgradeType.CarrierHelper:
+                CarrierHelper newCarrier = Instantiate(carrierHelperPrefab, helperSpawnPoint.position, Quaternion.identity);
+                newCarrier.Setup(dropoffBin, binStandPoint, itemRoutes, this);
+                break;
+            case  UpgradeData.UpgradeType.HelperDigRadius:
             // Implement logic for Helper Dig Radius upgrade
             break;
           case  UpgradeData.UpgradeType.HelperDigSpeed:
@@ -288,6 +293,8 @@ public class ShopManager : MonoBehaviour, IInteractable
         data.coins = GameManager.Instance.coins;
         data.upgrades = new List<UpgradeSaveEntry>();
 
+        data.trashRemaining = GameManager.Instance.trashRemaining;
+
         data.inventory = new List<ItemSaveEntry>();
 
         data.modifiedChunks = mountainManager.BuildChunkSaveData();
@@ -336,6 +343,7 @@ public class ShopManager : MonoBehaviour, IInteractable
         SaveData data = JsonUtility.FromJson<SaveData>(json);
 
         GameManager.Instance.coins = data.coins;
+        GameManager.Instance.trashRemaining = data.trashRemaining;
 
         foreach (var entry in data.upgrades)
         {

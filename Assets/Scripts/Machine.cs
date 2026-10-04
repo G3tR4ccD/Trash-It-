@@ -3,6 +3,7 @@ using System.Collections;
 
 public class Machine : MonoBehaviour, IInteractable
 {
+    [SerializeField] private Inventory hopperInput;
     [SerializeField] private Inventory playerInventory;
     [SerializeField] private MachineData machine;
 
@@ -16,6 +17,7 @@ public class Machine : MonoBehaviour, IInteractable
     RecipeData currentRecipe;
     int pendingOutput;
     public bool autoProcess = false;
+    public Inventory outputDestination;
 
     void Update()
     {
@@ -28,7 +30,7 @@ public class Machine : MonoBehaviour, IInteractable
 
             foreach (ItemData ingredient in currentRecipe.ingredients)
             {
-                playerInventory.RemoveItem(ingredient, currentRecipe.ingredientsCount);
+                hopperInput.RemoveItem(ingredient, currentRecipe.ingredientsCount);
             }
 
             StartCoroutine(ProcessRoutine());
@@ -36,7 +38,8 @@ public class Machine : MonoBehaviour, IInteractable
         }
         else if (currentState == MachineState.Finished)
         {
-            int added = playerInventory.InsertItem(currentRecipe.resultItem, pendingOutput);
+            Inventory outputTarget = outputDestination != null ? outputDestination : playerInventory;
+            int added = outputTarget.InsertItem(currentRecipe.resultItem, pendingOutput);
             pendingOutput -= added;
 
             if (pendingOutput <= 0)
@@ -77,7 +80,8 @@ public class Machine : MonoBehaviour, IInteractable
                 Debug.Log("Machine is currently processing. Please wait.");
                 break;
             case MachineState.Finished:
-                int added = playerInventory.InsertItem(currentRecipe.resultItem, pendingOutput);
+                Inventory outputTarget = outputDestination != null ? outputDestination : playerInventory;
+                int added = outputTarget.InsertItem(currentRecipe.resultItem, pendingOutput);
                 pendingOutput -= added;
                 if (pendingOutput <= 0)
                 {
@@ -102,9 +106,10 @@ public class Machine : MonoBehaviour, IInteractable
     }
     private bool CanAfford(RecipeData recipe)
     {
+        Inventory source = autoProcess ? hopperInput : playerInventory;
         foreach (ItemData ingredient in recipe.ingredients)
         {
-            if (playerInventory.GetItemQuantity(ingredient) < recipe.ingredientsCount)
+            if (source.GetItemQuantity(ingredient) < recipe.ingredientsCount)
             {
                 return false;
             }

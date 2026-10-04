@@ -24,10 +24,12 @@ public class CarrierHelper : MonoBehaviour
     public float arriveDistance = 0.3f;
 
     public Inventory dropoffBin;        // where diggers dump raw loot
-    public Inventory sellDestination;   // where finished goods end up (recommend: the player's own Inventory)
     public List<ItemRoute> itemRoutes;  // item -> the machine hopper it should go to next
     public float waitAtEmptyBin = 1f;   // pause before re-checking an empty bin
+    public ShopManager shopManager; // reference to the ShopManager for checking machine availability
+    public Transform binStandPoint;
 
+    private Transform currentDestination;
     private Inventory load;             // the carrier's own backpack
     private CarrierState state = CarrierState.GoingToBin;
     private float lastBinCheckTime = -999f;
@@ -100,33 +102,45 @@ public class CarrierHelper : MonoBehaviour
 
             if (destination != null)
             {
+                currentDestination = destination;
                 target.position = destination.position;
                 state = CarrierState.GoingToDestination;
             }
             else
             {
-                target.position = sellDestination.transform.position;
+                target.position = shopManager.transform.position;
                 state = CarrierState.GoingToSell;
             }
 
-            return; // only one item type per trip
+            return;
         }
-        // bin was empty, try again after waitAtEmptyBin
     }
 
     Transform FindRouteFor(ItemData item)
     {
         foreach (var route in itemRoutes)
         {
-            if (route.item == item) return route.destinationMachine;
+            if (route.item == item)
+            {
+                if (route.destinationMachine != null && route.destinationMachine.gameObject.activeInHierarchy)
+                {
+                    return route.destinationMachine;
+                }
+                return null; // route exists, but the machine isn't bought/active yet
+            }
         }
-        return null; // no route = finished product
+        return null; // no route at all = finished product
     }
 
     void DeliverToMachine()
     {
-        Inventory hopper = target.GetComponent<Inventory>();
-        if (hopper != null)
+        Inventory hopper = currentDestination != null ? currentDestination.GetComponent<Inventory>() : null;
+
+        if (hopper == null)
+        {
+            Debug.LogWarning("No Inventory component found on destination machine!");
+        }
+        else
         {
             foreach (var entry in load.GetAllItems())
             {
@@ -141,7 +155,7 @@ public class CarrierHelper : MonoBehaviour
 
     void DeliverToSell()
     {
-        load.TransferAllTo(sellDestination);
+        shopManager.SellInventory(load);
         target.position = dropoffBin.transform.position;
         state = CarrierState.GoingToBin;
     }
@@ -163,14 +177,15 @@ public class CarrierHelper : MonoBehaviour
         return Vector2.Distance(new Vector2(a.x, a.z), new Vector2(b.x, b.z));
     }
 
-    public void Setup(Inventory bin, Inventory sellPoint, List<ItemRoute> routes)
+    public void Setup(Inventory bin, Transform standPoint, List<ItemRoute> routes, ShopManager shop)
     {
         dropoffBin = bin;
-        sellDestination = sellPoint;
+        binStandPoint = standPoint;
         itemRoutes = routes;
+        shopManager = shop;
 
         target = new GameObject("CarrierMarker").transform;
-        target.position = bin.transform.position;
+        target.position = standPoint.position;
         state = CarrierState.GoingToBin;
     }
 }

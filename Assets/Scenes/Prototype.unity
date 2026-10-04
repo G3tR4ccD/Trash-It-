@@ -1297,6 +1297,7 @@ MonoBehaviour:
   helperSpawnPoint: {fileID: 1554609501}
   helperStartPoint: {fileID: 1740800387}
   dropoffBin: {fileID: 8961902633452961148}
+  binStandPoint: {fileID: 1554609501}
   itemRoutes:
   - item: {fileID: 11400000, guid: b29ca063d63133c4e969b591ad37b34a, type: 2}
     destinationMachine: {fileID: 1916353823}
@@ -3839,9 +3840,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 087d046c1b8c99648a9f63dafdf790d4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Machine
-  playerInventory: {fileID: 1735810660}
+  hopperInput: {fileID: 1735810660}
+  playerInventory: {fileID: 5762035261519009670}
   machine: {fileID: 11400000, guid: 31373fa563a769f4e83982be7be4d536, type: 2}
   autoProcess: 1
+  outputDestination: {fileID: 8961902633452961148}
 --- !u!65 &725906383
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -4162,9 +4165,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 087d046c1b8c99648a9f63dafdf790d4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Machine
-  playerInventory: {fileID: 1916353822}
+  hopperInput: {fileID: 1916353822}
+  playerInventory: {fileID: 5762035261519009670}
   machine: {fileID: 11400000, guid: a8c6feb3741b5ac41b85c07c449cb8fd, type: 2}
   autoProcess: 1
+  outputDestination: {fileID: 8961902633452961148}
 --- !u!65 &754821817
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -5544,7 +5549,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &982618982
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5557,9 +5562,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 087d046c1b8c99648a9f63dafdf790d4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Machine
-  playerInventory: {fileID: 866195044}
+  hopperInput: {fileID: 866195044}
+  playerInventory: {fileID: 5762035261519009670}
   machine: {fileID: 11400000, guid: d80e69926e39f2440bca9da8f62cb2d7, type: 2}
   autoProcess: 1
+  outputDestination: {fileID: 8961902633452961148}
 --- !u!65 &982618983
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -7310,7 +7317,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &1286618608
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -7323,9 +7330,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 087d046c1b8c99648a9f63dafdf790d4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Machine
-  playerInventory: {fileID: 1272318593}
+  hopperInput: {fileID: 1272318593}
+  playerInventory: {fileID: 5762035261519009670}
   machine: {fileID: 11400000, guid: 3f19cfc5daa32b84cbe092ce3d3f74c0, type: 2}
   autoProcess: 1
+  outputDestination: {fileID: 8961902633452961148}
 --- !u!65 &1286618609
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -9011,7 +9020,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1554609501}
   m_Layer: 0
-  m_Name: Digger Helper Spawnpoint
+  m_Name: Helper Spawnpoint
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

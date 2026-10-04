@@ -29,6 +29,7 @@ public class SaveData
     public List<UpgradeSaveEntry> upgrades;
     public List<ItemSaveEntry> inventory;
     public List<ChunkSaveEntry> modifiedChunks;
+    public long trashRemaining;
 }
 
 
