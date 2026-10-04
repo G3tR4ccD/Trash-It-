@@ -14,6 +14,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::ItemData
   displayName: Metal Sheet
   itemDescription: 
-  itemPrice: 0
+  itemPrice: 900
   itemIcon: {fileID: 0}
   itemID: metal_sheet

@@ -8,12 +8,20 @@ public class UpgradeData  : ScriptableObject
     public float multiplier;
     public UpgradeType upgradeType;
     public string upgradeID;
+    public int maxLevel =  0; // 0 means no limit
     public enum UpgradeType
     {
         DigRadius,
         DigSpeed,
         DigReach,
         MachineSpeed,
-        BackpackSize
+        BackpackSize,
+        Machine,
+        DiggerHelper,
+        CarrierHelper,
+        HelperDigRadius,
+        HelperDigSpeed,
+        HelperBackpack,
     }
 }
+

@@ -9,11 +9,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6f82539197a41064dbaebcaeff18ce9b, type: 3}
-  m_Name: MetalScrap
-  m_EditorClassIdentifier: Assembly-CSharp::ItemData
-  displayName: Metal Scrap
-  itemDescription: 
-  itemPrice: 60
-  itemIcon: {fileID: 0}
-  itemID: metal_scrap
+  m_Script: {fileID: 11500000, guid: f52422befadad1b469c200db97f7d04c, type: 3}
+  m_Name: PressUpgrade
+  m_EditorClassIdentifier: Assembly-CSharp::UpgradeData
+  displayName: Press
+  baseCost: 700
+  multiplier: 1
+  upgradeType: 5
+  upgradeID: press_upgrade
+  maxLevel: 1

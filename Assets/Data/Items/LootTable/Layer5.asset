@@ -14,10 +14,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::LootTable
   lootItems:
   - itemName: {fileID: 11400000, guid: b29ca063d63133c4e969b591ad37b34a, type: 2}
-    weight: 50
+    weight: 20
   - itemName: {fileID: 11400000, guid: 2808aa01acba5df41951fd4655ed1640, type: 2}
-    weight: 35
+    weight: 40
   - itemName: {fileID: 11400000, guid: 35ef2f5d92cfdcf47a45d1457c0cc03b, type: 2}
-    weight: 15
+    weight: 35
   - itemName: {fileID: 11400000, guid: 72651618bd995c943846569024161bb0, type: 2}
     weight: 5

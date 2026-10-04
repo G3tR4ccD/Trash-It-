@@ -15,7 +15,37 @@ public class Machine : MonoBehaviour, IInteractable
     MachineState currentState = MachineState.Idle;
     RecipeData currentRecipe;
     int pendingOutput;
+    public bool autoProcess = false;
 
+    void Update()
+    {
+        if (!autoProcess) return;
+
+        if (currentState == MachineState.Idle)
+        {
+            currentRecipe = FindAffordableRecipe();
+            if (currentRecipe == null) return;
+
+            foreach (ItemData ingredient in currentRecipe.ingredients)
+            {
+                playerInventory.RemoveItem(ingredient, currentRecipe.ingredientsCount);
+            }
+
+            StartCoroutine(ProcessRoutine());
+            currentState = MachineState.Processing;
+        }
+        else if (currentState == MachineState.Finished)
+        {
+            int added = playerInventory.InsertItem(currentRecipe.resultItem, pendingOutput);
+            pendingOutput -= added;
+
+            if (pendingOutput <= 0)
+            {
+                currentState = MachineState.Idle;
+                currentRecipe = null;
+            }
+        }
+    }
 
     public string GetDisplayName()
     {
@@ -64,7 +94,8 @@ public class Machine : MonoBehaviour, IInteractable
     }
     IEnumerator ProcessRoutine()
     {
-        yield return new WaitForSeconds(currentRecipe.processingTime);
+        float actualTime = currentRecipe.processingTime / GameManager.Instance.machineSpeedMultiplier;
+        yield return new WaitForSeconds(actualTime);
         pendingOutput = currentRecipe.resultItemCount;
         currentState = MachineState.Finished;
         Debug.Log("FInished processing. You can now collect your item.");

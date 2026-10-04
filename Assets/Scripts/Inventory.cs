@@ -106,6 +106,5 @@ public class Inventory : MonoBehaviour
             int transferredAmount = other.InsertItem(entry.Key, entry.Value);
             RemoveItem(entry.Key, transferredAmount);
         }
-
     }
 }

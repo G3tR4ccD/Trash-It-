@@ -20,7 +20,10 @@ public class DiggerHelper : MonoBehaviour
     public PlayerDigging playerDigging;   // drag the player in via the Inspector, for the loot tables
     public Inventory dropoffBin;
     public float dropRadius = 1.5f;
+    public int maxEmptyDigs = 6;
+    private int emptyDigs = 0;
 
+    private Vector3 mountainPoint;
     private Vector3 workSpot;
     private Inventory load;               // the helper's own backpack
     private int stuckHops = 0;
@@ -173,6 +176,21 @@ public class DiggerHelper : MonoBehaviour
             }
             GameManager.Instance.trashRemaining -= total * GameManager.Instance.bagsPerVoxel;
 
+            if (total == 0)
+            {
+                emptyDigs++;
+            }
+            else
+            {
+                emptyDigs = 0;
+            }
+
+            if (emptyDigs >= maxEmptyDigs)
+            {
+                target.position = mountainPoint;
+                emptyDigs = 0;
+            }
+
             Dictionary<ItemData, int> found = playerDigging.RollLoot(dug);
             foreach (var entry in found)
             {
@@ -180,5 +198,18 @@ public class DiggerHelper : MonoBehaviour
             }
             lastDigTime = Time.time;
         }
+    }
+
+    public void Setup(MountainManager mountain, PlayerDigging digging, Inventory bin, Vector3 startPoint)
+    {
+        mountainManager = mountain;
+        playerDigging = digging;
+        dropoffBin = bin;
+        mountainPoint = startPoint;
+
+        target = new GameObject("HelperMarker").transform;
+        target.position = startPoint;
+
+
     }
 }

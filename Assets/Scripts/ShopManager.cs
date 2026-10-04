@@ -2,6 +2,13 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
+
+[System.Serializable]
+public class MachineSlot
+{
+    public UpgradeData upgrade;
+    public GameObject machine;
+}
 public class ShopManager : MonoBehaviour, IInteractable
 {
     private Dictionary<UpgradeData, int> purchaseCounts = new Dictionary<UpgradeData, int>();
@@ -17,23 +24,113 @@ public class ShopManager : MonoBehaviour, IInteractable
     public GameObject tooltipText;
     public ItemDatabase itemDatabase;
     public MountainManager mountainManager;
+    public GameObject[] pages;
+    public List<UpgradeData> allUpgrades;
+    public List<MachineSlot> machineSlots;
 
-    public void BuyDigRadius() 
-    { 
+    public UpgradeData mixerUpgrade;
+    public UpgradeData pressUpgrade;
+    public UpgradeData shredderUpgrade;
+    public UpgradeData smelterUpgrade;
+    public UpgradeData diggerHelperUpgrade;
+    public UpgradeData carrierHelperUpgrade;
+    public UpgradeData helperDigRadiusUpgrade;
+    public UpgradeData helperDigSpeedUpgrade;
+    public UpgradeData helperBackpackUpgrade;
+    public UpgradeData machineSpeedUpgrade;
+
+    public DiggerHelper diggerHelperPrefab;
+    public CarrierHelper carrierHelperPrefab;
+    public Transform helperSpawnPoint;   // an empty object on the floor near the bin
+    public Transform helperStartPoint;   // an empty object over the mountain
+    public Inventory dropoffBin;
+    public List<ItemRoute> itemRoutes;
+
+    // page navigation methods
+    public void OpenMainPage()
+    {
+        ShowPage(0);
+    }
+    public void OpenPlayerPage()
+    {
+        ShowPage(1);
+    }
+    public void OpenMachinePage()
+    {
+        ShowPage(2);
+    }
+    public void OpenHelperPage()
+    {
+        ShowPage(3);
+    }
+    // end page navigation methods
+
+    // player upgrade purchase methods
+    public void BuyDigRadius()
+    {
         TryPurchase(digRadiusUpgrade);
     }
-    public void BuyDigSpeed() 
-    { 
-        TryPurchase(digSpeedUpgrade); 
+    public void BuyDigSpeed()
+    {
+        TryPurchase(digSpeedUpgrade);
     }
-    public void BuyDigReach() 
-    { 
-        TryPurchase(digReachUpgrade); 
+    public void BuyDigReach()
+    {
+        TryPurchase(digReachUpgrade);
     }
-    public void BuyBackpack() 
-    { 
-        TryPurchase(backpackUpgrade); 
+    public void BuyBackpack()
+    {
+        TryPurchase(backpackUpgrade);
     }
+    // end player upgrade purchase methods
+
+    // machine upgrade purchase methods
+    public void BuyMixer()
+    {
+        TryPurchase(mixerUpgrade);
+    }
+    public void BuyPress()
+    {
+        TryPurchase(pressUpgrade);
+    }
+    public void BuyShredder()
+    {
+        TryPurchase(shredderUpgrade);
+    }
+    public void BuySmelter()
+    {
+        TryPurchase(smelterUpgrade);
+    }
+    public void BuyMachineSpeed()
+    {
+        TryPurchase(machineSpeedUpgrade);
+    }
+    // end machine upgrade purchase methods
+
+    // helper upgrade purchase methods
+    public void BuyDiggerHelper()
+    {
+        TryPurchase(diggerHelperUpgrade);
+    }
+    public void BuyCarrierHelper()
+    {
+        TryPurchase(carrierHelperUpgrade);
+    }
+    public void BuyHelperDigRadius()
+    {
+        TryPurchase(helperDigRadiusUpgrade);
+    }
+    public void BuyHelperDigSpeed()
+    {
+        TryPurchase(helperDigSpeedUpgrade);
+    }
+    public void BuyHelperBackpack()
+    {
+        TryPurchase(helperBackpackUpgrade);
+    }
+    // end helper upgrade purchase methods
+
+
     public void SellWares()
     {
         Dictionary<ItemData, int> snapshot = playerInventory.GetAllItems();
@@ -84,6 +181,10 @@ public class ShopManager : MonoBehaviour, IInteractable
 
     public bool TryPurchase(UpgradeData upgrade)
     {
+        if (upgrade.maxLevel > 0 && GetPurchaseCount(upgrade) >= upgrade.maxLevel)
+        {
+            return false;
+        }
         long cost = GetCurrentCost(upgrade);
         if (GameManager.Instance.coins >= cost)
         {
@@ -112,8 +213,35 @@ public class ShopManager : MonoBehaviour, IInteractable
             playerInventory.IncreaseCapacity(10);
             break;
           case UpgradeData.UpgradeType.MachineSpeed:
-            // this one's harder, let's hold off on it for now
-            break; 
+            GameManager.Instance.machineSpeedMultiplier += 0.1f;
+            break;
+          case UpgradeData.UpgradeType.Machine:
+            foreach (var slot in machineSlots)
+            {
+                if (slot.upgrade == upgrade && slot.machine != null)
+                {
+                    slot.machine.SetActive(true);
+                    break;
+                }
+            }
+            break;
+          case UpgradeData.UpgradeType.DiggerHelper:
+            DiggerHelper newHelper = Instantiate(diggerHelperPrefab, helperSpawnPoint.position, Quaternion.identity);
+            newHelper.Setup(mountainManager, playerDigging, dropoffBin, helperStartPoint.position);
+            break;
+          case UpgradeData.UpgradeType.CarrierHelper:
+            CarrierHelper newCarrier = Instantiate(carrierHelperPrefab, helperSpawnPoint.position, Quaternion.identity);
+            newCarrier.Setup(dropoffBin, playerInventory, itemRoutes);
+            break;
+          case  UpgradeData.UpgradeType.HelperDigRadius:
+            // Implement logic for Helper Dig Radius upgrade
+            break;
+          case  UpgradeData.UpgradeType.HelperDigSpeed:
+            // Implement logic for Helper Dig Speed upgrade
+            break;
+          case UpgradeData.UpgradeType.HelperBackpack:
+            // Implement logic for Helper Dig Backpack upgrade
+            break;
         }
     }
     public string GetDisplayName()
@@ -132,13 +260,14 @@ public class ShopManager : MonoBehaviour, IInteractable
         shopPanel.SetActive(true);
         Cursor.lockState = CursorLockMode.None;
         Cursor.visible = true;
+        ShowPage(0);
     }
 
     public void CloseShop()
     {
         playerInput.SwitchCurrentActionMap("Player");
 
-        shopPanel.SetActive(false);
+        ShowPage(-1);
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
 
@@ -241,11 +370,19 @@ public class ShopManager : MonoBehaviour, IInteractable
 
     private UpgradeData FindUpgradeByID(string id)
     {
-        if (digRadiusUpgrade.upgradeID == id) return digRadiusUpgrade;
-        if (digSpeedUpgrade.upgradeID == id) return digSpeedUpgrade;
-        if (digReachUpgrade.upgradeID == id) return digReachUpgrade;
-        if (backpackUpgrade.upgradeID == id) return backpackUpgrade;
+        foreach (var upgrade in allUpgrades)
+        {
+            if (upgrade.upgradeID == id)
+            {
+                return upgrade;
+            }
+        }
         return null;
+    }
+
+    public void Buy(UpgradeData upgrade)
+    {
+        TryPurchase(upgrade);
     }
 
     void Start()
@@ -257,5 +394,14 @@ public class ShopManager : MonoBehaviour, IInteractable
     void OnApplicationQuit()
     {
         SaveGame();
+    }
+
+    public void ShowPage(int index)
+    {
+        for (int i = 0; i < pages.Length; i++)
+        {
+            pages[i].SetActive(i == index);
+        }
+        tooltipText.gameObject.SetActive(false);
     }
 }
