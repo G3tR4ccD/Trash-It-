@@ -38,10 +38,6 @@ public class CarrierHelper : MonoBehaviour
     private void Awake()
     {
         load = GetComponent<Inventory>();
-        if (load == null)
-        {
-            Debug.LogError("CarrierHelper requires an Inventory component.");
-        }
     }
 
     void Update()
@@ -148,7 +144,7 @@ public class CarrierHelper : MonoBehaviour
 
         if (hopper == null)
         {
-            Debug.LogWarning("No Inventory component found on destination machine!");
+            return;
         }
         else
         {

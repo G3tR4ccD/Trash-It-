@@ -62,22 +62,19 @@ public class Machine : MonoBehaviour, IInteractable
                 currentRecipe = FindAffordableRecipe();
                 if (currentRecipe == null)
                 {
-                    Debug.Log("Nothing to process.");
                     break;
                 }
                 foreach (ItemData ingredient in currentRecipe.ingredients)
                 {
                     if (!playerInventory.RemoveItem(ingredient, currentRecipe.ingredientsCount))
                     {
-                        Debug.LogWarning("Could not remove " + ingredient.displayName);
+                        return;
                     }
                 }
-                Debug.Log("Machine is idle. Starting processing...");
                 StartCoroutine(ProcessRoutine());
                 currentState = MachineState.Processing;
                 break;
             case MachineState.Processing:
-                Debug.Log("Machine is currently processing. Please wait.");
                 break;
             case MachineState.Finished:
                 Inventory outputTarget = outputDestination != null ? outputDestination : playerInventory;
@@ -87,11 +84,10 @@ public class Machine : MonoBehaviour, IInteractable
                 {
                     currentState = MachineState.Idle;
                     currentRecipe = null;
-                    Debug.Log("Item collected. Machine is now idle.");
                 }
                 else
                 {
-                    Debug.Log("Pockets full! " + pendingOutput + " left in the machine.");
+                    return;
                 }
                 break;
         }
@@ -102,7 +98,6 @@ public class Machine : MonoBehaviour, IInteractable
         yield return new WaitForSeconds(actualTime);
         pendingOutput = currentRecipe.resultItemCount;
         currentState = MachineState.Finished;
-        Debug.Log("FInished processing. You can now collect your item.");
     }
     private bool CanAfford(RecipeData recipe)
     {

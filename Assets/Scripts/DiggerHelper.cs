@@ -96,10 +96,6 @@ public class DiggerHelper : MonoBehaviour
     private void Awake()
     {
         load = GetComponent<Inventory>();
-        if (load == null)
-        {
-            Debug.LogError("DiggerHelper requires an Inventory component.");
-        }
 
     }
     void Update()
