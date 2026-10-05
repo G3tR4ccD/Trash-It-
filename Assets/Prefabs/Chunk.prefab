@@ -151,3 +151,6 @@ MonoBehaviour:
   - 3
   - 4
   - 7
+  maxNeighborsToRemove: 2
+  maxIslandSize: 40
+  islandSearchPadding: 4

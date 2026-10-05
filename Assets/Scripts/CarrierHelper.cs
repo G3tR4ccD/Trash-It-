@@ -33,6 +33,7 @@ public class CarrierHelper : MonoBehaviour
     private Inventory load;             // the carrier's own backpack
     private CarrierState state = CarrierState.GoingToBin;
     private float lastBinCheckTime = -999f;
+    public float rotationSpeed = 8f;
 
     private void Awake()
     {
@@ -64,6 +65,15 @@ public class CarrierHelper : MonoBehaviour
         {
             next.y = groundY;
         }
+
+        Vector3 direction = next - transform.position;
+        direction.y = 0f;
+
+        if (direction.sqrMagnitude > 0.0001f)
+        {
+            transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(direction), Time.deltaTime * rotationSpeed);
+        }
+
         transform.position = next;
     }
 
@@ -149,14 +159,14 @@ public class CarrierHelper : MonoBehaviour
             }
         }
 
-        target.position = dropoffBin.transform.position;
+        target.position = binStandPoint.transform.position;
         state = CarrierState.GoingToBin;
     }
 
     void DeliverToSell()
     {
         shopManager.SellInventory(load);
-        target.position = dropoffBin.transform.position;
+        target.position = binStandPoint.transform.position;
         state = CarrierState.GoingToBin;
     }
 

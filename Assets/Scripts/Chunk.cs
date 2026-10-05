@@ -17,7 +17,8 @@ public class Chunk : MonoBehaviour
     public float[] layerdepths = {4f, 10f, 18f, 20f};
     public float[] layerhardness = { 1f, 2f, 3f, 4f, 7f };
     public int maxNeighborsToRemove = 2;
-
+    public int maxIslandSize = 40;       // max voxel count for a disconnected chunk to be auto-removed
+    public int islandSearchPadding = 4;  // how far beyond the dig box to look for floating debris
 
     private byte[,,] voxels;
     private byte[,,] layers;
@@ -51,7 +52,52 @@ public class Chunk : MonoBehaviour
     { 0, 4 }, { 1, 5 }, { 2, 6 }, { 3, 7 },   // edges 8-11: vertical pillars
     };
 
+    bool FloodFillIsland(int startX, int startY, int startZ, int padX0, int padX1, int padY0, int padY1, int padZ0, int padZ1, bool[,,] visited, List<Vector3Int> island)
+    {
+        bool touchesBoundary = false;
+        Stack<Vector3Int> stack = new Stack<Vector3Int>();
+        stack.Push(new Vector3Int(startX, startY, startZ));
+        visited[startX - padX0, startY - padY0, startZ - padZ0] = true;
 
+        Vector3Int[] directions = {
+        new Vector3Int(1,0,0), new Vector3Int(-1,0,0),
+        new Vector3Int(0,1,0), new Vector3Int(0,-1,0),
+        new Vector3Int(0,0,1), new Vector3Int(0,0,-1)
+    };
+
+        while (stack.Count > 0)
+        {
+            Vector3Int current = stack.Pop();
+            island.Add(current);
+
+            if (current.x == padX0 || current.x == padX1 || current.y == padY0 || current.y == padY1 || current.z == padZ0 || current.z == padZ1)
+            {
+                touchesBoundary = true;
+            }
+
+            foreach (var dir in directions)
+            {
+                int nx = current.x + dir.x;
+                int ny = current.y + dir.y;
+                int nz = current.z + dir.z;
+
+                if (nx < padX0 || nx > padX1 || ny < padY0 || ny > padY1 || nz < padZ0 || nz > padZ1) continue;
+                if (visited[nx - padX0, ny - padY0, nz - padZ0]) continue;
+                if (!IsSolid(nx, ny, nz)) continue;
+
+                visited[nx - padX0, ny - padY0, nz - padZ0] = true;
+                stack.Push(new Vector3Int(nx, ny, nz));
+            }
+
+            if (island.Count > maxIslandSize * 4)
+            {
+                touchesBoundary = true; // bail out, this is too big to be simple debris
+                break;
+            }
+        }
+
+        return touchesBoundary;
+    }
     public void InitializeFromSave(byte[] voxelData)
     {
         mesh = new Mesh();
@@ -202,19 +248,34 @@ public class Chunk : MonoBehaviour
             }
         }
 
-        // 2. cleanup: remove thin leftover spikes
+        // 2. cleanup: remove small disconnected floating chunks
+        int padX0 = Mathf.Clamp(minX - islandSearchPadding, 0, chunkSize);
+        int padX1 = Mathf.Clamp(maxX + islandSearchPadding, 0, chunkSize);
+        int padY0 = Mathf.Clamp(minY - islandSearchPadding, 0, chunkHeight - 1);
+        int padY1 = Mathf.Clamp(maxY + islandSearchPadding, 0, chunkHeight - 1);
+        int padZ0 = Mathf.Clamp(minZ - islandSearchPadding, 0, chunkSize);
+        int padZ1 = Mathf.Clamp(maxZ + islandSearchPadding, 0, chunkSize);
+
+        bool[,,] visited = new bool[padX1 - padX0 + 1, padY1 - padY0 + 1, padZ1 - padZ0 + 1];
+
         for (int x = minX; x <= maxX; x++)
         {
             for (int y = minY; y <= maxY; y++)
             {
                 for (int z = minZ; z <= maxZ; z++)
                 {
-                    // skip the shared border voxels between chunks
-                    if (x == 0 || x == chunkSize || z == 0 || z == chunkSize) continue;
+                    if (!IsSolid(x, y, z)) continue;
+                    if (visited[x - padX0, y - padY0, z - padZ0]) continue;
 
-                    if (IsSolid(x, y, z) && CountSolidNeighbors(x, y, z) <= maxNeighborsToRemove)
+                    List<Vector3Int> island = new List<Vector3Int>();
+                    bool touchesBoundary = FloodFillIsland(x, y, z, padX0, padX1, padY0, padY1, padZ0, padZ1, visited, island);
+
+                    if (!touchesBoundary && island.Count <= maxIslandSize)
                     {
-                        voxels[x, y, z] = 0;
+                        foreach (var voxel in island)
+                        {
+                            voxels[voxel.x, voxel.y, voxel.z] = 0;
+                        }
                         changed = true;
                     }
                 }
@@ -414,32 +475,5 @@ public class Chunk : MonoBehaviour
                 }
             }
         }
-    }
-
-    int CountSolidNeighbors(int x, int y, int z)
-    {
-        int count = 0;
-
-        for (int dx = -1; dx <= 1; dx++)
-        {
-            for (int dy = -1; dy <= 1; dy++)
-            {
-                for (int dz = -1; dz <= 1; dz++)
-                {
-                    if (Mathf.Abs(dx) + Mathf.Abs(dy) + Mathf.Abs(dz) != 1) continue; // only check direct neighbors
-                    int nx = x + dx;
-                    int ny = y + dy;
-                    int nz = z + dz;
-                    if (nx >= 0 && nx <= chunkSize && ny >= 0 && ny < chunkHeight && nz >= 0 && nz <= chunkSize)
-                    {
-                        if (IsSolid(nx, ny, nz))
-                        {
-                            count++;
-                        }
-                    }
-                }
-            }
-        }
-        return count;
     }
 }

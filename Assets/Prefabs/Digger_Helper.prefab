@@ -1552,7 +1552,7 @@ MonoBehaviour:
   target: {fileID: 0}
   moveSpeed: 3
   arriveDistance: 0.3
-  searchRadius: 16
+  searchRadius: 0
   searchStep: 1
   maxClimb: 2
   mountainManager: {fileID: 0}
@@ -1564,6 +1564,17 @@ MonoBehaviour:
   playerDigging: {fileID: 0}
   dropoffBin: {fileID: 0}
   dropRadius: 1.5
+  maxEmptyDigs: 6
+  reach: 2.5
+  sweepArc: 120
+  sweepStep: 15
+  standBack: 3
+  minMountainHeight: 2
+  ringStep: 2
+  maxSearchDistance: 80
+  samplesPerRing: 24
+  rotationSpeed: 8
+  digRotationSpeed: 20
 --- !u!114 &7211210181027302251
 MonoBehaviour:
   m_ObjectHideFlags: 0

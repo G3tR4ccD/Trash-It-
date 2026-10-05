@@ -164,7 +164,6 @@ MonoBehaviour:
   moveSpeed: 3
   arriveDistance: 0.3
   dropoffBin: {fileID: 0}
-  sellDestination: {fileID: 0}
   itemRoutes:
   - item: {fileID: 11400000, guid: b29ca063d63133c4e969b591ad37b34a, type: 2}
     destinationMachine: {fileID: 0}
@@ -193,6 +192,9 @@ MonoBehaviour:
   - item: {fileID: 11400000, guid: 67893b01c176ffe4780aad1f64404392, type: 2}
     destinationMachine: {fileID: 0}
   waitAtEmptyBin: 1
+  shopManager: {fileID: 0}
+  binStandPoint: {fileID: 0}
+  rotationSpeed: 20
 --- !u!1 &766117679634874376
 GameObject:
   m_ObjectHideFlags: 0

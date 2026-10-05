@@ -21,8 +21,15 @@ public class DiggerHelper : MonoBehaviour
     public Inventory dropoffBin;
     public float dropRadius = 1.5f;
     public int maxEmptyDigs = 6;
-    private int emptyDigs = 0;
+    public float reach = 2.5f;
+    public float sweepArc = 120f;      // total sweep angle in degrees
+    public float sweepStep = 15f;      // degrees per dig
 
+    public float standBack = 3f;      // how far in front of the face the helper stands
+    private Vector3 workDirection;    // the direction the helper looks while working
+    private float sweepAngle = 0f;
+    private int sweepDir = 1;
+    private int emptyDigs = 0;
     private Vector3 mountainPoint;
     private Vector3 workSpot;
     private Inventory load;               // the helper's own backpack
@@ -30,6 +37,54 @@ public class DiggerHelper : MonoBehaviour
     private float highestReached = -1000f;
     private float lastDigTime = 0f;
     private bool returningToBin = false;
+    public float minMountainHeight = 2f;   // ground above this world height counts as mountain
+    public float ringStep = 2f;
+    public float maxSearchDistance = 80f;
+    public int samplesPerRing = 24;
+    private bool faceFound = false;
+    private float nextSearchTime = 0f;
+    public float rotationSpeed = 8f;
+    public float digRotationSpeed = 15f;
+    private static Dictionary<DiggerHelper, Vector3> claimedPoints = new Dictionary<DiggerHelper, Vector3>();
+    public float minDiggerSeparation = 5f;
+
+
+    bool FindNearestMountainPoint(out Vector3 point)
+    {
+        for (float r = ringStep; r <= maxSearchDistance; r += ringStep)
+        {
+            for (int i = 0; i < samplesPerRing; i++)
+            {
+                float angle = (i / (float)samplesPerRing) * Mathf.PI * 2f;
+                float x = transform.position.x + Mathf.Cos(angle) * r;
+                float z = transform.position.z + Mathf.Sin(angle) * r;
+                if (TryGetGroundHeight(x, z, out float y))
+                {
+                    if (y - heightOffset >= minMountainHeight)
+                    {
+                        Vector3 candidate = new Vector3(x, y, z);
+                        if (!IsClaimedByOther(candidate))
+                        {
+                            point = candidate;
+                            return true;
+                        }
+                    }
+                }
+            }
+        }
+        point = transform.position;
+        return false;
+    }
+
+    bool IsClaimedByOther(Vector3 point)
+    {
+        foreach (var kvp in claimedPoints)
+        {
+            if (kvp.Key == this) continue;
+            if (FlatDistance(kvp.Value, point) < minDiggerSeparation) return true;
+        }
+        return false;
+    }
 
     float FlatDistance(Vector3 a, Vector3 b)
     {
@@ -50,6 +105,24 @@ public class DiggerHelper : MonoBehaviour
     void Update()
     {
         if (target == null) return;
+
+        if (!faceFound && Time.time >= nextSearchTime)
+        {
+            nextSearchTime = Time.time + 1f;
+
+            if (FindNearestMountainPoint(out Vector3 p))
+            {
+                faceFound = true;
+                claimedPoints[this] = p;
+
+                Vector3 toFace = p - transform.position;
+                toFace.y = 0f;
+                toFace.Normalize();
+
+                workDirection = toFace;
+                target.position = p - toFace * standBack;
+            }
+        }
 
         if (TryGetGroundHeight(transform.position.x, transform.position.z, out float myGround))
         {
@@ -99,7 +172,6 @@ public class DiggerHelper : MonoBehaviour
                     target.position = best;
                 }
             }
-
         }
 
         Vector3 next = Vector3.MoveTowards(transform.position, goal, moveSpeed * Time.deltaTime);
@@ -107,6 +179,14 @@ public class DiggerHelper : MonoBehaviour
         if (TryGetGroundHeight(next.x, next.z, out float groundY))  
         {
             next.y = groundY;
+        }
+
+        Vector3 direction = next - transform.position;
+        direction.y = 0f;
+
+        if (direction.sqrMagnitude > 0.0001f)
+        {
+            transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(direction), Time.deltaTime * rotationSpeed);
         }
 
         transform.position = next;
@@ -166,7 +246,8 @@ public class DiggerHelper : MonoBehaviour
 
         if (Time.time - lastDigTime >= digCooldown)
         {
-            Vector3 digPoint = new Vector3(transform.position.x, transform.position.y - heightOffset - 0.5f, transform.position.z);
+            Vector3 digPoint = GetSweepPoint();
+
             int[] dug = mountainManager.DigAt(digPoint, digRadius, digStrength);
 
             int total = 0;
@@ -174,6 +255,17 @@ public class DiggerHelper : MonoBehaviour
             {
                 total += count;
             }
+
+            if (total > 0)
+            {
+                Vector3 lookDirection = digPoint - transform.position;
+                lookDirection.y = 0f;
+                if (lookDirection.sqrMagnitude > 0.0001f)
+                {
+                    transform.rotation = Quaternion.LookRotation(lookDirection);
+                }
+            }
+
             GameManager.Instance.trashRemaining -= total * GameManager.Instance.bagsPerVoxel;
 
             if (total == 0)
@@ -187,8 +279,9 @@ public class DiggerHelper : MonoBehaviour
 
             if (emptyDigs >= maxEmptyDigs)
             {
-                target.position = mountainPoint;
+                faceFound = false;
                 emptyDigs = 0;
+                claimedPoints.Remove(this);
             }
 
             Dictionary<ItemData, int> found = playerDigging.RollLoot(dug);
@@ -209,7 +302,38 @@ public class DiggerHelper : MonoBehaviour
 
         target = new GameObject("HelperMarker").transform;
         target.position = startPoint;
+    }
+    Vector3 GetSweepPoint()
+    {
+        Vector3 dir = Quaternion.AngleAxis(sweepAngle, Vector3.up) * transform.forward;
+        Vector3 flat = transform.position + dir * reach;
 
+        Vector3 point;
+        if (TryGetGroundHeight(flat.x, flat.z, out float y))
+        {
+            point = new Vector3(flat.x, y - heightOffset - 0.5f, flat.z);
+        }
+        else
+        {
+            point = new Vector3(transform.position.x, transform.position.y - heightOffset - 0.5f, transform.position.z);
+        }
 
+        sweepAngle += sweepDir * sweepStep;
+        if (sweepAngle > sweepArc / 2f)
+        {
+            sweepAngle = sweepArc / 2f;
+            sweepDir = -1;
+        }
+        else if (sweepAngle < -sweepArc / 2f)
+        {
+            sweepAngle = -sweepArc / 2f;
+            sweepDir = 1;
+        }
+
+        return point;
+    }
+    private void OnDestroy()
+    {
+        claimedPoints.Remove(this);
     }
 }
