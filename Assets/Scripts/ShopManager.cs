@@ -124,14 +124,14 @@ public class ShopManager : MonoBehaviour, IInteractable
         switch (upgrade.upgradeType)
         {
             case UpgradeData.UpgradeType.DigRadius:
-                  GameManager.Instance.digRadiusBonus += 0.2f;
-                  break;
+                GameManager.Instance.digRadiusBonus += 0.2f;
+                break;
             case UpgradeData.UpgradeType.DigSpeed:
-                  GameManager.Instance.digCooldownReduction += 0.05f;
-                  break;
+                GameManager.Instance.digCooldownReduction += 0.05f;
+                break;
             case UpgradeData.UpgradeType.DigReach:
-                  GameManager.Instance.digReachBonus += 0.5f;
-                  break;
+                GameManager.Instance.digReachBonus += 0.5f;
+                break;
             case UpgradeData.UpgradeType.BackpackSize:
                 playerInventory.IncreaseCapacity(10);
                 break;
