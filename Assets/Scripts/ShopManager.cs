@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.InputSystem;
 
 
 [System.Serializable]
@@ -13,13 +12,9 @@ public class ShopManager : MonoBehaviour, IInteractable
 {
     private Dictionary<UpgradeData, int> purchaseCounts = new Dictionary<UpgradeData, int>();
 
-    public PlayerDigging playerDigging;
     public Inventory playerInventory;
-    public PlayerInput playerInput;
-    public UpgradeData digRadiusUpgrade;
-    public UpgradeData digSpeedUpgrade;
-    public UpgradeData digReachUpgrade;
-    public UpgradeData backpackUpgrade;
+    public event System.Action OnShopOpened;
+    public event System.Action OnShopClosed;
     public GameObject shopPanel;
     public GameObject tooltipText;
     public ItemDatabase itemDatabase;
@@ -27,17 +22,6 @@ public class ShopManager : MonoBehaviour, IInteractable
     public GameObject[] pages;
     public List<UpgradeData> allUpgrades;
     public List<MachineSlot> machineSlots;
-
-    public UpgradeData mixerUpgrade;
-    public UpgradeData pressUpgrade;
-    public UpgradeData shredderUpgrade;
-    public UpgradeData smelterUpgrade;
-    public UpgradeData diggerHelperUpgrade;
-    public UpgradeData carrierHelperUpgrade;
-    public UpgradeData helperDigRadiusUpgrade;
-    public UpgradeData helperDigSpeedUpgrade;
-    public UpgradeData helperBackpackUpgrade;
-    public UpgradeData machineSpeedUpgrade;
 
     public DiggerHelper diggerHelperPrefab;
     public CarrierHelper carrierHelperPrefab;
@@ -65,72 +49,6 @@ public class ShopManager : MonoBehaviour, IInteractable
         ShowPage(3);
     }
     // end page navigation methods
-
-    // player upgrade purchase methods
-    public void BuyDigRadius()
-    {
-        TryPurchase(digRadiusUpgrade);
-    }
-    public void BuyDigSpeed()
-    {
-        TryPurchase(digSpeedUpgrade);
-    }
-    public void BuyDigReach()
-    {
-        TryPurchase(digReachUpgrade);
-    }
-    public void BuyBackpack()
-    {
-        TryPurchase(backpackUpgrade);
-    }
-    // end player upgrade purchase methods
-
-    // machine upgrade purchase methods
-    public void BuyMixer()
-    {
-        TryPurchase(mixerUpgrade);
-    }
-    public void BuyPress()
-    {
-        TryPurchase(pressUpgrade);
-    }
-    public void BuyShredder()
-    {
-        TryPurchase(shredderUpgrade);
-    }
-    public void BuySmelter()
-    {
-        TryPurchase(smelterUpgrade);
-    }
-    public void BuyMachineSpeed()
-    {
-        TryPurchase(machineSpeedUpgrade);
-    }
-    // end machine upgrade purchase methods
-
-    // helper upgrade purchase methods
-    public void BuyDiggerHelper()
-    {
-        TryPurchase(diggerHelperUpgrade);
-    }
-    public void BuyCarrierHelper()
-    {
-        TryPurchase(carrierHelperUpgrade);
-    }
-    public void BuyHelperDigRadius()
-    {
-        TryPurchase(helperDigRadiusUpgrade);
-    }
-    public void BuyHelperDigSpeed()
-    {
-        TryPurchase(helperDigSpeedUpgrade);
-    }
-    public void BuyHelperBackpack()
-    {
-        TryPurchase(helperBackpackUpgrade);
-    }
-    // end helper upgrade purchase methods
-
 
     public void SellWares()
     {
@@ -205,21 +123,21 @@ public class ShopManager : MonoBehaviour, IInteractable
     {
         switch (upgrade.upgradeType)
         {
-          case UpgradeData.UpgradeType.DigRadius:
-            playerDigging.digRadius += 0.2f;
-            break;
-          case UpgradeData.UpgradeType.DigSpeed:
-            playerDigging.digCooldown = Mathf.Max(0.05f, playerDigging.digCooldown - 0.05f);
-            break;
-          case UpgradeData.UpgradeType.DigReach:
-            playerDigging.digReach += 0.5f; 
-            break;
-          case UpgradeData.UpgradeType.BackpackSize:
-            playerInventory.IncreaseCapacity(10);
-            break;
+            case UpgradeData.UpgradeType.DigRadius:
+                  GameManager.Instance.digRadiusBonus += 0.2f;
+                  break;
+            case UpgradeData.UpgradeType.DigSpeed:
+                  GameManager.Instance.digCooldownReduction += 0.05f;
+                  break;
+            case UpgradeData.UpgradeType.DigReach:
+                  GameManager.Instance.digReachBonus += 0.5f;
+                  break;
+            case UpgradeData.UpgradeType.BackpackSize:
+                playerInventory.IncreaseCapacity(10);
+                break;
           case UpgradeData.UpgradeType.MachineSpeed:
-            GameManager.Instance.machineSpeedMultiplier += 0.1f;
-            break;
+                GameManager.Instance.machineSpeedMultiplier += 0.1f;
+                break;
           case UpgradeData.UpgradeType.Machine:
             foreach (var slot in machineSlots)
             {
@@ -231,22 +149,24 @@ public class ShopManager : MonoBehaviour, IInteractable
             }
             break;
           case UpgradeData.UpgradeType.DiggerHelper:
-            DiggerHelper newHelper = Instantiate(diggerHelperPrefab, helperSpawnPoint.position, Quaternion.identity);
-            newHelper.Setup(mountainManager, playerDigging, dropoffBin, helperStartPoint.position);
-            break;
+                DiggerHelper newHelper = Instantiate(diggerHelperPrefab, helperSpawnPoint.position, Quaternion.identity);
+                newHelper.Setup(mountainManager, dropoffBin, helperStartPoint.position);
+                dropoffBin.gameObject.SetActive(true);
+                break;
             case UpgradeData.UpgradeType.CarrierHelper:
                 CarrierHelper newCarrier = Instantiate(carrierHelperPrefab, helperSpawnPoint.position, Quaternion.identity);
                 newCarrier.Setup(dropoffBin, binStandPoint, itemRoutes, this);
+                dropoffBin.gameObject.SetActive(true);
                 break;
-            case  UpgradeData.UpgradeType.HelperDigRadius:
-            // Implement logic for Helper Dig Radius upgrade
-            break;
-          case  UpgradeData.UpgradeType.HelperDigSpeed:
-            // Implement logic for Helper Dig Speed upgrade
-            break;
-          case UpgradeData.UpgradeType.HelperBackpack:
-            // Implement logic for Helper Dig Backpack upgrade
-            break;
+            case UpgradeData.UpgradeType.HelperDigRadius:
+                GameManager.Instance.helperDigRadiusBonus += 0.2f;
+                break;
+            case UpgradeData.UpgradeType.HelperDigSpeed:
+                GameManager.Instance.helperCooldownReduction += 0.1f;
+                break;
+            case UpgradeData.UpgradeType.HelperBackpack:
+                GameManager.Instance.helperBackpackBonus += 5;
+                break;
         }
     }
     public string GetDisplayName()
@@ -260,31 +180,17 @@ public class ShopManager : MonoBehaviour, IInteractable
 
     public void OpenShop()
     {
-        playerInput.SwitchCurrentActionMap("UI");
-
         shopPanel.SetActive(true);
-        Cursor.lockState = CursorLockMode.None;
-        Cursor.visible = true;
         ShowPage(0);
+        OnShopOpened?.Invoke();
     }
 
     public void CloseShop()
     {
-        playerInput.SwitchCurrentActionMap("Player");
-
         ShowPage(-1);
-        Cursor.lockState = CursorLockMode.Locked;
-        Cursor.visible = false;
-
         tooltipText.gameObject.SetActive(false);
-
         SaveGame();
-    }
-
-    public void OnCloseShop(InputAction.CallbackContext context)
-    {
-        if (!context.performed) return;
-        CloseShop();
+        OnShopClosed?.Invoke();
     }
 
     public SaveData BuildSaveData()

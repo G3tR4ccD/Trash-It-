@@ -11,11 +11,16 @@ public class PlayerDigging : MonoBehaviour
     public Inventory inventory;
     public MountainManager mountainManager;
     public float digStrength = 200f;
-    public LootTable[] lootTables;
+    public LootRoller lootRoller;
 
+    float EffectiveRadius => digRadius + GameManager.Instance.digRadiusBonus;
+    float EffectiveCooldown => Mathf.Max(0.05f, digCooldown - GameManager.Instance.digCooldownReduction);
+    float EffectiveReach => digReach + GameManager.Instance.digReachBonus;
 
     private bool isDigging = false;
     private float lastDigTime = 0f;
+    private Animator animator;
+    private bool nextPawRight = true;
 
     [SerializeField] private TrashPickup trashPickupPrefab;
 
@@ -40,16 +45,21 @@ public class PlayerDigging : MonoBehaviour
             return;
         }
 
-        if (isDigging && Time.time - lastDigTime >= digCooldown)
+        if (isDigging && Time.time - lastDigTime >= EffectiveCooldown)
         {
             Ray ray = playerCamera.ScreenPointToRay(new Vector3(Screen.width / 2, Screen.height / 2));
-            if (Physics.Raycast(ray, out RaycastHit hit, digReach))
+            if (Physics.Raycast(ray, out RaycastHit hit, EffectiveReach))
             {
                 Vector3 worldHitPoint = hit.point - hit.normal * 0.5f;
                 Vector3 dropPosition = hit.point + hit.normal * 0.5f;
 
-                int[] dug = mountainManager.DigAt(worldHitPoint, digRadius, digStrength);
+                int[] dug = mountainManager.DigAt(worldHitPoint, EffectiveRadius, digStrength);
                 lastDigTime = Time.time;
+                if (animator != null)
+                {
+                    animator.SetTrigger(nextPawRight ? "DigRight" : "DigLeft");
+                    nextPawRight = !nextPawRight;
+                }
 
                 int total = 0;
                 foreach (int count in dug)
@@ -62,10 +72,6 @@ public class PlayerDigging : MonoBehaviour
                         GameManager.Instance.trashRemaining -= total * GameManager.Instance.bagsPerVoxel;
                         GiveLoot(dug, dropPosition);
                     }
-                else
-                {
-                    Debug.Log("Nothing dug.");
-                }
             }
         }
     }
@@ -73,33 +79,12 @@ public class PlayerDigging : MonoBehaviour
     public void Awake()
     {
         inventory = GetComponent<Inventory>();
-    }
-
-    public Dictionary<ItemData, int> RollLoot(int[] dugPerLayer)
-    {
-        Dictionary<ItemData, int> found = new Dictionary<ItemData, int>();
-
-        for (int layer = 0; layer < dugPerLayer.Length; layer++)
-        {
-            for (int n = 0; n < dugPerLayer[layer]; n++)
-            {
-                ItemData item = lootTables[layer].Roll();
-                if (item != null)
-                {
-                    if (!found.ContainsKey(item))
-                    {
-                        found[item] = 0;
-                    }
-                    found[item]++;
-                }
-            }
-        }
-        return found;
+        animator = GetComponent<Animator>();
     }
 
     private void GiveLoot(int[] dugPerLayer, Vector3 dropPosition)
     {
-        Dictionary<ItemData, int> found = RollLoot(dugPerLayer);
+        Dictionary<ItemData, int> found = lootRoller.RollLoot(dugPerLayer);
         foreach (KeyValuePair<ItemData, int> entry in found)
         {
             int amount = entry.Value;

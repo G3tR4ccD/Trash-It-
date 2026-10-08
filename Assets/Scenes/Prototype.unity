@@ -297,11 +297,11 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 226934975}
         m_TargetAssemblyTypeName: ShopManager, Assembly-CSharp
-        m_MethodName: BuyBackpack
-        m_Mode: 1
+        m_MethodName: Buy
+        m_Mode: 2
         m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_ObjectArgument: {fileID: 11400000, guid: 167c74e9d94ee7741910d11306565eef, type: 2}
+          m_ObjectArgumentAssemblyTypeName: UpgradeData, Assembly-CSharp
           m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: 
@@ -706,11 +706,11 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 226934975}
         m_TargetAssemblyTypeName: ShopManager, Assembly-CSharp
-        m_MethodName: BuyMixer
-        m_Mode: 1
+        m_MethodName: Buy
+        m_Mode: 2
         m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_ObjectArgument: {fileID: 11400000, guid: cc40422b31198bf43923509db1e4a9b6, type: 2}
+          m_ObjectArgumentAssemblyTypeName: UpgradeData, Assembly-CSharp
           m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: 
@@ -1242,13 +1242,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a3a33cdb4e7c24641a4cb1d3f8656768, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ShopManager
-  playerDigging: {fileID: 5762035261519009671}
   playerInventory: {fileID: 5762035261519009670}
-  playerInput: {fileID: 5762035261519009667}
-  digRadiusUpgrade: {fileID: 11400000, guid: a6c93bec6c297434b8caa7bb9d8e4947, type: 2}
-  digSpeedUpgrade: {fileID: 11400000, guid: e05dd82f122eeae4eacf6a0aea953467, type: 2}
-  digReachUpgrade: {fileID: 11400000, guid: cdf15980ddde3d54d809456f2233dd22, type: 2}
-  backpackUpgrade: {fileID: 11400000, guid: 167c74e9d94ee7741910d11306565eef, type: 2}
   shopPanel: {fileID: 530893817}
   tooltipText: {fileID: 1290110509}
   itemDatabase: {fileID: 11400000, guid: 1c0987dfa406b5f4594ee4f851382502, type: 2}
@@ -1282,16 +1276,6 @@ MonoBehaviour:
     machine: {fileID: 725906381}
   - upgrade: {fileID: 11400000, guid: d1b0aba3cdd57e14394412e53d8d48f7, type: 2}
     machine: {fileID: 1286618607}
-  mixerUpgrade: {fileID: 11400000, guid: cc40422b31198bf43923509db1e4a9b6, type: 2}
-  pressUpgrade: {fileID: 11400000, guid: fc5705d8ce5d0324296e09ed3da09278, type: 2}
-  shredderUpgrade: {fileID: 11400000, guid: 75212b52286121c4fb1f89e5412e9267, type: 2}
-  smelterUpgrade: {fileID: 11400000, guid: d1b0aba3cdd57e14394412e53d8d48f7, type: 2}
-  diggerHelperUpgrade: {fileID: 11400000, guid: 744883c9ec367fa4197547ae9cdc6cde, type: 2}
-  carrierHelperUpgrade: {fileID: 11400000, guid: 9a341c7584121234e9528230594a19fa, type: 2}
-  helperDigRadiusUpgrade: {fileID: 11400000, guid: 993c933952362fe4ebdab2328c8601cd, type: 2}
-  helperDigSpeedUpgrade: {fileID: 11400000, guid: 50db7242ac26d7640a9f6312412a01fb, type: 2}
-  helperBackpackUpgrade: {fileID: 11400000, guid: 7a3f0866ebbeaf34eae103d519bf029d, type: 2}
-  machineSpeedUpgrade: {fileID: 11400000, guid: 689414714a989b74aacc1b51f13f54a6, type: 2}
   diggerHelperPrefab: {fileID: 2212148110730144868, guid: e5bfff9f67782ea4a8db2fe9e7b996ed, type: 3}
   carrierHelperPrefab: {fileID: 742702083073576575, guid: 61f376e306d54de4a8fa8fedc06d34d9, type: 3}
   helperSpawnPoint: {fileID: 1554609501}
@@ -1634,11 +1618,11 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 226934975}
         m_TargetAssemblyTypeName: ShopManager, Assembly-CSharp
-        m_MethodName: BuyDigRadius
-        m_Mode: 1
+        m_MethodName: Buy
+        m_Mode: 2
         m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_ObjectArgument: {fileID: 11400000, guid: a6c93bec6c297434b8caa7bb9d8e4947, type: 2}
+          m_ObjectArgumentAssemblyTypeName: UpgradeData, Assembly-CSharp
           m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: 
@@ -2486,11 +2470,11 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 226934975}
         m_TargetAssemblyTypeName: ShopManager, Assembly-CSharp
-        m_MethodName: BuyShredder
-        m_Mode: 1
+        m_MethodName: Buy
+        m_Mode: 2
         m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_ObjectArgument: {fileID: 11400000, guid: 75212b52286121c4fb1f89e5412e9267, type: 2}
+          m_ObjectArgumentAssemblyTypeName: UpgradeData, Assembly-CSharp
           m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: 
@@ -3036,13 +3020,13 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 1031615717}
+  m_Father: {fileID: 1987375296}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 203.7}
+  m_AnchorMin: {x: 0.5, y: 1}
+  m_AnchorMax: {x: 0.5, y: 1}
+  m_AnchoredPosition: {x: 0, y: 265}
   m_SizeDelta: {x: 250, y: 50}
-  m_Pivot: {x: 0.5, y: 0.5}
+  m_Pivot: {x: 0.5, y: 1}
 --- !u!114 &484856682
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3427,6 +3411,12 @@ MonoBehaviour:
   trashRemaining: 1000000000
   bagsPerVoxel: 1
   machineSpeedMultiplier: 1
+  helperDigRadiusBonus: 0
+  helperCooldownReduction: 0
+  helperBackpackBonus: 0
+  digRadiusBonus: 0
+  digCooldownReduction: 0
+  digReachBonus: 0
 --- !u!4 &581269038
 Transform:
   m_ObjectHideFlags: 0
@@ -4367,11 +4357,11 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 226934975}
         m_TargetAssemblyTypeName: ShopManager, Assembly-CSharp
-        m_MethodName: BuyHelperBackpack
-        m_Mode: 1
+        m_MethodName: Buy
+        m_Mode: 2
         m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_ObjectArgument: {fileID: 11400000, guid: 7a3f0866ebbeaf34eae103d519bf029d, type: 2}
+          m_ObjectArgumentAssemblyTypeName: UpgradeData, Assembly-CSharp
           m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: 
@@ -5832,7 +5822,6 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1987375296}
-  - {fileID: 484856681}
   - {fileID: 530893818}
   - {fileID: 1806422037}
   - {fileID: 2059244397}
@@ -6705,11 +6694,11 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 226934975}
         m_TargetAssemblyTypeName: ShopManager, Assembly-CSharp
-        m_MethodName: BuySmelter
-        m_Mode: 1
+        m_MethodName: Buy
+        m_Mode: 2
         m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_ObjectArgument: {fileID: 11400000, guid: d1b0aba3cdd57e14394412e53d8d48f7, type: 2}
+          m_ObjectArgumentAssemblyTypeName: UpgradeData, Assembly-CSharp
           m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: 
@@ -7130,11 +7119,11 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 226934975}
         m_TargetAssemblyTypeName: ShopManager, Assembly-CSharp
-        m_MethodName: BuyMachineSpeed
-        m_Mode: 1
+        m_MethodName: Buy
+        m_Mode: 2
         m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_ObjectArgument: {fileID: 11400000, guid: 689414714a989b74aacc1b51f13f54a6, type: 2}
+          m_ObjectArgumentAssemblyTypeName: UpgradeData, Assembly-CSharp
           m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: 
@@ -7676,11 +7665,11 @@ RectTransform:
   - {fileID: 1040686071}
   m_Father: {fileID: 1987375296}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 300, y: -200}
-  m_SizeDelta: {x: 100, y: 100}
-  m_Pivot: {x: 0.5, y: 0.5}
+  m_AnchorMin: {x: 1, y: 0}
+  m_AnchorMax: {x: 1, y: 0}
+  m_AnchoredPosition: {x: 409, y: -262}
+  m_SizeDelta: {x: 100, y: 101}
+  m_Pivot: {x: 1, y: 0}
 --- !u!114 &1337328053
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -7959,11 +7948,11 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 226934975}
         m_TargetAssemblyTypeName: ShopManager, Assembly-CSharp
-        m_MethodName: BuyHelperDigRadius
-        m_Mode: 1
+        m_MethodName: Buy
+        m_Mode: 2
         m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_ObjectArgument: {fileID: 11400000, guid: 993c933952362fe4ebdab2328c8601cd, type: 2}
+          m_ObjectArgumentAssemblyTypeName: UpgradeData, Assembly-CSharp
           m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: 
@@ -8603,11 +8592,11 @@ RectTransform:
   - {fileID: 1186359041}
   m_Father: {fileID: 1987375296}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -380, y: -200}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
+  m_AnchoredPosition: {x: -407, y: -262}
   m_SizeDelta: {x: 100, y: 100}
-  m_Pivot: {x: 0.5, y: 0.5}
+  m_Pivot: {x: 0, y: 0}
 --- !u!114 &1489150356
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -8757,8 +8746,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 103.4}
-  m_SizeDelta: {x: 100, y: 100}
+  m_AnchoredPosition: {x: 0, y: 102.89998}
+  m_SizeDelta: {x: 100, y: 101}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1528195281
 MonoBehaviour:
@@ -9670,8 +9659,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1618009150}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.00000008940697, y: 0.00000010430813, z: -0.000000029802322, w: 1}
-  m_LocalPosition: {x: 0, y: 0.35799998, z: 0.44599998}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0.3, z: 0.487}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -10280,11 +10269,11 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 226934975}
         m_TargetAssemblyTypeName: ShopManager, Assembly-CSharp
-        m_MethodName: BuyDiggerHelper
-        m_Mode: 1
+        m_MethodName: Buy
+        m_Mode: 2
         m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_ObjectArgument: {fileID: 11400000, guid: 744883c9ec367fa4197547ae9cdc6cde, type: 2}
+          m_ObjectArgumentAssemblyTypeName: UpgradeData, Assembly-CSharp
           m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: 
@@ -10564,11 +10553,11 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 226934975}
         m_TargetAssemblyTypeName: ShopManager, Assembly-CSharp
-        m_MethodName: BuyHelperDigSpeed
-        m_Mode: 1
+        m_MethodName: Buy
+        m_Mode: 2
         m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_ObjectArgument: {fileID: 11400000, guid: 50db7242ac26d7640a9f6312412a01fb, type: 2}
+          m_ObjectArgumentAssemblyTypeName: UpgradeData, Assembly-CSharp
           m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: 
@@ -10873,7 +10862,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 5.0392, y: 0.52230453}
+  m_AnchoredPosition: {x: 5.0392, y: 0.52230835}
   m_SizeDelta: {x: 126.4055, y: 92.5673}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1808148405
@@ -11524,11 +11513,11 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 226934975}
         m_TargetAssemblyTypeName: ShopManager, Assembly-CSharp
-        m_MethodName: BuyCarrierHelper
-        m_Mode: 1
+        m_MethodName: Buy
+        m_Mode: 2
         m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_ObjectArgument: {fileID: 11400000, guid: 9a341c7584121234e9528230594a19fa, type: 2}
+          m_ObjectArgumentAssemblyTypeName: UpgradeData, Assembly-CSharp
           m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: 
@@ -11681,12 +11670,13 @@ RectTransform:
   - {fileID: 877365712}
   - {fileID: 1337328052}
   - {fileID: 1489150355}
+  - {fileID: 484856681}
   m_Father: {fileID: 1031615717}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 100, y: 100}
+  m_SizeDelta: {x: -824, y: -536}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &1994193780
 GameObject:
@@ -12078,11 +12068,11 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 226934975}
         m_TargetAssemblyTypeName: ShopManager, Assembly-CSharp
-        m_MethodName: BuyDigReach
-        m_Mode: 1
+        m_MethodName: Buy
+        m_Mode: 2
         m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_ObjectArgument: {fileID: 11400000, guid: cdf15980ddde3d54d809456f2233dd22, type: 2}
+          m_ObjectArgumentAssemblyTypeName: UpgradeData, Assembly-CSharp
           m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: 
@@ -12229,11 +12219,11 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 226934975}
         m_TargetAssemblyTypeName: ShopManager, Assembly-CSharp
-        m_MethodName: BuyPress
-        m_Mode: 1
+        m_MethodName: Buy
+        m_Mode: 2
         m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_ObjectArgument: {fileID: 11400000, guid: fc5705d8ce5d0324296e09ed3da09278, type: 2}
+          m_ObjectArgumentAssemblyTypeName: UpgradeData, Assembly-CSharp
           m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: 
@@ -13970,11 +13960,13 @@ GameObject:
   m_Component:
   - component: {fileID: 5762035261519009665}
   - component: {fileID: 5762035261519009668}
+  - component: {fileID: 5762035261519009673}
   - component: {fileID: 5762035261519009667}
   - component: {fileID: 5762035261519009666}
   - component: {fileID: 5762035261519009669}
   - component: {fileID: 5762035261519009670}
   - component: {fileID: 5762035261519009671}
+  - component: {fileID: 5762035261519009672}
   m_Layer: 20
   m_Name: Player
   m_TagString: Untagged
@@ -15011,10 +15003,10 @@ MonoBehaviour:
     m_ActionName: 'Player/Inventory[/Keyboard/f,/Keyboard/n]'
   - m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 226934975}
-        m_TargetAssemblyTypeName: ShopManager, Assembly-CSharp
-        m_MethodName: CloseShop
-        m_Mode: 1
+      - m_Target: {fileID: 5762035261519009672}
+        m_TargetAssemblyTypeName: ShopInputSwitcher, Assembly-CSharp
+        m_MethodName: OnCloseShop
+        m_Mode: 0
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
@@ -15098,18 +15090,48 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::PlayerDigging
   playerCamera: {fileID: 1618009151}
   digReach: 5
-  digCooldown: 0.5
-  digRadius: 1.5
+  digCooldown: 0.75
+  digRadius: 1
   inventory: {fileID: 5762035261519009670}
   mountainManager: {fileID: 1800094600}
   digStrength: 200
-  lootTables:
-  - {fileID: 11400000, guid: 2a27634adfb7b064ca69fd7f5db98b49, type: 2}
-  - {fileID: 11400000, guid: 86f26b333073580488a07dad497a9132, type: 2}
-  - {fileID: 11400000, guid: 997ac8001fb3830478626c7ac66a989a, type: 2}
-  - {fileID: 11400000, guid: 0cfcf3c2b579f2044a18ced4056b02a2, type: 2}
-  - {fileID: 11400000, guid: 7a02dd95649dd1342becae6be2419082, type: 2}
+  lootRoller: {fileID: 11400000, guid: 4c5c3350125892a47bd2fe5fa183e120, type: 2}
   trashPickupPrefab: {fileID: 2708782478669684882, guid: bbe32faefccb6be40b470c3a196ed663, type: 3}
+--- !u!114 &5762035261519009672
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5756702288810265147}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ebe7db822e94d5d4a967a9b4604e62e0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ShopInputSwitcher
+  shop: {fileID: 226934975}
+--- !u!95 &5762035261519009673
+Animator:
+  serializedVersion: 7
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5756702288810265147}
+  m_Enabled: 1
+  m_Avatar: {fileID: 9000000, guid: 42b16888dccfed94fb39302aa553204d, type: 3}
+  m_Controller: {fileID: 9100000, guid: 3bdc904f6587e6640ba577ddc6172fdf, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_AnimatePhysics: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!4 &5762040838836845993
 Transform:
   m_ObjectHideFlags: 0
@@ -15315,6 +15337,7 @@ GameObject:
   - component: {fileID: 7787918006520514068}
   - component: {fileID: 6610129488351660465}
   - component: {fileID: 8961902633452961147}
+  - component: {fileID: 8961902633452961149}
   - component: {fileID: 8961902633452961148}
   m_Layer: 0
   m_Name: Barrel
@@ -15322,7 +15345,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &7787918006520514068
 Transform:
   m_ObjectHideFlags: 0
@@ -15401,6 +15424,28 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Inventory
   maxCapacity: 100
+--- !u!64 &8961902633452961149
+MeshCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7448934571010579630}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 5
+  m_Convex: 0
+  m_CookingOptions: 30
+  m_Mesh: {fileID: 2534964839176971238, guid: b876dca377614a24dbeef8a2c8721674, type: 3}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0

@@ -107,6 +107,7 @@ GameObject:
   - component: {fileID: 6791357468787576938}
   - component: {fileID: 5131844223388083108}
   - component: {fileID: 742702083073576575}
+  - component: {fileID: 4685498284976833711}
   m_Layer: 20
   m_Name: Carrier_Helper
   m_TagString: Untagged
@@ -195,6 +196,28 @@ MonoBehaviour:
   shopManager: {fileID: 0}
   binStandPoint: {fileID: 0}
   rotationSpeed: 20
+--- !u!95 &4685498284976833711
+Animator:
+  serializedVersion: 7
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 607507143999249415}
+  m_Enabled: 1
+  m_Avatar: {fileID: 9000000, guid: 42b16888dccfed94fb39302aa553204d, type: 3}
+  m_Controller: {fileID: 9100000, guid: 3bdc904f6587e6640ba577ddc6172fdf, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_AnimatePhysics: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!1 &766117679634874376
 GameObject:
   m_ObjectHideFlags: 0

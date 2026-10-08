@@ -1,5 +1,8 @@
 using System.Collections.Generic;
+using UnityEditor.Experimental.GraphView;
 using UnityEngine;
+using UnityEngine.InputSystem.XR;
+using UnityEngine.Rendering;
 
 public class DiggerHelper : MonoBehaviour
 {
@@ -17,7 +20,7 @@ public class DiggerHelper : MonoBehaviour
     public float digCooldown = 1f;
     public float minClimb = 0.5f; // minimum height difference to consider climbing
     public int maxStuckHops = 3;        // hops with no progress before it digs where it stands
-    public PlayerDigging playerDigging;   // drag the player in via the Inspector, for the loot tables
+    public LootRoller lootRoller;
     public Inventory dropoffBin;
     public float dropRadius = 1.5f;
     public int maxEmptyDigs = 6;
@@ -47,7 +50,11 @@ public class DiggerHelper : MonoBehaviour
     public float digRotationSpeed = 15f;
     private static Dictionary<DiggerHelper, Vector3> claimedPoints = new Dictionary<DiggerHelper, Vector3>();
     public float minDiggerSeparation = 5f;
-
+    float EffectiveRadius => digRadius + GameManager.Instance.helperDigRadiusBonus;
+    float EffectiveCooldown => Mathf.Max(0.1f, digCooldown - GameManager.Instance.helperCooldownReduction);
+    private int baseCapacity;
+    private Animator animator;
+    private bool nextPawRight = true;
 
     bool FindNearestMountainPoint(out Vector3 point)
     {
@@ -96,11 +103,15 @@ public class DiggerHelper : MonoBehaviour
     private void Awake()
     {
         load = GetComponent<Inventory>();
+        baseCapacity = load.maxCapacity;
+        animator = GetComponent<Animator>();
 
     }
     void Update()
     {
         if (target == null) return;
+
+        load.maxCapacity = baseCapacity + GameManager.Instance.helperBackpackBonus;
 
         if (!faceFound && Time.time >= nextSearchTime)
         {
@@ -140,7 +151,7 @@ public class DiggerHelper : MonoBehaviour
             if (Vector3.Distance(best, transform.position) < arriveDistance)
             {
                 // on a peak
-                if (Time.time - lastDigTime >= digCooldown) DigHere();
+                if (Time.time - lastDigTime >= EffectiveCooldown) DigHere();
             }
             else
             {
@@ -156,7 +167,7 @@ public class DiggerHelper : MonoBehaviour
 
                 if (stuckHops >= maxStuckHops)
                 {
-                    if (Time.time - lastDigTime >= digCooldown)
+                    if (Time.time - lastDigTime >= EffectiveCooldown)
                     {
                         DigHere();
                         stuckHops = 0;
@@ -179,6 +190,12 @@ public class DiggerHelper : MonoBehaviour
 
         Vector3 direction = next - transform.position;
         direction.y = 0f;
+
+        if (animator != null)
+        {
+            float speed = Time.deltaTime > 0f ? direction.magnitude / Time.deltaTime : 0f;
+            animator.SetFloat("Speed", speed, 0.1f, Time.deltaTime);
+        }
 
         if (direction.sqrMagnitude > 0.0001f)
         {
@@ -240,11 +257,16 @@ public class DiggerHelper : MonoBehaviour
             return;
         }
 
-        if (Time.time - lastDigTime >= digCooldown)
+        if (Time.time - lastDigTime >= EffectiveCooldown)
         {
+            if (animator != null)
+            {
+                animator.SetTrigger(nextPawRight ? "DigRight" : "DigLeft");
+                nextPawRight = !nextPawRight;
+            }
             Vector3 digPoint = GetSweepPoint();
 
-            int[] dug = mountainManager.DigAt(digPoint, digRadius, digStrength);
+            int[] dug = mountainManager.DigAt(digPoint, EffectiveRadius, digStrength);
 
             int total = 0;
             foreach (int count in dug)
@@ -280,7 +302,7 @@ public class DiggerHelper : MonoBehaviour
                 claimedPoints.Remove(this);
             }
 
-            Dictionary<ItemData, int> found = playerDigging.RollLoot(dug);
+            Dictionary<ItemData, int> found = lootRoller.RollLoot(dug);
             foreach (var entry in found)
             {
                 load.InsertItem(entry.Key, entry.Value);
@@ -289,10 +311,9 @@ public class DiggerHelper : MonoBehaviour
         }
     }
 
-    public void Setup(MountainManager mountain, PlayerDigging digging, Inventory bin, Vector3 startPoint)
+    public void Setup(MountainManager mountain, Inventory bin, Vector3 startPoint)
     {
         mountainManager = mountain;
-        playerDigging = digging;
         dropoffBin = bin;
         mountainPoint = startPoint;
 

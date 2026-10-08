@@ -22,12 +22,13 @@ public class Movement : MonoBehaviour
     private Vector2 lookInput;
     private float verticalVelocity;
     private float xRotation = 0f;
-
+    private Animator  animator;
 
 
     private void Awake()
     {
         controller = GetComponent<CharacterController>();
+        animator = GetComponent<Animator>();
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
     }
@@ -36,6 +37,13 @@ public class Movement : MonoBehaviour
     {
         Move();
         Look();
+
+        if (animator != null)
+        {
+            Vector3 flat = controller.velocity;
+            flat.y = 0f;
+            animator.SetFloat("Speed", flat.magnitude, 0.1f, Time.deltaTime);
+        }
     }
 
     public void OnMove(InputAction.CallbackContext context)

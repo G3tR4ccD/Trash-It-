@@ -1509,6 +1509,7 @@ GameObject:
   - component: {fileID: 536821333644274959}
   - component: {fileID: 2212148110730144868}
   - component: {fileID: 7211210181027302251}
+  - component: {fileID: -251220503494636912}
   m_Layer: 20
   m_Name: Digger_Helper
   m_TagString: Untagged
@@ -1558,10 +1559,10 @@ MonoBehaviour:
   mountainManager: {fileID: 0}
   digRadius: 1
   digStrength: 200
-  digCooldown: 1
+  digCooldown: 2
   minClimb: 1
   maxStuckHops: 3
-  playerDigging: {fileID: 0}
+  lootRoller: {fileID: 11400000, guid: 4c5c3350125892a47bd2fe5fa183e120, type: 2}
   dropoffBin: {fileID: 0}
   dropRadius: 1.5
   maxEmptyDigs: 6
@@ -1575,6 +1576,7 @@ MonoBehaviour:
   samplesPerRing: 24
   rotationSpeed: 8
   digRotationSpeed: 20
+  minDiggerSeparation: 5
 --- !u!114 &7211210181027302251
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1588,6 +1590,28 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Inventory
   maxCapacity: 30
+--- !u!95 &-251220503494636912
+Animator:
+  serializedVersion: 7
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7744722846478507929}
+  m_Enabled: 1
+  m_Avatar: {fileID: 9000000, guid: 42b16888dccfed94fb39302aa553204d, type: 3}
+  m_Controller: {fileID: 9100000, guid: 3bdc904f6587e6640ba577ddc6172fdf, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_AnimatePhysics: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!1 &7764881428437686555
 GameObject:
   m_ObjectHideFlags: 0

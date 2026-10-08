@@ -34,15 +34,23 @@ public class CarrierHelper : MonoBehaviour
     private CarrierState state = CarrierState.GoingToBin;
     private float lastBinCheckTime = -999f;
     public float rotationSpeed = 8f;
+    private int baseCapacity; // Base capacity of the carrier's inventory
+    private Animator animator;
+
+
 
     private void Awake()
     {
         load = GetComponent<Inventory>();
+        baseCapacity = load.maxCapacity; // Store the base capacity
+        animator = GetComponent<Animator>();
     }
 
     void Update()
     {
         if (target == null) return;
+
+        load.maxCapacity = baseCapacity + GameManager.Instance.helperBackpackBonus; // Update capacity based on GameManager
 
         if (TryGetGroundHeight(transform.position.x, transform.position.z, out float myGround))
         {
@@ -64,6 +72,12 @@ public class CarrierHelper : MonoBehaviour
 
         Vector3 direction = next - transform.position;
         direction.y = 0f;
+
+        if (animator != null)
+        {
+            float speed = Time.deltaTime > 0f ? direction.magnitude / Time.deltaTime : 0f;
+            animator.SetFloat("Speed", speed, 0.1f, Time.deltaTime);
+        }
 
         if (direction.sqrMagnitude > 0.0001f)
         {

@@ -17,4 +17,4 @@ MonoBehaviour:
   multiplier: 2
   upgradeType: 7
   upgradeID: carrier_upgrade
-  maxLevel: 5
+  maxLevel: 2
