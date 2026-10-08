@@ -104,6 +104,7 @@ public class DiggerHelper : MonoBehaviour
         animator = GetComponent<Animator>();
 
     }
+
     void Update()
     {
         if (target == null) return;
@@ -317,6 +318,7 @@ public class DiggerHelper : MonoBehaviour
         target = new GameObject("HelperMarker").transform;
         target.position = startPoint;
     }
+
     Vector3 GetSweepPoint()
     {
         Vector3 dir = Quaternion.AngleAxis(sweepAngle, Vector3.up) * transform.forward;
@@ -346,6 +348,7 @@ public class DiggerHelper : MonoBehaviour
 
         return point;
     }
+
     private void OnDestroy()
     {
         claimedPoints.Remove(this);

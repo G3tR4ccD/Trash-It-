@@ -147,10 +147,10 @@ MonoBehaviour:
   - 20
   layerhardness:
   - 1
+  - 1
   - 2
   - 3
-  - 4
-  - 7
-  maxNeighborsToRemove: 2
+  - 5
+  maxNeighborsToRemove: 3
   maxIslandSize: 40
-  islandSearchPadding: 4
+  islandSearchPadding: 5

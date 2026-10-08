@@ -169,6 +169,7 @@ public class ShopManager : MonoBehaviour, IInteractable
                 break;
         }
     }
+
     public string GetDisplayName()
     {
         return "Shop";
