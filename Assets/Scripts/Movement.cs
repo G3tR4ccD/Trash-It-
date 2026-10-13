@@ -4,27 +4,42 @@ using UnityEngine.InputSystem;
 [RequireComponent(typeof(CharacterController))]
 public class Movement : MonoBehaviour
 {
+    // start Serialized fields
+    [Header("Movement")]
     public float moveSpeed = 5f;
     public float sprintSpeed = 8f;
     public float jumpHeight = 1.5f;
     public float gravity = -9.81f;
 
-    private CharacterController controller;
-    public Transform groundCheck;
-    public Camera camera;
+    [Header("Look")]
     public float mouseSensitivity = 0.1f;
+    public Camera camera;
+    public float Pitch 
+    { 
+        get => xRotation; 
+        set => xRotation = value; 
+    }
+    public float Yaw
+    {
+        get => transform.eulerAngles.y;
+        set => transform.eulerAngles = new Vector3(0f, value, 0f);
+    }
 
+    [Header("Ground Check")]
+    public Transform groundCheck;
+    // end Serialized fields
 
-    bool isSprinting = false;
-
-
+    // start Runtime state
+    private CharacterController controller;
+    private Animator animator;
     private Vector2 moveInput;
     private Vector2 lookInput;
     private float verticalVelocity;
     private float xRotation = 0f;
-    private Animator  animator;
+    bool isSprinting = false;
+    // end Runtime state
 
-
+    // start Awake
     private void Awake()
     {
         controller = GetComponent<CharacterController>();
@@ -32,7 +47,9 @@ public class Movement : MonoBehaviour
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
     }
+    // end Awake
 
+    // start Update
     private void Update()
     {
         Move();
@@ -45,25 +62,33 @@ public class Movement : MonoBehaviour
             animator.SetFloat("Speed", flat.magnitude, 0.1f, Time.deltaTime);
         }
     }
+    // end Update
 
+    // start OnMove
     public void OnMove(InputAction.CallbackContext context)
     {
         moveInput = context.ReadValue<Vector2>();
     }
+    // end OnMove
 
+    // start OnLook
     public void OnLook(InputAction.CallbackContext context)
     {
         lookInput = context.ReadValue<Vector2>();
     }
+    // end OnLook
 
+    // start OnJump
     public void OnJump(InputAction.CallbackContext context)
     {
         if (!context.performed) return;
-        if (!controller.isGrounded) return; // no double jumping
+        if (!controller.isGrounded) return;
 
         verticalVelocity = Mathf.Sqrt(jumpHeight * -2f * gravity);
     }
+    // end OnJump
 
+    // start OnSprint
     public void OnSprint(InputAction.CallbackContext context)
     {
         if (context.performed)
@@ -75,7 +100,9 @@ public class Movement : MonoBehaviour
             isSprinting = false;
         }
     }
+    // end OnSprint
 
+    // start Look
     private void Look()
     {
         float mouseX = lookInput.x * mouseSensitivity;
@@ -86,8 +113,11 @@ public class Movement : MonoBehaviour
         camera.transform.localRotation = Quaternion.Euler(xRotation, 0f, 0f);
 
         transform.Rotate(Vector3.up * mouseX);
-    }
 
+    }
+    // end Look
+
+    // start Move
     private void Move()
     {
         Vector3 direction = transform.right * moveInput.x + transform.forward * moveInput.y;
@@ -95,7 +125,7 @@ public class Movement : MonoBehaviour
 
         if (controller.isGrounded && verticalVelocity < 0f)
         {
-            verticalVelocity = -2f; // small downward force to keep grounded checks happy
+            verticalVelocity = -2f;
         }
 
         verticalVelocity += gravity * Time.deltaTime;
@@ -114,7 +144,6 @@ public class Movement : MonoBehaviour
         motion.y = verticalVelocity;
 
         controller.Move(motion * Time.deltaTime);
-
     }
-
+    // end Move
 }

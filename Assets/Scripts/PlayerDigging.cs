@@ -4,27 +4,35 @@ using System.Collections.Generic;
 
 public class PlayerDigging : MonoBehaviour
 {
+    // start Serialized fields
+    [Header("References")]
     public Camera playerCamera;
+    public Inventory inventory;
+    public MountainManager mountainManager;
+    public LootRoller lootRoller;
+    [SerializeField] private TrashPickup trashPickupPrefab;
+
+    [Header("Dig Settings")]
     public float digReach = 5f;
     public float digCooldown = 0.5f;
     public float digRadius = 1f;
-    public Inventory inventory;
-    public MountainManager mountainManager;
     public float digStrength = 200f;
-    public LootRoller lootRoller;
+    // end Serialized fields
 
+    // start Effective values (include upgrade bonuses)
     float EffectiveRadius => digRadius + GameManager.Instance.digRadiusBonus;
     float EffectiveCooldown => Mathf.Max(0.05f, digCooldown - GameManager.Instance.digCooldownReduction);
     float EffectiveReach => digReach + GameManager.Instance.digReachBonus;
+    // end Effective values
 
+    // start Runtime state
     private bool isDigging = false;
     private float lastDigTime = 0f;
     private Animator animator;
     private bool nextPawRight = true;
+    // end Runtime state
 
-    [SerializeField] private TrashPickup trashPickupPrefab;
-
-
+    // start OnDig
     public void OnDig(InputAction.CallbackContext context)
     {
         if (context.performed)
@@ -36,7 +44,9 @@ public class PlayerDigging : MonoBehaviour
             isDigging = false;
         }
     }
+    // end OnDig
 
+    // start Update
     private void Update()
     {
         if (inventory.IsFull() && isDigging)
@@ -68,20 +78,24 @@ public class PlayerDigging : MonoBehaviour
                 }
 
                 if (total > 0)
-                    {
-                        GameManager.Instance.trashRemaining -= total * GameManager.Instance.bagsPerVoxel;
-                        GiveLoot(dug, dropPosition);
-                    }
+                {
+                    GameManager.Instance.trashRemaining -= total * GameManager.Instance.bagsPerVoxel;
+                    GiveLoot(dug, dropPosition);
+                }
             }
         }
     }
+    // end Update
 
+    // start Awake
     public void Awake()
     {
         inventory = GetComponent<Inventory>();
         animator = GetComponent<Animator>();
     }
+    // end Awake
 
+    // start GiveLoot
     private void GiveLoot(int[] dugPerLayer, Vector3 dropPosition)
     {
         Dictionary<ItemData, int> found = lootRoller.RollLoot(dugPerLayer);
@@ -97,10 +111,13 @@ public class PlayerDigging : MonoBehaviour
             }
         }
     }
+    // end GiveLoot
 
+    // start SpawnBag
     private void SpawnBag(ItemData item, int amount, Vector3 position)
     {
         TrashPickup bag = Instantiate(trashPickupPrefab, position, Quaternion.identity);
         bag.Setup(item, amount, inventory);
     }
+    // end SpawnBag
 }

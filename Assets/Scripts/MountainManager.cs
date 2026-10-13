@@ -3,13 +3,23 @@ using UnityEngine;
 
 public class MountainManager : MonoBehaviour
 {
+    // start Serialized fields
+    [Header("Prefabs")]
     public Chunk chunkPrefab;
-    public int gridWidth = 4;   // chunks across, x direction
-    public int gridDepth = 4;   // chunks across, z direction
+
+    [Header("Grid")]
+    public int gridWidth = 4;
+    public int gridDepth = 4;
+
+    [Header("Terrain")]
     public Texture2D heightMap;
+    // end Serialized fields
 
+    // start Runtime state
     private Dictionary<Vector2Int, Chunk> chunks = new Dictionary<Vector2Int, Chunk>();
+    // end Runtime state
 
+    // start Start
     void Start()
     {
         int chunkSize = chunkPrefab.chunkSize;
@@ -49,13 +59,14 @@ public class MountainManager : MonoBehaviour
 
         GameManager.Instance.bagsPerVoxel = GameManager.Instance.trashRemaining / totalSolidVoxels;
     }
+    // end Start
 
+    // start DigAt
     public int[] DigAt(Vector3 worldPosition, float radius, float strength)
     {
         int[] totalDug = new int[chunkPrefab.layerhardness.Length];
         int chunkSize = chunkPrefab.chunkSize;
 
-        // figure out which chunk coordinates the dig sphere could overlap
         int minX = Mathf.FloorToInt((worldPosition.x - radius) / chunkSize);
         int maxX = Mathf.FloorToInt((worldPosition.x + radius) / chunkSize);
         int minZ = Mathf.FloorToInt((worldPosition.z - radius) / chunkSize);
@@ -68,7 +79,6 @@ public class MountainManager : MonoBehaviour
                 Vector2Int chunkCoord = new Vector2Int(gx, gz);
                 if (chunks.TryGetValue(chunkCoord, out Chunk chunk))
                 {
-                    // Convert world position to local position in the chunk
                     Vector3 localPosition = worldPosition - chunk.transform.position;
                     int[] dug = chunk.DigSphere(localPosition, radius, strength);
                     for (int i = 0; i < totalDug.Length; i++)
@@ -81,7 +91,9 @@ public class MountainManager : MonoBehaviour
 
         return totalDug;
     }
+    // end DigAt
 
+    // start BuildChunkSaveData
     public List<ChunkSaveEntry> BuildChunkSaveData()
     {
         List<ChunkSaveEntry> result = new List<ChunkSaveEntry>();
@@ -104,7 +116,9 @@ public class MountainManager : MonoBehaviour
 
         return result;
     }
+    // end BuildChunkSaveData
 
+    // start LoadSavedChunkData
     private Dictionary<Vector2Int, byte[]> LoadSavedChunkData()
     {
         Dictionary<Vector2Int, byte[]> result = new Dictionary<Vector2Int, byte[]>();
@@ -128,4 +142,5 @@ public class MountainManager : MonoBehaviour
 
         return result;
     }
+    // end LoadSavedChunkData
 }

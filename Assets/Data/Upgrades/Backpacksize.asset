@@ -17,4 +17,4 @@ MonoBehaviour:
   multiplier: 1.5
   upgradeType: 4
   upgradeID: backpack_size
-  maxLevel: 10
+  maxLevel: 9

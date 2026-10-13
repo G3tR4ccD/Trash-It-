@@ -4,8 +4,12 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "LootRoller", menuName = "Scriptable Objects/LootRoller")]
 public class LootRoller : ScriptableObject
 {
+    // start Serialized fields
+    [Header("Loot Tables")]
     public LootTable[] lootTables;
+    // end Serialized fields
 
+    // start RollLoot
     public Dictionary<ItemData, int> RollLoot(int[] dugPerLayer)
     {
         Dictionary<ItemData, int> found = new Dictionary<ItemData, int>();
@@ -27,4 +31,5 @@ public class LootRoller : ScriptableObject
         }
         return found;
     }
+    // end RollLoot
 }

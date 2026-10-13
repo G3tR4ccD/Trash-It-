@@ -1,26 +1,50 @@
 using UnityEngine;
-using System.Collections;
 
 public class Machine : MonoBehaviour, IInteractable
 {
+    // start Serialized fields
+    [Header("References")]
     [SerializeField] private Inventory hopperInput;
     [SerializeField] private Inventory playerInventory;
+    public Inventory outputDestination;
+    public string machineID;
+
+    [Header("Machine")]
     [SerializeField] private MachineData machine;
 
+    [Header("Settings")]
+    public bool autoProcess = false;
+    // end Serialized fields
+
+    // start MachineState enum
     enum MachineState
     {
         Idle,
         Processing,
         Finished
     }
+    // end MachineState enum
+
+    // start Runtime state
     MachineState currentState = MachineState.Idle;
     RecipeData currentRecipe;
     int pendingOutput;
-    public bool autoProcess = false;
-    public Inventory outputDestination;
+    private float timeRemaining;
+    // end Runtime state
 
+    // start Update
     void Update()
     {
+        if (currentState == MachineState.Processing)
+        {
+            timeRemaining -= Time.deltaTime;
+            if (timeRemaining <= 0f)
+            {
+                pendingOutput = currentRecipe.resultItemCount;
+                currentState = MachineState.Finished;
+            }
+        }
+
         if (!autoProcess) return;
 
         if (currentState == MachineState.Idle)
@@ -33,27 +57,24 @@ public class Machine : MonoBehaviour, IInteractable
                 hopperInput.RemoveItem(ingredient, currentRecipe.ingredientsCount);
             }
 
-            StartCoroutine(ProcessRoutine());
-            currentState = MachineState.Processing;
+            StartProcessing();
+
         }
         else if (currentState == MachineState.Finished)
         {
-            Inventory outputTarget = outputDestination != null ? outputDestination : playerInventory;
-            int added = outputTarget.InsertItem(currentRecipe.resultItem, pendingOutput);
-            pendingOutput -= added;
-
-            if (pendingOutput <= 0)
-            {
-                currentState = MachineState.Idle;
-                currentRecipe = null;
-            }
+            TryDeliverOutput();
         }
     }
+    // end Update
 
+    // start GetDisplayName
     public string GetDisplayName()
     {
         return $"{machine.displayName}";
     }
+    // end GetDisplayName
+
+    // start Interact
     public void Interact()
     {
         switch (currentState)
@@ -71,34 +92,19 @@ public class Machine : MonoBehaviour, IInteractable
                         return;
                     }
                 }
-                StartCoroutine(ProcessRoutine());
-                currentState = MachineState.Processing;
+                StartProcessing();
+
                 break;
             case MachineState.Processing:
                 break;
             case MachineState.Finished:
-                Inventory outputTarget = outputDestination != null ? outputDestination : playerInventory;
-                int added = outputTarget.InsertItem(currentRecipe.resultItem, pendingOutput);
-                pendingOutput -= added;
-                if (pendingOutput <= 0)
-                {
-                    currentState = MachineState.Idle;
-                    currentRecipe = null;
-                }
-                else
-                {
-                    return;
-                }
+                TryDeliverOutput();
                 break;
         }
     }
-    IEnumerator ProcessRoutine()
-    {
-        float actualTime = currentRecipe.processingTime / GameManager.Instance.machineSpeedMultiplier;
-        yield return new WaitForSeconds(actualTime);
-        pendingOutput = currentRecipe.resultItemCount;
-        currentState = MachineState.Finished;
-    }
+    // end Interact
+
+    // start CanAfford
     private bool CanAfford(RecipeData recipe)
     {
         Inventory source = autoProcess ? hopperInput : playerInventory;
@@ -111,6 +117,9 @@ public class Machine : MonoBehaviour, IInteractable
         }
         return true;
     }
+    // end CanAfford
+
+    // start FindAffordableRecipe
     private RecipeData FindAffordableRecipe()
     {
         foreach (RecipeData r in machine.recipes)
@@ -122,5 +131,61 @@ public class Machine : MonoBehaviour, IInteractable
         }
         return null;
     }
-}
+    // end FindAffordableRecipe
 
+    // start StartProcessing
+    void StartProcessing()
+    {
+        timeRemaining = currentRecipe.processingTime / GameManager.Instance.machineSpeedMultiplier;
+        currentState = MachineState.Processing;
+
+    }
+    // end StartProcessing
+
+    // start TryDeliverOutput
+    void TryDeliverOutput()
+    {
+        Inventory outputTarget = outputDestination != null ? outputDestination : playerInventory;
+        int added = outputTarget.InsertItem(currentRecipe.resultItem, pendingOutput);
+        pendingOutput -= added;
+        if (pendingOutput <= 0)
+        {
+            currentState = MachineState.Idle;
+            currentRecipe = null;
+        }
+    }
+    // end TryDeliverOutput
+
+    // start GetSaveEntry
+    public MachineSaveEntry GetSaveEntry()
+    {
+        MachineSaveEntry entry = new MachineSaveEntry();
+        entry.machineID = machineID;
+        entry.machineState = (int)currentState;
+        entry.timeRemaining = timeRemaining;
+        entry.pendingOutput = pendingOutput;
+        entry.recipeIndex = machine.recipes.IndexOf(currentRecipe);
+        return entry;
+    }
+    // end GetSaveEntry
+
+
+    // start LoadFromEntry
+    public void LoadFromEntry(MachineSaveEntry entry)
+    {
+        currentState = (MachineState)entry.machineState;
+        timeRemaining = entry.timeRemaining;
+        pendingOutput = entry.pendingOutput;
+
+        if (entry.recipeIndex >= 0 && entry.recipeIndex < machine.recipes.Count)
+        {
+            currentRecipe = machine.recipes[entry.recipeIndex];
+        }
+        else
+        {
+            currentRecipe = null;
+            currentState = MachineState.Idle;
+        }
+    }
+    // end LoadFromEntry
+}

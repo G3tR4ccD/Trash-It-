@@ -248,9 +248,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::UpgradeTooltip
   shopManager: {fileID: 7349391227574173875}
-  upgrade: {fileID: 11400000, guid: 167c74e9d94ee7741910d11306565eef, type: 2}
   tooltipText: {fileID: 1290110511}
   shopPanel: {fileID: 1806422036}
+  upgrade: {fileID: 11400000, guid: 167c74e9d94ee7741910d11306565eef, type: 2}
 --- !u!114 &36644457
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -510,9 +510,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Hud
   coinsText: {fileID: 1186359042}
   backpackText: {fileID: 1040686072}
+  trashText: {fileID: 484856682}
   playerInventory: {fileID: 5762035261519009670}
   backpackFillImage: {fileID: 1808148405}
-  trashText: {fileID: 484856682}
 --- !u!4 &44859107
 Transform:
   m_ObjectHideFlags: 0
@@ -617,7 +617,7 @@ GameObject:
   - component: {fileID: 109556930}
   - component: {fileID: 109556929}
   m_Layer: 5
-  m_Name: Mixer Unlock
+  m_Name: Pulping Vat Unlock
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -657,9 +657,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::UpgradeTooltip
   shopManager: {fileID: 7349391227574173875}
-  upgrade: {fileID: 11400000, guid: cc40422b31198bf43923509db1e4a9b6, type: 2}
   tooltipText: {fileID: 1290110511}
   shopPanel: {fileID: 2059244396}
+  upgrade: {fileID: 11400000, guid: cc40422b31198bf43923509db1e4a9b6, type: 2}
 --- !u!114 &109556930
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1384,9 +1384,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::UpgradeTooltip
   shopManager: {fileID: 7349391227574173875}
-  upgrade: {fileID: 11400000, guid: a6c93bec6c297434b8caa7bb9d8e4947, type: 2}
   tooltipText: {fileID: 1290110511}
   shopPanel: {fileID: 1806422036}
+  upgrade: {fileID: 11400000, guid: a6c93bec6c297434b8caa7bb9d8e4947, type: 2}
 --- !u!114 &263440392
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2068,7 +2068,7 @@ GameObject:
   - component: {fileID: 388133526}
   - component: {fileID: 388133525}
   m_Layer: 5
-  m_Name: Shredder Unlock
+  m_Name: Grinding Mill Unlock
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2108,9 +2108,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::UpgradeTooltip
   shopManager: {fileID: 7349391227574173875}
-  upgrade: {fileID: 11400000, guid: 75212b52286121c4fb1f89e5412e9267, type: 2}
   tooltipText: {fileID: 1290110511}
   shopPanel: {fileID: 2059244396}
+  upgrade: {fileID: 11400000, guid: 75212b52286121c4fb1f89e5412e9267, type: 2}
 --- !u!114 &388133526
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3499,7 +3499,7 @@ GameObject:
   - component: {fileID: 725906383}
   - component: {fileID: 725906382}
   m_Layer: 0
-  m_Name: Shredder
+  m_Name: Grinding Mill
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3519,9 +3519,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Machine
   hopperInput: {fileID: 1735810660}
   playerInventory: {fileID: 5762035261519009670}
+  outputDestination: {fileID: 8961902633452961148}
+  machineID: grinding_mill
   machine: {fileID: 11400000, guid: 31373fa563a769f4e83982be7be4d536, type: 2}
   autoProcess: 1
-  outputDestination: {fileID: 8961902633452961148}
 --- !u!65 &725906383
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -3609,7 +3610,7 @@ Transform:
   m_GameObject: {fileID: 725906381}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -4.25, y: 0.5, z: -2}
+  m_LocalPosition: {x: -4.29, y: 0.5, z: 9.91}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -3824,7 +3825,7 @@ GameObject:
   - component: {fileID: 754821817}
   - component: {fileID: 754821816}
   m_Layer: 0
-  m_Name: Mixer
+  m_Name: Pulping Vat
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3844,9 +3845,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Machine
   hopperInput: {fileID: 1916353822}
   playerInventory: {fileID: 5762035261519009670}
+  outputDestination: {fileID: 8961902633452961148}
+  machineID: pulping_vat
   machine: {fileID: 11400000, guid: a8c6feb3741b5ac41b85c07c449cb8fd, type: 2}
   autoProcess: 1
-  outputDestination: {fileID: 8961902633452961148}
 --- !u!65 &754821817
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -3934,7 +3936,7 @@ Transform:
   m_GameObject: {fileID: 754821815}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -1.25, y: 0.5, z: -2}
+  m_LocalPosition: {x: -3.48, y: 0.5, z: 1.86}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -3995,9 +3997,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::UpgradeTooltip
   shopManager: {fileID: 7349391227574173875}
-  upgrade: {fileID: 11400000, guid: 7a3f0866ebbeaf34eae103d519bf029d, type: 2}
   tooltipText: {fileID: 1290110511}
   shopPanel: {fileID: 738609967}
+  upgrade: {fileID: 11400000, guid: 7a3f0866ebbeaf34eae103d519bf029d, type: 2}
 --- !u!114 &773441722
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4712,6 +4714,7 @@ GameObject:
   m_Component:
   - component: {fileID: 866195045}
   - component: {fileID: 866195044}
+  - component: {fileID: 866195046}
   m_Layer: 0
   m_Name: Hopper_Press
   m_TagString: Untagged
@@ -4747,6 +4750,19 @@ Transform:
   m_Children: []
   m_Father: {fileID: 982618986}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &866195046
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 866195043}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7742b7e432e85d046a309b2a8b9b6ab0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SaveableInventory
+  inventoryID: hopper_press
 --- !u!1 &877365711
 GameObject:
   m_ObjectHideFlags: 0
@@ -5241,9 +5257,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Machine
   hopperInput: {fileID: 866195044}
   playerInventory: {fileID: 5762035261519009670}
+  outputDestination: {fileID: 8961902633452961148}
+  machineID: press
   machine: {fileID: 11400000, guid: d80e69926e39f2440bca9da8f62cb2d7, type: 2}
   autoProcess: 1
-  outputDestination: {fileID: 8961902633452961148}
 --- !u!65 &982618983
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -5331,7 +5348,7 @@ Transform:
   m_GameObject: {fileID: 982618981}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -2.75, y: 0.5, z: -2}
+  m_LocalPosition: {x: -5.12, y: 0.5, z: 5.76}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -6278,6 +6295,57 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1110917860}
   m_CullTransparentMesh: 1
+--- !u!1 &1113203101
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1113203103}
+  - component: {fileID: 1113203102}
+  m_Layer: 0
+  m_Name: SaveManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1113203102
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1113203101}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0a8e6889ad46cf04b9974941edbdab00, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SaveManager
+  shopManager: {fileID: 7349391227574173875}
+  playerInventory: {fileID: 5762035261519009670}
+  mountainManager: {fileID: 1800094600}
+  itemDatabase: {fileID: 11400000, guid: 1c0987dfa406b5f4594ee4f851382502, type: 2}
+  player: {fileID: 5762035261519009665}
+  trashPickupPrefab: {fileID: 2708782478669684882, guid: bbe32faefccb6be40b470c3a196ed663, type: 3}
+  autosaveInterval: 30
+--- !u!4 &1113203103
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1113203101}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 8.90287, y: -0, z: 6.55384}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1146878189
 GameObject:
   m_ObjectHideFlags: 0
@@ -6332,9 +6400,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::UpgradeTooltip
   shopManager: {fileID: 7349391227574173875}
-  upgrade: {fileID: 11400000, guid: d1b0aba3cdd57e14394412e53d8d48f7, type: 2}
   tooltipText: {fileID: 1290110511}
   shopPanel: {fileID: 2059244396}
+  upgrade: {fileID: 11400000, guid: d1b0aba3cdd57e14394412e53d8d48f7, type: 2}
 --- !u!114 &1146878192
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6703,6 +6771,37 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1190203187}
   m_CullTransparentMesh: 1
+--- !u!1 &1205978239
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1205978240}
+  m_Layer: 20
+  m_Name: Sell  Marker
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1205978240
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1205978239}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 1.2}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 7346683091829882856}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1257446100
 GameObject:
   m_ObjectHideFlags: 0
@@ -6757,9 +6856,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::UpgradeTooltip
   shopManager: {fileID: 7349391227574173875}
-  upgrade: {fileID: 11400000, guid: 689414714a989b74aacc1b51f13f54a6, type: 2}
   tooltipText: {fileID: 1290110511}
   shopPanel: {fileID: 2059244396}
+  upgrade: {fileID: 11400000, guid: 689414714a989b74aacc1b51f13f54a6, type: 2}
 --- !u!114 &1257446103
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6864,6 +6963,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1272318594}
   - component: {fileID: 1272318593}
+  - component: {fileID: 1272318595}
   m_Layer: 0
   m_Name: Hopper_Smelter
   m_TagString: Untagged
@@ -6899,6 +6999,19 @@ Transform:
   m_Children: []
   m_Father: {fileID: 1286618612}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1272318595
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1272318592}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7742b7e432e85d046a309b2a8b9b6ab0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SaveableInventory
+  inventoryID: hopper_smelter
 --- !u!1 &1274478675
 GameObject:
   m_ObjectHideFlags: 0
@@ -7008,9 +7121,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Machine
   hopperInput: {fileID: 1272318593}
   playerInventory: {fileID: 5762035261519009670}
+  outputDestination: {fileID: 8961902633452961148}
+  machineID: smelter
   machine: {fileID: 11400000, guid: 3f19cfc5daa32b84cbe092ce3d3f74c0, type: 2}
   autoProcess: 1
-  outputDestination: {fileID: 8961902633452961148}
 --- !u!65 &1286618609
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -7098,7 +7212,7 @@ Transform:
   m_GameObject: {fileID: 1286618607}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -5.75, y: 0.5, z: -2}
+  m_LocalPosition: {x: -2.4, y: 0.5, z: 13.65}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -7586,9 +7700,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::UpgradeTooltip
   shopManager: {fileID: 7349391227574173875}
-  upgrade: {fileID: 11400000, guid: 993c933952362fe4ebdab2328c8601cd, type: 2}
   tooltipText: {fileID: 1290110511}
   shopPanel: {fileID: 738609967}
+  upgrade: {fileID: 11400000, guid: 993c933952362fe4ebdab2328c8601cd, type: 2}
 --- !u!114 &1426128605
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -8531,7 +8645,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Mixer Unlock
+  m_text: "Pulping Vat \nUnlock"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 356ad54c7b540874dbcc861c931a7798, type: 2}
   m_sharedMaterial: {fileID: 6402619551292943033, guid: 356ad54c7b540874dbcc861c931a7798, type: 2}
@@ -8558,7 +8672,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 16.25
+  m_fontSize: 10
   m_fontSizeBase: 15
   m_fontWeight: 400
   m_enableAutoSizing: 1
@@ -8711,7 +8825,7 @@ Transform:
   m_GameObject: {fileID: 1554609500}
   serializedVersion: 2
   m_LocalRotation: {x: -0.7071068, y: -0, z: -0, w: 0.7071067}
-  m_LocalPosition: {x: 10.514, y: 0.102, z: -0.974}
+  m_LocalPosition: {x: 12.58, y: 0.1, z: 6.82}
   m_LocalScale: {x: 0.25, y: 0.24999997, z: 0.24999997}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -8986,7 +9100,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Shredder Unlock
+  m_text: "Grinding Mill \n Unlock"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 356ad54c7b540874dbcc861c931a7798, type: 2}
   m_sharedMaterial: {fileID: 6402619551292943033, guid: 356ad54c7b540874dbcc861c931a7798, type: 2}
@@ -9013,7 +9127,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 12.85
+  m_fontSize: 10
   m_fontSizeBase: 15
   m_fontWeight: 400
   m_enableAutoSizing: 1
@@ -9787,6 +9901,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1735810661}
   - component: {fileID: 1735810660}
+  - component: {fileID: 1735810662}
   m_Layer: 0
   m_Name: Hopper_Shredder
   m_TagString: Untagged
@@ -9822,6 +9937,19 @@ Transform:
   m_Children: []
   m_Father: {fileID: 725906386}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1735810662
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1735810659}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7742b7e432e85d046a309b2a8b9b6ab0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SaveableInventory
+  inventoryID: hopper_shredder
 --- !u!1 &1740800386
 GameObject:
   m_ObjectHideFlags: 0
@@ -9907,9 +10035,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::UpgradeTooltip
   shopManager: {fileID: 7349391227574173875}
-  upgrade: {fileID: 11400000, guid: 744883c9ec367fa4197547ae9cdc6cde, type: 2}
   tooltipText: {fileID: 1290110511}
   shopPanel: {fileID: 738609967}
+  upgrade: {fileID: 11400000, guid: 744883c9ec367fa4197547ae9cdc6cde, type: 2}
 --- !u!114 &1758786127
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -10191,9 +10319,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::UpgradeTooltip
   shopManager: {fileID: 7349391227574173875}
-  upgrade: {fileID: 11400000, guid: 50db7242ac26d7640a9f6312412a01fb, type: 2}
   tooltipText: {fileID: 1290110511}
   shopPanel: {fileID: 738609967}
+  upgrade: {fileID: 11400000, guid: 50db7242ac26d7640a9f6312412a01fb, type: 2}
 --- !u!114 &1792701411
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -10884,6 +11012,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1916353823}
   - component: {fileID: 1916353822}
+  - component: {fileID: 1916353824}
   m_Layer: 0
   m_Name: Hopper_Mixer
   m_TagString: Untagged
@@ -10919,6 +11048,19 @@ Transform:
   m_Children: []
   m_Father: {fileID: 754821820}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1916353824
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1916353821}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7742b7e432e85d046a309b2a8b9b6ab0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SaveableInventory
+  inventoryID: hopper_mixer
 --- !u!1 &1935720055
 GameObject:
   m_ObjectHideFlags: 0
@@ -11106,9 +11248,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::UpgradeTooltip
   shopManager: {fileID: 7349391227574173875}
-  upgrade: {fileID: 11400000, guid: 9a341c7584121234e9528230594a19fa, type: 2}
   tooltipText: {fileID: 1290110511}
   shopPanel: {fileID: 738609967}
+  upgrade: {fileID: 11400000, guid: 9a341c7584121234e9528230594a19fa, type: 2}
 --- !u!114 &1953770285
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -11661,9 +11803,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::UpgradeTooltip
   shopManager: {fileID: 7349391227574173875}
-  upgrade: {fileID: 11400000, guid: cdf15980ddde3d54d809456f2233dd22, type: 2}
   tooltipText: {fileID: 1290110511}
   shopPanel: {fileID: 1806422036}
+  upgrade: {fileID: 11400000, guid: cdf15980ddde3d54d809456f2233dd22, type: 2}
 --- !u!114 &2019743970
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -11812,9 +11954,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::UpgradeTooltip
   shopManager: {fileID: 7349391227574173875}
-  upgrade: {fileID: 11400000, guid: fc5705d8ce5d0324296e09ed3da09278, type: 2}
   tooltipText: {fileID: 1290110511}
   shopPanel: {fileID: 2059244396}
+  upgrade: {fileID: 11400000, guid: fc5705d8ce5d0324296e09ed3da09278, type: 2}
 --- !u!114 &2025551215
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -12729,14 +12871,6 @@ MeshRenderer:
   m_SortingOrder: 0
   m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!33 &1183919941044302157
-MeshFilter:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 9123410479253691329}
-  m_Mesh: {fileID: 0}
 --- !u!23 &1266192445715305808
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -12903,42 +13037,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 7346683091829882856}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &2885988990052924991
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 9123410479253691329}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3d21c68f9c1ecbd4f9af7ee18404f8e7, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::Chunk
-  chunkSize: 16
-  chunkHeight: 64
-  noiseScale: 3
-  noiseStrength: 2
-  grit: 0.7
-  heightMap: {fileID: 2800000, guid: 82ac9034f32a7d745827c920b3ffcb36, type: 3}
-  maxHeight: 64
-  chunkCoord: {x: 0, y: 0}
-  totalGridSize: 0
-  isModified: 0
-  layerdepths:
-  - 4
-  - 10
-  - 18
-  - 20
-  layerhardness:
-  - 1
-  - 2
-  - 3
-  - 4
-  - 7
-  maxNeighborsToRemove: 3
-  maxIslandSize: 10
-  islandSearchPadding: 4
 --- !u!33 &2992689488110129450
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -13092,59 +13190,6 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 596385000831658033}
   m_Mesh: {fileID: 6242557314026885968, guid: 8dc02333ed05404499bcdc2761f46cae, type: 3}
---- !u!23 &4330771040934891121
-MeshRenderer:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 9123410479253691329}
-  m_Enabled: 1
-  m_CastShadows: 1
-  m_ReceiveShadows: 1
-  m_DynamicOccludee: 1
-  m_StaticShadowCaster: 0
-  m_MotionVectors: 1
-  m_LightProbeUsage: 1
-  m_ReflectionProbeUsage: 1
-  m_RayTracingMode: 2
-  m_RayTraceProcedural: 0
-  m_RayTracingAccelStructBuildFlagsOverride: 0
-  m_RayTracingAccelStructBuildFlags: 1
-  m_SmallMeshCulling: 1
-  m_ForceMeshLod: -1
-  m_MeshLodSelectionBias: 0
-  m_RenderingLayerMask: 1
-  m_RendererPriority: 0
-  m_Materials:
-  - {fileID: 2100000, guid: 65df2034ede0309438ff03d348dcb7c3, type: 2}
-  - {fileID: 2100000, guid: 5382e317cfdceb146b3a9501a921434f, type: 2}
-  - {fileID: 2100000, guid: 67c00d4bba3c0994e8caeacde8279adb, type: 2}
-  - {fileID: 2100000, guid: 23e97b6db0c608645b8503bd55321183, type: 2}
-  - {fileID: 2100000, guid: a2ba929793ec0904680f1205004b3a48, type: 2}
-  m_StaticBatchInfo:
-    firstSubMesh: 0
-    subMeshCount: 0
-  m_StaticBatchRoot: {fileID: 0}
-  m_ProbeAnchor: {fileID: 0}
-  m_LightProbeVolumeOverride: {fileID: 0}
-  m_ScaleInLightmap: 1
-  m_ReceiveGI: 1
-  m_PreserveUVs: 0
-  m_IgnoreNormalsForChartDetection: 0
-  m_ImportantGI: 0
-  m_StitchLightmapSeams: 1
-  m_SelectedEditorRenderState: 3
-  m_MinimumChartSize: 4
-  m_AutoUVMaxDistance: 0.5
-  m_AutoUVMaxAngle: 89
-  m_LightmapParameters: {fileID: 0}
-  m_GlobalIlluminationMeshLod: 0
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
-  m_SortingOrder: 0
-  m_MaskInteraction: 0
-  m_AdditionalVertexStreams: {fileID: 0}
 --- !u!1 &4426413320977868936
 GameObject:
   m_ObjectHideFlags: 0
@@ -15407,9 +15452,9 @@ MonoBehaviour:
   sprintSpeed: 5
   jumpHeight: 1
   gravity: -9.81
-  groundCheck: {fileID: 5762035261519009665}
-  camera: {fileID: 1618009151}
   mouseSensitivity: 0.1
+  camera: {fileID: 1618009151}
+  groundCheck: {fileID: 5762035261519009665}
 --- !u!114 &5762035261519009667
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -15635,14 +15680,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerDigging
   playerCamera: {fileID: 1618009151}
+  inventory: {fileID: 5762035261519009670}
+  mountainManager: {fileID: 1800094600}
+  lootRoller: {fileID: 11400000, guid: 4c5c3350125892a47bd2fe5fa183e120, type: 2}
+  trashPickupPrefab: {fileID: 2708782478669684882, guid: bbe32faefccb6be40b470c3a196ed663, type: 3}
   digReach: 5
   digCooldown: 0.75
   digRadius: 1
-  inventory: {fileID: 5762035261519009670}
-  mountainManager: {fileID: 1800094600}
   digStrength: 200
-  lootRoller: {fileID: 11400000, guid: 4c5c3350125892a47bd2fe5fa183e120, type: 2}
-  trashPickupPrefab: {fileID: 2708782478669684882, guid: bbe32faefccb6be40b470c3a196ed663, type: 3}
 --- !u!114 &5762035261519009672
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -16190,21 +16235,6 @@ MeshCollider:
   m_Convex: 0
   m_CookingOptions: 30
   m_Mesh: {fileID: -3262789968867269347, guid: 8dc02333ed05404499bcdc2761f46cae, type: 3}
---- !u!4 &6551863386363366959
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 9123410479253691329}
-  serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -4.96, y: 0, z: 0.8666667}
-  m_LocalScale: {x: 0.6666667, y: 0.6666667, z: 0.6666667}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 7346683091829882856}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &6607370418766167939
 Transform:
   m_ObjectHideFlags: 0
@@ -17243,8 +17273,8 @@ Transform:
   m_Children:
   - {fileID: 7344037310606896668}
   - {fileID: 7346881968495250616}
+  - {fileID: 1205978240}
   - {fileID: 6102731549711393767}
-  - {fileID: 6551863386363366959}
   - {fileID: 3066405052750000732}
   - {fileID: 6072480948381286553}
   - {fileID: 6284158219773034896}
@@ -18124,10 +18154,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ShopManager
   playerInventory: {fileID: 5762035261519009670}
+  mountainManager: {fileID: 1800094600}
   shopPanel: {fileID: 530893817}
   tooltipText: {fileID: 1290110509}
-  itemDatabase: {fileID: 11400000, guid: 1c0987dfa406b5f4594ee4f851382502, type: 2}
-  mountainManager: {fileID: 1800094600}
   pages:
   - {fileID: 530893817}
   - {fileID: 1806422036}
@@ -18163,6 +18192,7 @@ MonoBehaviour:
   helperStartPoint: {fileID: 1740800387}
   dropoffBin: {fileID: 8961902633452961148}
   binStandPoint: {fileID: 1554609501}
+  sellPoint: {fileID: 1205978240}
   itemRoutes:
   - item: {fileID: 11400000, guid: b29ca063d63133c4e969b591ad37b34a, type: 2}
     destinationMachine: {fileID: 1916353823}
@@ -18717,6 +18747,7 @@ GameObject:
   - component: {fileID: 8961902633452961147}
   - component: {fileID: 8961902633452961149}
   - component: {fileID: 8961902633452961148}
+  - component: {fileID: 8961902633452961150}
   m_Layer: 0
   m_Name: Barrel
   m_TagString: Untagged
@@ -18804,7 +18835,7 @@ Transform:
   m_GameObject: {fileID: 7448934571010579630}
   serializedVersion: 2
   m_LocalRotation: {x: -0.7071068, y: 0, z: -0, w: 0.7071067}
-  m_LocalPosition: {x: 10.514, y: 0.36699986, z: -1.824}
+  m_LocalPosition: {x: 12.58, y: 0.36499986, z: 5.9700003}
   m_LocalScale: {x: 0.25, y: 0.25, z: 0.25}
   m_ConstrainProportionsScale: 1
   m_Children: []
@@ -18847,28 +18878,6 @@ MeshCollider:
   m_Convex: 0
   m_CookingOptions: 30
   m_Mesh: {fileID: -3262789968867269347, guid: 8dc02333ed05404499bcdc2761f46cae, type: 3}
---- !u!64 &8278715661943793531
-MeshCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 9123410479253691329}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 5
-  m_Convex: 0
-  m_CookingOptions: 30
-  m_Mesh: {fileID: 0}
 --- !u!4 &8307862777252436936
 Transform:
   m_ObjectHideFlags: 0
@@ -19114,26 +19123,19 @@ MeshCollider:
   m_Convex: 0
   m_CookingOptions: 30
   m_Mesh: {fileID: 2534964839176971238, guid: b876dca377614a24dbeef8a2c8721674, type: 3}
---- !u!1 &9123410479253691329
-GameObject:
+--- !u!114 &8961902633452961150
+MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 6551863386363366959}
-  - component: {fileID: 1183919941044302157}
-  - component: {fileID: 4330771040934891121}
-  - component: {fileID: 8278715661943793531}
-  - component: {fileID: 2885988990052924991}
-  m_Layer: 3
-  m_Name: Chunk
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_GameObject: {fileID: 7448934571010579630}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7742b7e432e85d046a309b2a8b9b6ab0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SaveableInventory
+  inventoryID: barrel
 --- !u!4 &9173668975594607231
 Transform:
   m_ObjectHideFlags: 0
@@ -19181,6 +19183,7 @@ SceneRoots:
   - {fileID: 931212762}
   - {fileID: 581269038}
   - {fileID: 1800094601}
+  - {fileID: 1113203103}
   - {fileID: 44859107}
   - {fileID: 1031615717}
   - {fileID: 5762035261519009665}

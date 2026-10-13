@@ -1,19 +1,25 @@
 using UnityEngine;
 using System.Collections.Generic;
 
-
-
+// start LootItem class
 [System.Serializable]
 public class LootItem
 {
+    [Header("Entry")]
     public ItemData itemName;
-    public int weight; // Percentage chance of dropping this item
+    public int weight;
 }
+// end LootItem class
+
 [CreateAssetMenu(fileName = "LootTable", menuName = "Scriptable Objects/LootTable")]
 public class LootTable : ScriptableObject
 {
+    // start Serialized fields
+    [Header("Loot")]
     public List<LootItem> lootItems;
+    // end Serialized fields
 
+    // start Roll
     public ItemData Roll()
     {
         int total = 0;
@@ -33,9 +39,7 @@ public class LootTable : ScriptableObject
             roll -= entry.weight;
         }
 
-        return lootItems[lootItems.Count - 1].itemName;   // safety net, never normally reached
+        return lootItems[lootItems.Count - 1].itemName;
     }
-
+    // end Roll
 }
-
-

@@ -10,10 +10,10 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 6f82539197a41064dbaebcaeff18ce9b, type: 3}
-  m_Name: PlasticScraps_Item
+  m_Name: HornFlakes
   m_EditorClassIdentifier: Assembly-CSharp::ItemData
-  displayName: Plastic Scraps
+  displayName: Horn Flakes
   itemDescription: 
-  itemPrice: 1
+  itemPrice: 15
   itemIcon: {fileID: 0}
-  itemID: plastic_scraps
+  itemID: horn_flakes

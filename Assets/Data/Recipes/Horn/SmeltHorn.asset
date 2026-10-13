@@ -10,12 +10,13 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 96c0de26b0b11634380e00794e3cc0e3, type: 3}
-  m_Name: SmeltPlastic
+  m_Name: SmeltHorn
   m_EditorClassIdentifier: Assembly-CSharp::RecipeData
-  recipeName: Smelt to Molten Plastic
-  recipeDescription: Smelts down "Plastic Flakes" into "Molten Plastic"
+  recipeName: Smelt to Horn Mass
+  recipeDescription: Smelts down "Horn Flakes" into "Horn Mass"
   ingredients:
   - {fileID: 11400000, guid: bd2a929d5cd3dd649a4936be3f3428f8, type: 2}
   ingredientsCount: 5
   resultItem: {fileID: 11400000, guid: f7f536672278d9741b6e9a607c8cc22e, type: 2}
   resultItemCount: 1
+  processingTime: 5

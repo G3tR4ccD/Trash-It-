@@ -3,10 +3,16 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "ItemData", menuName = "Scriptable Objects/ItemData")]
 public class ItemData : ScriptableObject
 {
+    // start Serialized fields
+    [Header("Identity")]
     public string displayName;
-    public string itemDescription;
-    public int itemPrice;
-    public Sprite itemIcon;
     public string itemID;
 
+    [Header("Details")]
+    public string itemDescription;
+    public Sprite itemIcon;
+
+    [Header("Economy")]
+    public int itemPrice;
+    // end Serialized fields
 }

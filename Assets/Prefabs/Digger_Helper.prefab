@@ -1546,37 +1546,37 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8579bc2b8afadbe4e828740df91155f3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::DiggerHelper
+  target: {fileID: 0}
+  mountainManager: {fileID: 0}
+  lootRoller: {fileID: 11400000, guid: 4c5c3350125892a47bd2fe5fa183e120, type: 2}
+  dropoffBin: {fileID: 0}
   terrainMask:
     serializedVersion: 2
     m_Bits: 8
   heightOffset: 0
-  target: {fileID: 0}
-  moveSpeed: 3
+  moveSpeed: 1.5
   arriveDistance: 0.3
-  searchRadius: 0
-  searchStep: 1
+  rotationSpeed: 2000
   maxClimb: 2
-  mountainManager: {fileID: 0}
-  digRadius: 1
-  digStrength: 200
-  digCooldown: 2
   minClimb: 1
   maxStuckHops: 3
-  lootRoller: {fileID: 11400000, guid: 4c5c3350125892a47bd2fe5fa183e120, type: 2}
-  dropoffBin: {fileID: 0}
-  dropRadius: 1.5
-  maxEmptyDigs: 6
-  reach: 2.5
-  sweepArc: 120
-  sweepStep: 15
-  standBack: 3
+  searchRadius: 0
+  searchStep: 1
   minMountainHeight: 2
   ringStep: 2
   maxSearchDistance: 80
   samplesPerRing: 24
-  rotationSpeed: 8
-  digRotationSpeed: 20
+  standBack: 3
   minDiggerSeparation: 5
+  digRadius: 1.5
+  digStrength: 200
+  digCooldown: 2
+  reach: 2.5
+  digRotationSpeed: 20
+  maxEmptyDigs: 6
+  sweepArc: 120
+  sweepStep: 15
+  dropRadius: 1.5
 --- !u!114 &7211210181027302251
 MonoBehaviour:
   m_ObjectHideFlags: 0

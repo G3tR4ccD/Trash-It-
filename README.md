@@ -49,7 +49,7 @@ Dig trash, process it in machines, sell the goods, upgrade, automate.
 | W A S D (or I J K L) | Move |
 | Mouse | Look |
 | Space | Jump |
-| Shift (or /) | Sprint |
+| Shift (or ;) | Sprint |
 | Hold left mouse button | Dig |
 | E (or U) | Interact |
 

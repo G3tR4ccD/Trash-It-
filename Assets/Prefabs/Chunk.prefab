@@ -132,14 +132,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Chunk
   chunkSize: 16
   chunkHeight: 64
+  totalGridSize: 0
   noiseScale: 3
   noiseStrength: 2
   grit: 0.7
   heightMap: {fileID: 2800000, guid: 82ac9034f32a7d745827c920b3ffcb36, type: 3}
   maxHeight: 64
-  chunkCoord: {x: 0, y: 0}
-  totalGridSize: 0
-  isModified: 0
   layerdepths:
   - 4
   - 10
@@ -154,3 +152,5 @@ MonoBehaviour:
   maxNeighborsToRemove: 3
   maxIslandSize: 40
   islandSearchPadding: 5
+  chunkCoord: {x: 0, y: 0}
+  isModified: 0

@@ -4,29 +4,41 @@ using UnityEngine.UI;
 
 public class HUD : MonoBehaviour
 {
+    // start Serialized fields
+    [Header("Text")]
     public TextMeshProUGUI coinsText;
     public TextMeshProUGUI backpackText;
-    public Inventory playerInventory;
-    public Image backpackFillImage;
     public TextMeshProUGUI trashText;
 
+    [Header("Backpack")]
+    public Inventory playerInventory;
+    public Image backpackFillImage;
+    // end Serialized fields
+
+    // start Update
     void Update()
     {
         coinsText.text = $"{GameManager.Instance.coins}";
         trashText.text = $"{FormatNumber(GameManager.Instance.trashRemaining)}";
     }
+    // end Update
 
+    // start OnEnable
     void OnEnable()
     {
         playerInventory.OnInventoryChanged += UpdateBackpackDisplay;
         UpdateBackpackDisplay(); // Update display immediately when enabled
     }
+    // end OnEnable
 
+    // start OnDisable
     void OnDisable()
     {
         playerInventory.OnInventoryChanged -= UpdateBackpackDisplay;
     }
+    // end OnDisable
 
+    // start UpdateBackpackDisplay
     void UpdateBackpackDisplay()
     {
         backpackText.text = $"Backpack: {playerInventory.GetTotalItemCount()}/{playerInventory.maxCapacity}";
@@ -35,7 +47,9 @@ public class HUD : MonoBehaviour
         backpackFillImage.fillAmount = fillAmount;
 
     }
+    // end UpdateBackpackDisplay
 
+    // start FormatNumber
     string FormatNumber(long number)
     {
         if (number >= 1_000_000_000)
@@ -52,4 +66,5 @@ public class HUD : MonoBehaviour
         }
         return number.ToString();
     }
+    // end FormatNumber
 }

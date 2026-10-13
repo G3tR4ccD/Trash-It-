@@ -10,10 +10,10 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 6f82539197a41064dbaebcaeff18ce9b, type: 3}
-  m_Name: Platic_Item
+  m_Name: RawHorn
   m_EditorClassIdentifier: Assembly-CSharp::ItemData
-  displayName: Plastic Sheet
+  displayName: Raw Horn
   itemDescription: 
-  itemPrice: 250
+  itemPrice: 1
   itemIcon: {fileID: 0}
-  itemID: plastic
+  itemID: raw_horn

@@ -5,25 +5,37 @@ using UnityEngine.InputSystem;
 
 public class UpgradeTooltip : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 {
+    // start Serialized fields
+    [Header("References")]
     public ShopManager shopManager;
-    public UpgradeData upgrade;
     public TextMeshProUGUI tooltipText;
     public GameObject shopPanel;
 
+    [Header("Upgrade")]
+    public UpgradeData upgrade;
+    // end Serialized fields
 
+    // start Runtime state
     private bool isHovering = false;
+    // end Runtime state
+
+    // start OnPointerEnter
     public void OnPointerEnter(PointerEventData eventData)
     {
         isHovering = true;
         tooltipText.gameObject.SetActive(true);
     }
+    // end OnPointerEnter
 
+    // start OnPointerExit
     public void OnPointerExit(PointerEventData eventData)
     {
         isHovering = false;
         tooltipText.gameObject.SetActive(false);
     }
+    // end OnPointerExit
 
+    // start Update
     private void Update()
     {
         if (isHovering)
@@ -53,8 +65,12 @@ public class UpgradeTooltip : MonoBehaviour, IPointerEnterHandler, IPointerExitH
             tooltipText.transform.position = mousePosition + new Vector2(20, 20);
         }
     }
+    // end Update
+
+    // start OnDisable
     private void OnDisable()
     {
         isHovering = false;
     }
+    // end OnDisable
 }

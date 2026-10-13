@@ -1,14 +1,23 @@
 using UnityEngine;
 
 [CreateAssetMenu(fileName = "UpgradeData", menuName = "Scriptable Objects/UpgradeData")]
-public class UpgradeData  : ScriptableObject
+public class UpgradeData : ScriptableObject
 {
+    // start Serialized fields
+    [Header("Identity")]
     public string displayName;
+    public string upgradeID;
+
+    [Header("Upgrade")]
+    public UpgradeType upgradeType;
+    public int maxLevel = 0;
+
+    [Header("Cost")]
     public long baseCost;
     public float multiplier;
-    public UpgradeType upgradeType;
-    public string upgradeID;
-    public int maxLevel =  0; // 0 means no limit
+    // end Serialized fields
+
+    // start UpgradeType enum
     public enum UpgradeType
     {
         DigRadius,
@@ -23,5 +32,5 @@ public class UpgradeData  : ScriptableObject
         HelperDigSpeed,
         HelperBackpack,
     }
+    // end UpgradeType enum
 }
-

@@ -157,14 +157,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a5208f2267d7eeb458fb46a3a464b4c3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CarrierHelper
+  target: {fileID: 0}
+  binStandPoint: {fileID: 0}
+  shopManager: {fileID: 0}
+  dropoffBin: {fileID: 0}
+  sellPoint: {fileID: 0}
   terrainMask:
     serializedVersion: 2
     m_Bits: 8
   heightOffset: 0
-  target: {fileID: 0}
-  moveSpeed: 3
+  moveSpeed: 1.5
   arriveDistance: 0.3
-  dropoffBin: {fileID: 0}
+  rotationSpeed: 2000
   itemRoutes:
   - item: {fileID: 11400000, guid: b29ca063d63133c4e969b591ad37b34a, type: 2}
     destinationMachine: {fileID: 0}
@@ -193,9 +197,7 @@ MonoBehaviour:
   - item: {fileID: 11400000, guid: 67893b01c176ffe4780aad1f64404392, type: 2}
     destinationMachine: {fileID: 0}
   waitAtEmptyBin: 1
-  shopManager: {fileID: 0}
-  binStandPoint: {fileID: 0}
-  rotationSpeed: 20
+  maxWaitAtMachine: 6
 --- !u!95 &4685498284976833711
 Animator:
   serializedVersion: 7

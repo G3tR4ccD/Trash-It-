@@ -4,28 +4,45 @@ using UnityEngine;
 [RequireComponent(typeof(MeshFilter), typeof(MeshRenderer), typeof(MeshCollider))]
 public class Chunk : MonoBehaviour
 {
+    // start Serialized fields
+    [Header("Chunk Size")]
     public int chunkSize = 16;
     public int chunkHeight = 16;
+    public int totalGridSize;
+
+    [Header("Terrain Noise")]
     public float noiseScale = 0.2f;     // size of the lumps (smaller = bigger lumps)
     public float noiseStrength = 2f;    // how tall the lumps are
     public float grit = 0.3f;           // small random roughness on top
+
+    [Header("Height Map")]
     public Texture2D heightMap;
     public float maxHeight = 20f;
-    public Vector2Int chunkCoord;
-    public int totalGridSize;
-    public bool isModified = false; // Flag to indicate if the chunk has been modified
-    public float[] layerdepths = {4f, 10f, 18f, 20f};
+
+    [Header("Layers")]
+    public float[] layerdepths = { 4f, 10f, 18f, 20f };
     public float[] layerhardness = { 1f, 2f, 3f, 4f, 7f };
+
+    [Header("Island Cleanup")]
     public int maxNeighborsToRemove = 2;
     public int maxIslandSize = 40;       // max voxel count for a disconnected chunk to be auto-removed
     public int islandSearchPadding = 4;  // how far beyond the dig box to look for floating debris
 
+    [Header("State")]
+    public Vector2Int chunkCoord;
+    public bool isModified = false;      // flag to indicate if the chunk has been modified
+    // end Serialized fields
+
+    // start Runtime data
     private byte[,,] voxels;
     private byte[,,] layers;
     private List<Vector3> vertices = new List<Vector3>();
     private List<int>[] layerTriangles;
     private Mesh mesh;
     private const byte isoLevel = 128;   // the threshold for solid vs. air
+    // end Runtime data
+
+    // start GetDensity
     byte GetDensity(int x, int y, int z)
     {
         if (x < 0 || y < 0 || z < 0 || x > chunkSize || y >= chunkHeight || z > chunkSize)
@@ -34,24 +51,32 @@ public class Chunk : MonoBehaviour
         }
         return voxels[x, y, z];
     }
+    // end GetDensity
+
+    // start cornerOffsets table
     private static readonly Vector3Int[] cornerOffsets =
     {
-    new Vector3Int(0, 0, 0), // 0
-    new Vector3Int(1, 0, 0), // 1
-    new Vector3Int(1, 0, 1), // 2
-    new Vector3Int(0, 0, 1), // 3
-    new Vector3Int(0, 1, 0), // 4
-    new Vector3Int(1, 1, 0), // 5
-    new Vector3Int(1, 1, 1), // 6
-    new Vector3Int(0, 1, 1), // 7
-       };
+        new Vector3Int(0, 0, 0), // 0
+        new Vector3Int(1, 0, 0), // 1
+        new Vector3Int(1, 0, 1), // 2
+        new Vector3Int(0, 0, 1), // 3
+        new Vector3Int(0, 1, 0), // 4
+        new Vector3Int(1, 1, 0), // 5
+        new Vector3Int(1, 1, 1), // 6
+        new Vector3Int(0, 1, 1), // 7
+    };
+    // end cornerOffsets table
+
+    // start edgeCorners table
     private static readonly int[,] edgeCorners =
     {
-    { 0, 1 }, { 1, 2 }, { 2, 3 }, { 3, 0 },   // edges 0-3: bottom square
-    { 4, 5 }, { 5, 6 }, { 6, 7 }, { 7, 4 },   // edges 4-7: top square
-    { 0, 4 }, { 1, 5 }, { 2, 6 }, { 3, 7 },   // edges 8-11: vertical pillars
+        { 0, 1 }, { 1, 2 }, { 2, 3 }, { 3, 0 },   // edges 0-3: bottom square
+        { 4, 5 }, { 5, 6 }, { 6, 7 }, { 7, 4 },   // edges 4-7: top square
+        { 0, 4 }, { 1, 5 }, { 2, 6 }, { 3, 7 },   // edges 8-11: vertical pillars
     };
+    // end edgeCorners table
 
+    // start FloodFillIsland
     bool FloodFillIsland(int startX, int startY, int startZ, int padX0, int padX1, int padY0, int padY1, int padZ0, int padZ1, bool[,,] visited, List<Vector3Int> island)
     {
         bool touchesBoundary = false;
@@ -60,10 +85,10 @@ public class Chunk : MonoBehaviour
         visited[startX - padX0, startY - padY0, startZ - padZ0] = true;
 
         Vector3Int[] directions = {
-        new Vector3Int(1,0,0), new Vector3Int(-1,0,0),
-        new Vector3Int(0,1,0), new Vector3Int(0,-1,0),
-        new Vector3Int(0,0,1), new Vector3Int(0,0,-1)
-    };
+            new Vector3Int(1,0,0), new Vector3Int(-1,0,0),
+            new Vector3Int(0,1,0), new Vector3Int(0,-1,0),
+            new Vector3Int(0,0,1), new Vector3Int(0,0,-1)
+        };
 
         while (stack.Count > 0)
         {
@@ -91,13 +116,16 @@ public class Chunk : MonoBehaviour
 
             if (island.Count > maxIslandSize * 4)
             {
-                touchesBoundary = true; // bail out, this is too big to be simple debris
+                touchesBoundary = true;
                 break;
             }
         }
 
         return touchesBoundary;
     }
+    // end FloodFillIsland
+
+    // start InitializeFromSave
     public void InitializeFromSave(byte[] voxelData)
     {
         mesh = new Mesh();
@@ -106,7 +134,9 @@ public class Chunk : MonoBehaviour
 
         SetVoxelBytes(voxelData);
     }
+    // end InitializeFromSave
 
+    // start Initialize
     public void Initialize()
     {
         voxels = new byte[chunkSize + 1, chunkHeight, chunkSize + 1];
@@ -118,12 +148,16 @@ public class Chunk : MonoBehaviour
 
         RebuildMesh();
     }
+    // end Initialize
 
+    // start IsSolid
     bool IsSolid(int x, int y, int z)
     {
         return GetDensity(x, y, z) >= isoLevel;
     }
+    // end IsSolid
 
+    // start FillVoxels
     void FillVoxels()
     {
         for (int x = 0; x <= chunkSize; x++)
@@ -154,7 +188,9 @@ public class Chunk : MonoBehaviour
             }
         }
     }
+    // end FillVoxels
 
+    // start BuildMesh
     void BuildMesh()
     {
         for (int x = 0; x < chunkSize; x++)
@@ -167,8 +203,10 @@ public class Chunk : MonoBehaviour
                 }
             }
         }
-    }    
+    }
+    // end BuildMesh
 
+    // start RebuildMesh
     void RebuildMesh()
     {
         vertices.Clear();
@@ -179,7 +217,13 @@ public class Chunk : MonoBehaviour
         mesh.Clear();
 
         BuildMesh();
-
+        if (vertices.Count < 3)
+        {
+            mesh.Clear();
+            GetComponent<MeshFilter>().mesh = mesh;
+            GetComponent<MeshCollider>().sharedMesh = null;
+            return;
+        }
         mesh.SetVertices(vertices);
         mesh.subMeshCount = layerTriangles.Length;
         for (int i = 0; i < layerTriangles.Length; i++)
@@ -192,9 +236,10 @@ public class Chunk : MonoBehaviour
         GetComponent<MeshFilter>().mesh = mesh;
         GetComponent<MeshCollider>().sharedMesh = null;
         GetComponent<MeshCollider>().sharedMesh = mesh;
-
     }
+    // end RebuildMesh
 
+    // start DigSphere
     public int[] DigSphere(Vector3 center, float radius, float strength)
     {
         int[] voxelsDug = new int[layerhardness.Length];
@@ -218,7 +263,6 @@ public class Chunk : MonoBehaviour
         minY = Mathf.Clamp(minY, 0, chunkHeight - 1);
         maxY = Mathf.Clamp(maxY, 0, chunkHeight - 1);
 
-        // 1. the dig itself
         for (int x = minX; x <= maxX; x++)
         {
             for (int y = minY; y <= maxY; y++)
@@ -226,7 +270,7 @@ public class Chunk : MonoBehaviour
                 for (int z = minZ; z <= maxZ; z++)
                 {
                     float distance = Vector3.Distance(new Vector3(x, y, z), center);
-                    if (distance > radius) continue;   // outside the scoop, skip
+                    if (distance > radius) continue;
 
                     float falloff = 1 - distance / radius;
                     int layer = layers[x, y, z];
@@ -239,7 +283,6 @@ public class Chunk : MonoBehaviour
                     voxels[x, y, z] = (byte)Mathf.Clamp(newDensity, 0, 255);
                     changed = true;
 
-                    // it counts as "dug" only if it just crossed from solid to air
                     if (wasSolid && !IsSolid(x, y, z))
                     {
                         voxelsDug[layer]++;
@@ -248,7 +291,6 @@ public class Chunk : MonoBehaviour
             }
         }
 
-        // 2. cleanup: remove small disconnected floating chunks
         int padX0 = Mathf.Clamp(minX - islandSearchPadding, 0, chunkSize);
         int padX1 = Mathf.Clamp(maxX + islandSearchPadding, 0, chunkSize);
         int padY0 = Mathf.Clamp(minY - islandSearchPadding, 0, chunkHeight - 1);
@@ -281,8 +323,6 @@ public class Chunk : MonoBehaviour
                 }
             }
         }
-
-        // 3. rebuild the mesh once, then report what was dug
         if (changed)
         {
             isModified = true;
@@ -291,7 +331,9 @@ public class Chunk : MonoBehaviour
 
         return voxelsDug;
     }
+    // end DigSphere
 
+    // start GetCaseIndex
     int GetCaseIndex(int x, int y, int z)
     {
         int caseIndex = 0;
@@ -302,59 +344,72 @@ public class Chunk : MonoBehaviour
 
             if (IsSolid(corner.x, corner.y, corner.z))
             {
-                caseIndex += 1 << i;   // add this corner's switch value
+                caseIndex += 1 << i;
             }
         }
 
         return caseIndex;
     }
+    // end GetCaseIndex
 
+    // start MarchCube
     void MarchCube(int x, int y, int z)
     {
         int caseIndex = GetCaseIndex(x, y, z);
         Vector3Int cubePos = new Vector3Int(x, y, z);
-
         int layer = 0;
         for (int i = 0; i < 8; i++)
         {
-            if ((caseIndex & (1 << i)) != 0)   // is corner i solid?
+            if ((caseIndex & (1 << i)) != 0)
             {
                 Vector3Int cornerPos = cubePos + cornerOffsets[i];
                 layer = Mathf.Max(layer, layers[cornerPos.x, cornerPos.y, cornerPos.z]);
-
-
             }
         }
-
-        // walk through the row, one triangle (3 edges) at a time
         for (int i = 0; MarchingTables.triTable[caseIndex, i] != -1; i += 3)
         {
-            int start = vertices.Count;
-
+            Vector3[] triangleVertices = new Vector3[3];
             for (int j = 0; j < 3; j++)
             {
                 int edge = MarchingTables.triTable[caseIndex, i + j];
-
-                // the two corners at the ends of this edge
                 int cornerA = edgeCorners[edge, 0];
                 int cornerB = edgeCorners[edge, 1];
-
                 Vector3Int posA = cubePos + cornerOffsets[cornerA];
                 Vector3Int posB = cubePos + cornerOffsets[cornerB];
-
                 float densityA = GetDensity(posA.x, posA.y, posA.z);
                 float densityB = GetDensity(posB.x, posB.y, posB.z);
 
-                float t = (isoLevel - densityA) / (densityB - densityA);
-
-                vertices.Add(Vector3.Lerp(posA, posB, t));
+                float t;
+                float denominator = densityB - densityA;
+                if (Mathf.Abs(denominator) < 0.0001f)
+                {
+                    t = 0.5f;
+                }
+                else
+                {
+                    t = Mathf.Clamp01((isoLevel - densityA) / denominator);
+                }
+                triangleVertices[j] = Vector3.Lerp(posA, posB, t);
             }
+            Vector3 a = triangleVertices[0];
+            Vector3 b = triangleVertices[1];
+            Vector3 c = triangleVertices[2];
+            if (Vector3.Cross(b - a, c - a).sqrMagnitude < 1e-10f)
+            {
+                continue;
+            }
+            int start = vertices.Count;
+            vertices.Add(a);
+            vertices.Add(b);
+            vertices.Add(c);
             layerTriangles[layer].Add(start + 0);
             layerTriangles[layer].Add(start + 1);
             layerTriangles[layer].Add(start + 2);
-
         }
     }
+// end MarchCube
+
+    // start CountSolidVoxels
     public int CountSolidVoxels()
     {
         int count = 0;
@@ -375,7 +430,9 @@ public class Chunk : MonoBehaviour
 
         return count;
     }
+    // end CountSolidVoxels
 
+    // start GetVoxelBytes
     public byte[] GetVoxelBytes()
     {
         int sizeX = chunkSize + 1;
@@ -398,7 +455,9 @@ public class Chunk : MonoBehaviour
 
         return flat;
     }
+    // end GetVoxelBytes
 
+    // start SetVoxelBytes
     public void SetVoxelBytes(byte[] flat)
     {
         int sizeX = chunkSize + 1;
@@ -421,17 +480,21 @@ public class Chunk : MonoBehaviour
         isModified = true;
         RebuildMesh();
     }
+    // end SetVoxelBytes
 
+    // start Awake
     private void Awake()
     {
-         layerTriangles = new List<int>[layerdepths.Length + 1];
+        layerTriangles = new List<int>[layerdepths.Length + 1];
 
         for (int i = 0; i < layerTriangles.Length; i++)
         {
             layerTriangles[i] = new List<int>();
         }
     }
+    // end Awake
 
+    // start SurfaceAt
     float SurfaceAt(float worldx, float worldz)
     {
         float u = worldx / (float)totalGridSize;
@@ -441,7 +504,9 @@ public class Chunk : MonoBehaviour
         float surfaceHeight = brightness * maxHeight;
         return surfaceHeight;
     }
+    // end SurfaceAt
 
+    // start FillLayers
     void FillLayers()
     {
         layers = new byte[chunkSize + 1, chunkHeight, chunkSize + 1];
@@ -452,7 +517,7 @@ public class Chunk : MonoBehaviour
             {
                 float worldX = chunkCoord.x * chunkSize + x;
                 float worldZ = chunkCoord.y * chunkSize + z;
-                
+
                 float surfaceHeight = SurfaceAt(worldX, worldZ);
 
                 for (int y = 0; y < chunkHeight; y++)
@@ -476,4 +541,5 @@ public class Chunk : MonoBehaviour
             }
         }
     }
+    // end FillLayers
 }

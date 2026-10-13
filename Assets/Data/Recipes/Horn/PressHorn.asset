@@ -10,12 +10,13 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 96c0de26b0b11634380e00794e3cc0e3, type: 3}
-  m_Name: ShredPlastic
+  m_Name: PressHorn
   m_EditorClassIdentifier: Assembly-CSharp::RecipeData
-  recipeName: Shred to Plastic Scrap
-  recipeDescription: Shreds "Plastic Scrap" into "Plastic Flakes"
+  recipeName: Press to Horn Plate
+  recipeDescription: Presses "Horn Mass" into "Horn Plate"
   ingredients:
-  - {fileID: 11400000, guid: 2808aa01acba5df41951fd4655ed1640, type: 2}
-  ingredientsCount: 10
-  resultItem: {fileID: 11400000, guid: bd2a929d5cd3dd649a4936be3f3428f8, type: 2}
+  - {fileID: 11400000, guid: f7f536672278d9741b6e9a607c8cc22e, type: 2}
+  ingredientsCount: 2
+  resultItem: {fileID: 11400000, guid: f7be1e939cdad36499445195ada4339d, type: 2}
   resultItemCount: 1
+  processingTime: 5

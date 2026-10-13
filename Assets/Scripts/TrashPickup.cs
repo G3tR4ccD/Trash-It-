@@ -2,20 +2,30 @@ using UnityEngine;
 
 public class TrashPickup : MonoBehaviour, IInteractable
 {
+    // start Serialized fields
+    [Header("References")]
+    [SerializeField] private TrashPickup trashPickupPrefab;
+    // end Serialized fields
+
+    // start Runtime state
     private ItemData item;
+    public ItemData Item => item;
     private int amount;
+    public int Amount => amount;
     private Inventory playerInventory;
 
-    [SerializeField] private TrashPickup trashPickupPrefab;
+    // end Runtime state
 
-    // called by whoever spawns the bag, right after creating it
+    // start Setup
     public void Setup(ItemData newItem, int newAmount, Inventory inventory)
     {
         item = newItem;
         amount = newAmount;
         playerInventory = inventory;
     }
+    // end Setup
 
+    // start Interact
     public void Interact()
     {
         int added = playerInventory.InsertItem(item, amount);
@@ -25,13 +35,13 @@ public class TrashPickup : MonoBehaviour, IInteractable
         {
             Destroy(gameObject);
         }
-        else
-        {
-            Debug.Log($"Pockets full! {amount} {item.displayName} left in the bag.");
-        }
     }
+    // end Interact
+
+    // start GetDisplayName
     public string GetDisplayName()
     {
         return $"{item.displayName} Bag ({amount})";
     }
+    // end GetDisplayName
 }

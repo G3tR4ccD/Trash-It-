@@ -2,6 +2,11 @@ using UnityEngine;
 
 public interface IInteractable
 {
-        void Interact();
-        string GetDisplayName();
+    // start Interact
+    void Interact();
+    // end Interact
+
+    // start GetDisplayName
+    string GetDisplayName();
+    // end GetDisplayName
 }

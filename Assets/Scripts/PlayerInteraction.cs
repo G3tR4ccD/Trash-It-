@@ -4,14 +4,21 @@ using TMPro;
 
 public class PlayerInteraction : MonoBehaviour
 {
+    // start Serialized fields
+    [Header("Interaction")]
     public float interactionDistance = 3f;
+
+    [Header("References")]
     public Camera playerCamera;
     public TextMeshProUGUI interactionText;
     public InputActionReference interactAction;
+    // end Serialized fields
 
+    // start Runtime state
     private IInteractable currentTarget;
+    // end Runtime state
 
-
+    // start OnInteract
     public void OnInteract(InputAction.CallbackContext context)
     {
         if (context.performed)
@@ -21,9 +28,12 @@ public class PlayerInteraction : MonoBehaviour
             currentTarget.Interact();
         }
     }
+    // end OnInteract
+
+    // start Update
     private void Update()
     {
-        currentTarget = null; 
+        currentTarget = null;
 
         Ray ray = playerCamera.ScreenPointToRay(new Vector3(Screen.width / 2, Screen.height / 2));
         if (Physics.Raycast(ray, out RaycastHit hit, interactionDistance))
@@ -39,7 +49,5 @@ public class PlayerInteraction : MonoBehaviour
             interactionText.text = "";
         }
     }
-
-
-
+    // end Update
 }

@@ -1,60 +1,90 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-
+// start MachineSlot class
 [System.Serializable]
 public class MachineSlot
 {
     public UpgradeData upgrade;
     public GameObject machine;
 }
+// end MachineSlot class
+
 public class ShopManager : MonoBehaviour, IInteractable
 {
-    private Dictionary<UpgradeData, int> purchaseCounts = new Dictionary<UpgradeData, int>();
-
+    // start Serialized fields
+    [Header("References")]
     public Inventory playerInventory;
-    public event System.Action OnShopOpened;
-    public event System.Action OnShopClosed;
+    public MountainManager mountainManager;
+
+    [Header("UI")]
     public GameObject shopPanel;
     public GameObject tooltipText;
-    public ItemDatabase itemDatabase;
-    public MountainManager mountainManager;
     public GameObject[] pages;
+
+    [Header("Upgrades & Machines")]
     public List<UpgradeData> allUpgrades;
     public List<MachineSlot> machineSlots;
 
+    [Header("Helpers")]
     public DiggerHelper diggerHelperPrefab;
     public CarrierHelper carrierHelperPrefab;
-    public Transform helperSpawnPoint;   // an empty object on the floor near the bin
-    public Transform helperStartPoint;   // an empty object over the mountain
+    public Transform helperSpawnPoint;
+    public Transform helperStartPoint;
+
+    [Header("Logistics")]
     public Inventory dropoffBin;
     public Transform binStandPoint;
-    public List<ItemRoute> itemRoutes;
+    public Transform sellPoint;
 
-    // page navigation methods
+    public List<ItemRoute> itemRoutes;
+    // end Serialized fields
+
+    // start Events (not serialized, so no header)
+    public event System.Action OnShopOpened;
+    public event System.Action OnShopClosed;
+    // end Events
+
+    // start Runtime state
+    private Dictionary<UpgradeData, int> purchaseCounts = new Dictionary<UpgradeData, int>();
+    // end Runtime state
+
+    // start OpenMainPage
     public void OpenMainPage()
     {
         ShowPage(0);
     }
+    // end OpenMainPage
+
+    // start OpenPlayerPage
     public void OpenPlayerPage()
     {
         ShowPage(1);
     }
+    // end OpenPlayerPage
+
+    // start OpenMachinePage
     public void OpenMachinePage()
     {
         ShowPage(2);
     }
+    // end OpenMachinePage
+
+    // start OpenHelperPage
     public void OpenHelperPage()
     {
         ShowPage(3);
     }
-    // end page navigation methods
+    // end OpenHelperPage
 
+    // start SellWares
     public void SellWares()
     {
         SellInventory(playerInventory);
     }
+    // end SellWares
 
+    // start SellInventory
     public void SellInventory(Inventory inventory)
     {
         Dictionary<ItemData, int> snapshot = inventory.GetAllItems();
@@ -71,7 +101,9 @@ public class ShopManager : MonoBehaviour, IInteractable
             }
         }
     }
+    // end SellInventory
 
+    // start GetSellValue
     public int GetSellValue()
     {
         Dictionary<ItemData, int> snapshot = playerInventory.GetAllItems();
@@ -84,7 +116,9 @@ public class ShopManager : MonoBehaviour, IInteractable
 
         return total;
     }
+    // end GetSellValue
 
+    // start GetPurchaseCount
     public int GetPurchaseCount(UpgradeData upgrade)
     {
         if (purchaseCounts.TryGetValue(upgrade, out int count))
@@ -93,7 +127,9 @@ public class ShopManager : MonoBehaviour, IInteractable
         }
         return 0;
     }
+    // end GetPurchaseCount
 
+    // start GetCurrentCost
     public long GetCurrentCost(UpgradeData upgrade)
     {
         long baseCost = upgrade.baseCost;
@@ -101,7 +137,9 @@ public class ShopManager : MonoBehaviour, IInteractable
         int purchaseCount = GetPurchaseCount(upgrade);
         return (long)(baseCost * Mathf.Pow(multiplier, purchaseCount));
     }
+    // end GetCurrentCost
 
+    // start TryPurchase
     public bool TryPurchase(UpgradeData upgrade)
     {
         if (upgrade.maxLevel > 0 && GetPurchaseCount(upgrade) >= upgrade.maxLevel)
@@ -118,7 +156,9 @@ public class ShopManager : MonoBehaviour, IInteractable
         }
         return false;
     }
+    // end TryPurchase
 
+    // start ApplyUpgrade
     private void ApplyUpgrade(UpgradeData upgrade)
     {
         switch (upgrade.upgradeType)
@@ -135,20 +175,20 @@ public class ShopManager : MonoBehaviour, IInteractable
             case UpgradeData.UpgradeType.BackpackSize:
                 playerInventory.IncreaseCapacity(10);
                 break;
-          case UpgradeData.UpgradeType.MachineSpeed:
+            case UpgradeData.UpgradeType.MachineSpeed:
                 GameManager.Instance.machineSpeedMultiplier += 0.1f;
                 break;
-          case UpgradeData.UpgradeType.Machine:
-            foreach (var slot in machineSlots)
-            {
-                if (slot.upgrade == upgrade && slot.machine != null)
+            case UpgradeData.UpgradeType.Machine:
+                foreach (var slot in machineSlots)
                 {
-                    slot.machine.SetActive(true);
-                    break;
+                    if (slot.upgrade == upgrade && slot.machine != null)
+                    {
+                        slot.machine.SetActive(true);
+                        break;
+                    }
                 }
-            }
-            break;
-          case UpgradeData.UpgradeType.DiggerHelper:
+                break;
+            case UpgradeData.UpgradeType.DiggerHelper:
                 DiggerHelper newHelper = Instantiate(diggerHelperPrefab, helperSpawnPoint.position, Quaternion.identity);
                 newHelper.Setup(mountainManager, dropoffBin, helperStartPoint.position);
                 dropoffBin.gameObject.SetActive(true);
@@ -169,121 +209,42 @@ public class ShopManager : MonoBehaviour, IInteractable
                 break;
         }
     }
+    // end ApplyUpgrade
 
+    // start GetDisplayName
     public string GetDisplayName()
     {
         return "Shop";
     }
+    // end GetDisplayName
+
+    // start Interact
     public void Interact()
     {
         OpenShop();
     }
+    // end Interact
 
+    // start OpenShop
     public void OpenShop()
     {
         shopPanel.SetActive(true);
         ShowPage(0);
         OnShopOpened?.Invoke();
     }
+    // end OpenShop
 
+    // start CloseShop
     public void CloseShop()
     {
         ShowPage(-1);
         tooltipText.gameObject.SetActive(false);
-        SaveGame();
         OnShopClosed?.Invoke();
     }
+    // end CloseShop
 
-    public SaveData BuildSaveData()
-    {
-        SaveData data = new SaveData();
-        data.coins = GameManager.Instance.coins;
-        data.upgrades = new List<UpgradeSaveEntry>();
-
-        data.trashRemaining = GameManager.Instance.trashRemaining;
-
-        data.inventory = new List<ItemSaveEntry>();
-
-        data.modifiedChunks = mountainManager.BuildChunkSaveData();
-
-        foreach (var entry in playerInventory.GetAllItems())
-        {
-            ItemSaveEntry itemEntry = new ItemSaveEntry
-            {
-                itemID = entry.Key.itemID,
-                quantity = entry.Value
-            };
-            data.inventory.Add(itemEntry);
-        }
-
-        foreach (var entry in purchaseCounts)
-        {
-            UpgradeSaveEntry upgradeEntry = new UpgradeSaveEntry
-            {
-                upgradeID = entry.Key.upgradeID,
-                purchaseCount = entry.Value
-            };
-            data.upgrades.Add(upgradeEntry);
-        }
-
-        return data;
-    }
-
-    public void SaveGame()
-    {
-        SaveData data = BuildSaveData();
-        string json = JsonUtility.ToJson(data);
-        string path = Application.persistentDataPath + "/save.json";
-
-        System.IO.File.WriteAllText(path, json);
-    }
-    public void LoadGame()
-    {
-        string path = Application.persistentDataPath + "/save.json";
-
-        if (!System.IO.File.Exists(path))
-        {
-            return;
-        }
-
-        string json = System.IO.File.ReadAllText(path);
-        SaveData data = JsonUtility.FromJson<SaveData>(json);
-
-        GameManager.Instance.coins = data.coins;
-        GameManager.Instance.trashRemaining = data.trashRemaining;
-
-        foreach (var entry in data.upgrades)
-        {
-            UpgradeData upgrade = FindUpgradeByID(entry.upgradeID);
-
-            if (upgrade == null)
-            {
-                continue;
-            }
-
-            purchaseCounts[upgrade] = entry.purchaseCount;
-
-            for (int i = 0; i < entry.purchaseCount; i++)
-            {
-                ApplyUpgrade(upgrade);
-            }
-        }
-
-        foreach (var entry in data.inventory)
-        {
-            ItemData item = itemDatabase.FindByID(entry.itemID);
-
-            if (item == null)
-            {
-                continue;
-            }
-
-            playerInventory.InsertItem(item, entry.quantity);
-
-        }
-    }
-
-    private UpgradeData FindUpgradeByID(string id)
+    // start FindUpgradeByID
+    public UpgradeData FindUpgradeByID(string id)
     {
         foreach (var upgrade in allUpgrades)
         {
@@ -294,23 +255,35 @@ public class ShopManager : MonoBehaviour, IInteractable
         }
         return null;
     }
+    // end FindUpgradeByID
 
+    // start GetAllPurchases
+    public Dictionary<UpgradeData, int> GetAllPurchases()
+    {
+        return new Dictionary<UpgradeData, int>(purchaseCounts);
+    }
+    // end GetAllPurchases
+
+    // start RestorePurchase
+    public void RestorePurchase(UpgradeData upgrade, int count)
+    {
+        purchaseCounts[upgrade] = count;
+
+        for (int i = 0; i < count; i++)
+        {
+            ApplyUpgrade(upgrade);
+        }
+    }
+    // end RestorePurchase
+
+    // start Buy
     public void Buy(UpgradeData upgrade)
     {
         TryPurchase(upgrade);
     }
+    // end Buy
 
-    void Start()
-    {
-        LoadGame();
-        InvokeRepeating(nameof(SaveGame), 30f, 30f);
-    }
-
-    void OnApplicationQuit()
-    {
-        SaveGame();
-    }
-
+    // start ShowPage
     public void ShowPage(int index)
     {
         for (int i = 0; i < pages.Length; i++)
@@ -319,4 +292,5 @@ public class ShopManager : MonoBehaviour, IInteractable
         }
         tooltipText.gameObject.SetActive(false);
     }
+    // end ShowPage
 }

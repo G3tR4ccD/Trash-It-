@@ -10,11 +10,11 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: f52422befadad1b469c200db97f7d04c, type: 3}
-  m_Name: ShredderUpgrade
+  m_Name: PulpingVatUpgrade
   m_EditorClassIdentifier: Assembly-CSharp::UpgradeData
-  displayName: Shredder
+  displayName: Pulping Vat
   baseCost: 150
   multiplier: 1
   upgradeType: 5
-  upgradeID: shredder_upgrade
+  upgradeID: pulping_vat_upgrade
   maxLevel: 1
