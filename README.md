@@ -82,27 +82,21 @@ Dig trash, process it in machines, sell the goods, upgrade, automate.
 
 **In the browser:** open the link at the top. The first load downloads the whole game, so it can take a moment. Click the page once so the browser hands over the mouse.
 
-**In Unity:**
-
-1. Install Unity Hub and the Unity version listed in `ProjectSettings/ProjectVersion.txt`.
-2. Clone this repo and add the folder in Unity Hub.
-3. Open the project's scene and press Play.
-
-The web build lives in the `docs` folder and is served with GitHub Pages.
 
 ## Status
 
 Working: digging, terrain rebuilding, depth layers, per-layer loot, overflow bags, interaction, machines, the shop, selling, upgrades, saving and loading, and the digger helper with its drop-off bin.
 
 In progress:
-- animations and models
+
+- sounds and models
 
 Not built yet:
 
 - Automatic builds. Right now I build the web version by hand and copy it into `docs`.
 
 Known issues:
-- In the browser build, saves don't survive a page reload yet. Saving works in the editor and in standalone builds.
+- In the browser build, saves don't survive a page reload yet and character textures are broken. Saving works in the editor and in standalone builds.
 
 ## What I practiced
 
