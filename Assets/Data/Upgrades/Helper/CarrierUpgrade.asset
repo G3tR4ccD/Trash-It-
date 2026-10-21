@@ -13,8 +13,8 @@ MonoBehaviour:
   m_Name: CarrierUpgrade
   m_EditorClassIdentifier: Assembly-CSharp::UpgradeData
   displayName: Carrier
-  baseCost: 400
-  multiplier: 2
-  upgradeType: 7
   upgradeID: carrier_upgrade
-  maxLevel: 2
+  upgradeType: 7
+  maxLevel: 5
+  baseCost: 500
+  multiplier: 2

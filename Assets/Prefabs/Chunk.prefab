@@ -13,7 +13,8 @@ GameObject:
   - component: {fileID: 8614480685407081768}
   - component: {fileID: 4140740803351903266}
   - component: {fileID: 7176523837923976550}
-  m_Layer: 3
+  - component: {fileID: 1930724683692048839}
+  m_Layer: 6
   m_Name: Chunk
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -139,10 +140,10 @@ MonoBehaviour:
   heightMap: {fileID: 2800000, guid: 82ac9034f32a7d745827c920b3ffcb36, type: 3}
   maxHeight: 64
   layerdepths:
-  - 4
   - 10
-  - 18
   - 20
+  - 30
+  - 40
   layerhardness:
   - 1
   - 1
@@ -154,3 +155,23 @@ MonoBehaviour:
   islandSearchPadding: 5
   chunkCoord: {x: 0, y: 0}
   isModified: 0
+--- !u!114 &1930724683692048839
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3821841551812722840}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1e3fdca004f2d45fe8abbed571a8abd5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Unity.AI.Navigation::Unity.AI.Navigation.NavMeshModifier
+  m_SerializedVersion: 0
+  m_OverrideArea: 1
+  m_Area: 1
+  m_OverrideGenerateLinks: 0
+  m_GenerateLinks: 0
+  m_IgnoreFromBuild: 0
+  m_ApplyToChildren: 1
+  m_AffectedAgents: ffffffff

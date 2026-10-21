@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using UnityEngine;
-using static UnityEngine.GraphicsBuffer;
 
 // start ItemRoute class
 [System.Serializable]
@@ -14,94 +13,46 @@ public class ItemRoute
 // start CarrierState enum
 public enum CarrierState
 {
-    GoingToBin,
-    GoingToDestination,
-    GoingToSell
+    GoingToBin, 
+    GoingToDestination, 
+    GoingToSell, 
+    WorkingMachine, 
+    DeliveringProduct
 }
 // end CarrierState enum
 
-public class CarrierHelper : MonoBehaviour
+public class CarrierHelper : HelperBase
 {
     // start Serialized fields
     [Header("References")]
-    public Transform target;
     public Transform binStandPoint;
     public ShopManager shopManager;     // reference to the ShopManager for checking machine availability
     public Inventory dropoffBin;        // where diggers dump raw loot
     public Transform sellPoint;          // where the carrier goes to sell items
-
-    [Header("Movement")]
-    public LayerMask terrainMask;
-    public float heightOffset = 1f;
-    public float moveSpeed = 3f;
-    public float arriveDistance = 0.3f;
-    public float rotationSpeed = 8f;
 
     [Header("Routing")]
     public List<ItemRoute> itemRoutes;  // item -> the machine hopper it should go to next
     public float waitAtEmptyBin = 1f;   // pause before re-checking an empty bin
     public float maxWaitAtMachine = 6f;     // with the other Routing fields
     private float waitStart = 0f;           // with the runtime state
+
     // end Serialized fields
 
     // start Runtime state
     private Transform currentDestination;
-    private Inventory load;             // the carrier's own backpack
     private CarrierState state = CarrierState.GoingToBin;
     private float lastBinCheckTime = -999f;
-    private int baseCapacity;           // base capacity of the carrier's inventory
-    private Animator animator;
+    private Machine currentMachine;
     // end Runtime state
 
-    // start Awake
-    private void Awake()
-    {
-        load = GetComponent<Inventory>();
-        baseCapacity = load.maxCapacity; // Store the base capacity
-        animator = GetComponent<Animator>();
-    }
-    // end Awake
-
     // start Update
-    void Update()
+    protected override void Update()
     {
-        if (target == null) return;
-
-        load.maxCapacity = baseCapacity + GameManager.Instance.helperBackpackBonus; // Update capacity based on GameManager
-
-        if (TryGetGroundHeight(transform.position.x, transform.position.z, out float myGround))
-        {
-            transform.position = new Vector3(transform.position.x, myGround, transform.position.z);
-        }
-
-        Vector3 goal = new Vector3(target.position.x, transform.position.y, target.position.z);
-
-        if (FlatDistance(transform.position, goal) < arriveDistance)
+        base.Update();
+        if (HasArrived())
         {
             HandleArrival();
         }
-
-        Vector3 next = Vector3.MoveTowards(transform.position, goal, moveSpeed * Time.deltaTime);
-        if (TryGetGroundHeight(next.x, next.z, out float groundY))
-        {
-            next.y = groundY;
-        }
-
-        Vector3 direction = next - transform.position;
-        direction.y = 0f;
-
-        if (animator != null)
-        {
-            float speed = Time.deltaTime > 0f ? direction.magnitude / Time.deltaTime : 0f;
-            animator.SetFloat("Speed", speed, 0.1f, Time.deltaTime);
-        }
-
-        if (direction.sqrMagnitude > 0.0001f)
-        {
-            transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(direction), Time.deltaTime * rotationSpeed);
-        }
-
-        transform.position = next;
     }
     // end Update
 
@@ -118,6 +69,12 @@ public class CarrierHelper : MonoBehaviour
                 break;
             case CarrierState.GoingToSell:
                 DeliverToSell();
+                break;
+            case CarrierState.WorkingMachine:
+                WorkMachine();
+                break;
+            case CarrierState.DeliveringProduct:
+                DeliverProduct();
                 break;
         }
     }
@@ -161,13 +118,13 @@ public class CarrierHelper : MonoBehaviour
             if (availableSpace <= 0) return;
 
             Transform destination = FindRouteFor(item);
-            int roomAtDestination = int.MaxValue;            // selling has no limit
+            int roomAtDestination = int.MaxValue; 
             if (destination != null)
             {
                 Inventory hopper = destination.GetComponent<Inventory>();
-                if (hopper == null) continue;                // broken route: skip it
+                if (hopper == null) continue;                
                 roomAtDestination = hopper.GetFreeSpace();
-                if (roomAtDestination <= 0) continue;        // full: try another item type
+                if (roomAtDestination <= 0) continue;       
             }
 
             int amountToTake = Mathf.Min(amountInBin, availableSpace, roomAtDestination);
@@ -178,12 +135,13 @@ public class CarrierHelper : MonoBehaviour
             if (destination != null)
             {
                 currentDestination = destination;
-                target.position = destination.position;
+                currentMachine = destination.GetComponentInParent<Machine>();
+                MoveTo(destination.position);
                 state = CarrierState.GoingToDestination;
             }
             else
             {
-                target.position = sellPoint.position;
+                MoveTo(sellPoint.position);
                 state = CarrierState.GoingToSell;
             }
 
@@ -218,7 +176,7 @@ public class CarrierHelper : MonoBehaviour
         if (hopper == null)
         {
             load.TransferAllTo(dropoffBin);
-            target.position = binStandPoint.position;
+            MoveTo(binStandPoint.position);
             state = CarrierState.GoingToBin;
             return;
         }
@@ -247,8 +205,19 @@ public class CarrierHelper : MonoBehaviour
         if (isLoadEmpty)
         {
             waitStart = 0f;
-            target.position = binStandPoint.transform.position;
-            state = CarrierState.GoingToBin;
+            if (currentMachine != null)
+            {
+                state = CarrierState.WorkingMachine;
+                if (animator != null)
+                {
+                    animator.SetTrigger("Work");
+                }
+            }
+            else
+            {
+                MoveTo(binStandPoint.position);
+                state = CarrierState.GoingToBin;
+            }
         }
         else
         {
@@ -259,7 +228,7 @@ public class CarrierHelper : MonoBehaviour
             else if (Time.time - waitStart > maxWaitAtMachine)
             {
                 load.TransferAllTo(dropoffBin);
-                target.position = binStandPoint.position;
+                MoveTo(binStandPoint.position);
                 state = CarrierState.GoingToBin;
                 waitStart = 0f;
             }
@@ -271,31 +240,10 @@ public class CarrierHelper : MonoBehaviour
     void DeliverToSell()
     {
         shopManager.SellInventory(load);
-        target.position = binStandPoint.transform.position;
+        MoveTo(binStandPoint.transform.position);
         state = CarrierState.GoingToBin;
     }
     // end DeliverToSell
-
-    // start TryGetGroundHeight
-    bool TryGetGroundHeight(float x, float z, out float groundY)
-    {
-        Ray ray = new Ray(new Vector3(x, 100f, z), Vector3.down);
-        if (Physics.Raycast(ray, out RaycastHit hit, Mathf.Infinity, terrainMask))
-        {
-            groundY = hit.point.y + heightOffset;
-            return true;
-        }
-        groundY = 0f;
-        return false;
-    }
-    // end TryGetGroundHeight
-
-    // start FlatDistance
-    float FlatDistance(Vector3 a, Vector3 b)
-    {
-        return Vector2.Distance(new Vector2(a.x, a.z), new Vector2(b.x, b.z));
-    }
-    // end FlatDistance
 
     // start Setup
     public void Setup(Inventory bin, Transform standPoint, List<ItemRoute> routes, ShopManager shop)
@@ -306,9 +254,42 @@ public class CarrierHelper : MonoBehaviour
         shopManager = shop;
         sellPoint = shopManager.sellPoint;
 
-        target = new GameObject("CarrierMarker").transform;
-        target.position = standPoint.position;
+        MoveTo(standPoint.position);
         state = CarrierState.GoingToBin;
     }
     // end Setup
+    
+    // start WorkMachine
+    void WorkMachine()
+    {
+        if (currentMachine == null)
+        {
+            MoveTo(binStandPoint.position);
+            state = CarrierState.GoingToBin;
+            return;
+        }
+
+        if (currentMachine.HasOutput)
+        {
+            currentMachine.TakeOutput(load);
+        }
+
+        if (!currentMachine.HasWork)
+        {
+            MoveTo(binStandPoint.position);
+            state = CarrierState.DeliveringProduct;
+        }
+    }
+    // end WorkMachine
+
+    // start DeliverProduct
+    void DeliverProduct()
+    {
+        load.TransferAllTo(dropoffBin);
+        if (load.GetTotalItemCount() == 0)
+        {
+            state = CarrierState.GoingToBin;
+        }
+    }
+    // end DeliverProduct
 }

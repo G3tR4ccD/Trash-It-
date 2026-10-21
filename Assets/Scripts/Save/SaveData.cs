@@ -74,9 +74,6 @@ public class SaveData
     public List<UpgradeSaveEntry> upgrades;
     public List<ItemSaveEntry> inventory;
 
-    [Header("World")]
-    public List<ChunkSaveEntry> modifiedChunks;
-
     [Header("Player")]
     public bool hasPlayerPosition;
     public Vector3 playerPosition;
@@ -89,5 +86,8 @@ public class SaveData
 
     [Header("Machines")]
     public List<MachineSaveEntry> storedMachines;
+
+    [Header("World")]
+    public List<ChunkSaveEntry> modifiedChunks;
 }
 // end SaveData class

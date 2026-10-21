@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Text.RegularExpressions;
 using UnityEngine;
 
 public class SaveManager : MonoBehaviour
@@ -61,8 +62,6 @@ public class SaveManager : MonoBehaviour
 
         data.inventory = new List<ItemSaveEntry>();
 
-        data.modifiedChunks = mountainManager.BuildChunkSaveData();
-
         data.hasPlayerPosition = true;
         data.playerPosition = player.position;
 
@@ -74,6 +73,8 @@ public class SaveManager : MonoBehaviour
         data.storedMachines = new List<MachineSaveEntry>();
 
         data.droppedBags = new List<BagSaveEntry>();
+
+        data.modifiedChunks = mountainManager.BuildChunkSaveData();
 
         foreach (var entry in playerInventory.GetAllItems())
         {
@@ -139,7 +140,10 @@ public class SaveManager : MonoBehaviour
     public void SaveGame()
     {
         SaveData data = BuildSaveData();
-        string json = JsonUtility.ToJson(data);
+        string json = JsonUtility.ToJson(data, true);
+        json = Regex.Replace(json, @"(?<=\x5B|\x2C)\r?\n\s*(-?\d+(\.\d+)?)", "$1");
+        json = Regex.Replace(json, @"\r?\n\s*(?=\x5D)", "");
+
         string path = Application.persistentDataPath + "/save.json";
 
         System.IO.File.WriteAllText(path, json);

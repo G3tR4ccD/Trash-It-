@@ -14,6 +14,7 @@ public class Machine : MonoBehaviour, IInteractable
 
     [Header("Settings")]
     public bool autoProcess = false;
+    private bool waitForCollection = true;
     // end Serialized fields
 
     // start MachineState enum
@@ -30,6 +31,8 @@ public class Machine : MonoBehaviour, IInteractable
     RecipeData currentRecipe;
     int pendingOutput;
     private float timeRemaining;
+    public bool HasOutput => currentState == MachineState.Finished;
+    public bool HasWork => currentState != MachineState.Idle || FindAffordableRecipe() != null;
     // end Runtime state
 
     // start Update
@@ -60,7 +63,7 @@ public class Machine : MonoBehaviour, IInteractable
             StartProcessing();
 
         }
-        else if (currentState == MachineState.Finished)
+        else if (currentState == MachineState.Finished && !waitForCollection)
         {
             TryDeliverOutput();
         }
@@ -142,17 +145,30 @@ public class Machine : MonoBehaviour, IInteractable
     }
     // end StartProcessing
 
-    // start TryDeliverOutput
-    void TryDeliverOutput()
+    // start TakeOutput
+    public int TakeOutput(Inventory target)
     {
-        Inventory outputTarget = outputDestination != null ? outputDestination : playerInventory;
-        int added = outputTarget.InsertItem(currentRecipe.resultItem, pendingOutput);
+        if (currentState != MachineState.Finished)
+        {
+            return 0;
+        }
+
+        int added = target.InsertItem(currentRecipe.resultItem, pendingOutput);
         pendingOutput -= added;
         if (pendingOutput <= 0)
         {
             currentState = MachineState.Idle;
             currentRecipe = null;
         }
+        return added;
+    }
+    // end TakeOutput
+
+    // start TryDeliverOutput
+    void TryDeliverOutput()
+    {
+        Inventory outputTarget = outputDestination != null ? outputDestination : playerInventory;
+        TakeOutput(outputTarget);
     }
     // end TryDeliverOutput
 

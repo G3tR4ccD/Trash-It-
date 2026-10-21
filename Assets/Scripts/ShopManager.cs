@@ -30,7 +30,6 @@ public class ShopManager : MonoBehaviour, IInteractable
     public DiggerHelper diggerHelperPrefab;
     public CarrierHelper carrierHelperPrefab;
     public Transform helperSpawnPoint;
-    public Transform helperStartPoint;
 
     [Header("Logistics")]
     public Inventory dropoffBin;
@@ -190,7 +189,7 @@ public class ShopManager : MonoBehaviour, IInteractable
                 break;
             case UpgradeData.UpgradeType.DiggerHelper:
                 DiggerHelper newHelper = Instantiate(diggerHelperPrefab, helperSpawnPoint.position, Quaternion.identity);
-                newHelper.Setup(mountainManager, dropoffBin, helperStartPoint.position);
+                newHelper.Setup(mountainManager, dropoffBin, binStandPoint);
                 dropoffBin.gameObject.SetActive(true);
                 break;
             case UpgradeData.UpgradeType.CarrierHelper:

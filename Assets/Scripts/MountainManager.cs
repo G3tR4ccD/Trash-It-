@@ -143,4 +143,84 @@ public class MountainManager : MonoBehaviour
         return result;
     }
     // end LoadSavedChunkData
+
+    // start Center
+    public Vector3 Center
+    {
+        get
+        {
+            float x = gridWidth / 2f * chunkPrefab.chunkSize;
+            float z = gridDepth / 2f * chunkPrefab.chunkSize;
+            return new Vector3(x, 0f, z);
+        }
+    }
+    // end Chunk Center
+
+    // start OuterRadius
+    public float OuterRadius
+    {
+        get 
+        {
+            float w = gridWidth * chunkPrefab.chunkSize;
+            float d = gridDepth * chunkPrefab.chunkSize;
+            return Mathf.Sqrt(w * w + d * d) / 2f + 5f;
+        }
+    }
+    // end OuterRadius
+
+    // start TryFindSolid
+    public bool TryFindSolid(Vector3 center, float radius, float height, float minY, out Vector3 point)
+    {
+        int chunkSize = chunkPrefab.chunkSize;
+        float bestDistance = float.MaxValue;
+        point = Vector3.zero;
+        bool found = false;
+
+        int minX = Mathf.FloorToInt(center.x - radius);
+        int maxX = Mathf.CeilToInt(center.x + radius);
+        int minZ = Mathf.FloorToInt(center.z - radius);
+        int maxZ = Mathf.CeilToInt(center.z + radius);
+
+        for (int wx = minX; wx <= maxX; wx++)
+        {
+            for (int wz = minZ; wz <= maxZ; wz++)
+            {
+                float flatDistance = Vector2.Distance(new Vector2(wx, wz), new Vector2(center.x, center.z));
+                if (flatDistance > radius)
+                {
+                    continue;
+                }
+                int yStart = Mathf.CeilToInt(minY);
+                int yEnd = Mathf.FloorToInt(center.y + height);
+
+                for (int y = yStart; y <= yEnd; y++)
+                {
+                    int gx = Mathf.FloorToInt(wx / (float)chunkSize);
+                    int gz = Mathf.FloorToInt(wz / (float)chunkSize);
+
+                    if (chunks.TryGetValue(new Vector2Int(gx, gz), out Chunk chunk))
+                    {
+                        int localX = wx - gx * chunkSize;
+                        int localZ = wz - gz * chunkSize;
+
+                        if (chunk.IsSolid(localX, y, localZ))
+                        {
+                            Vector3 cell = new Vector3(wx, y, wz);
+                            float distance = Vector3.Distance(cell, center);
+
+                            if (distance <= bestDistance)
+                            {
+                                bestDistance = distance;
+                                point = cell;
+                                found = true;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        return found;
+    }
+    //end TryFindSolid
 }

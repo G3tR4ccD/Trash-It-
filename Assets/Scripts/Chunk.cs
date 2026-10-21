@@ -151,7 +151,7 @@ public class Chunk : MonoBehaviour
     // end Initialize
 
     // start IsSolid
-    bool IsSolid(int x, int y, int z)
+    public bool IsSolid(int x, int y, int z)
     {
         return GetDensity(x, y, z) >= isoLevel;
     }
