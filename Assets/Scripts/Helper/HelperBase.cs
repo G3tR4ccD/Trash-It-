@@ -8,6 +8,7 @@ public class HelperBase : MonoBehaviour
     protected Animator animator;
     protected Inventory load;
     private int baseCapacity;
+    protected int basePriority;
 
 
     // start Awake
@@ -17,7 +18,8 @@ public class HelperBase : MonoBehaviour
         animator = GetComponent<Animator>();
         load = GetComponent<Inventory>();
         baseCapacity = load.maxCapacity;
-        agent.avoidancePriority = Random.Range(30, 70);
+        basePriority = Random.Range(30, 70);
+        agent.avoidancePriority = basePriority;
     }
     // end Awake
 

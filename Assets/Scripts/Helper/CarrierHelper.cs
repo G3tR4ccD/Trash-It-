@@ -43,6 +43,7 @@ public class CarrierHelper : HelperBase
     private CarrierState state = CarrierState.GoingToBin;
     private float lastBinCheckTime = -999f;
     private Machine currentMachine;
+    private bool isWorker;
     // end Runtime state
 
     // start Update
@@ -173,11 +174,15 @@ public class CarrierHelper : HelperBase
     {
         Inventory hopper = currentDestination != null ? currentDestination.GetComponent<Inventory>() : null;
 
+        if (currentMachine != null && !isWorker && currentMachine.TryStaff(this))
+        {
+            isWorker = true;
+        }
+
         if (hopper == null)
         {
             load.TransferAllTo(dropoffBin);
-            MoveTo(binStandPoint.position);
-            state = CarrierState.GoingToBin;
+            ReturnToBin();
             return;
         }
         else
@@ -205,18 +210,18 @@ public class CarrierHelper : HelperBase
         if (isLoadEmpty)
         {
             waitStart = 0f;
-            if (currentMachine != null)
+            if (isWorker)
             {
                 state = CarrierState.WorkingMachine;
+                agent.avoidancePriority = 0;
                 if (animator != null)
                 {
-                    animator.SetTrigger("Work");
+                    animator.SetBool("Working", true);
                 }
             }
             else
             {
-                MoveTo(binStandPoint.position);
-                state = CarrierState.GoingToBin;
+                ReturnToBin();
             }
         }
         else
@@ -228,8 +233,7 @@ public class CarrierHelper : HelperBase
             else if (Time.time - waitStart > maxWaitAtMachine)
             {
                 load.TransferAllTo(dropoffBin);
-                MoveTo(binStandPoint.position);
-                state = CarrierState.GoingToBin;
+                ReturnToBin();
                 waitStart = 0f;
             }
         }
@@ -240,8 +244,7 @@ public class CarrierHelper : HelperBase
     void DeliverToSell()
     {
         shopManager.SellInventory(load);
-        MoveTo(binStandPoint.transform.position);
-        state = CarrierState.GoingToBin;
+        ReturnToBin();
     }
     // end DeliverToSell
 
@@ -254,18 +257,16 @@ public class CarrierHelper : HelperBase
         shopManager = shop;
         sellPoint = shopManager.sellPoint;
 
-        MoveTo(standPoint.position);
-        state = CarrierState.GoingToBin;
+        ReturnToBin();
     }
     // end Setup
-    
+
     // start WorkMachine
     void WorkMachine()
     {
         if (currentMachine == null)
         {
-            MoveTo(binStandPoint.position);
-            state = CarrierState.GoingToBin;
+            ReturnToBin();
             return;
         }
 
@@ -276,8 +277,7 @@ public class CarrierHelper : HelperBase
 
         if (!currentMachine.HasWork)
         {
-            MoveTo(binStandPoint.position);
-            state = CarrierState.DeliveringProduct;
+            ReturnToBin(CarrierState.DeliveringProduct);
         }
     }
     // end WorkMachine
@@ -292,4 +292,29 @@ public class CarrierHelper : HelperBase
         }
     }
     // end DeliverProduct
+
+    // start ReleaseMachine
+    void ReleaseMachine()
+    {
+        if (isWorker && currentMachine != null)
+        {
+            currentMachine.Unstaff(this);
+        }
+        isWorker = false;
+        agent.avoidancePriority = basePriority;
+        if (animator != null)
+        {
+            animator.SetBool("Working", false);
+        }
+    }
+    // end ReleaseMachine
+
+    // start ReturnToBin
+    void ReturnToBin(CarrierState next = CarrierState.GoingToBin)
+    {
+        ReleaseMachine();
+        MoveTo(binStandPoint.position);
+        state = next;
+    }
+    // end ReturnToBin
 }

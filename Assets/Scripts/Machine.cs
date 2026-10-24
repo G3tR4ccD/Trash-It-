@@ -33,6 +33,7 @@ public class Machine : MonoBehaviour, IInteractable
     private float timeRemaining;
     public bool HasOutput => currentState == MachineState.Finished;
     public bool HasWork => currentState != MachineState.Idle || FindAffordableRecipe() != null;
+    private MonoBehaviour worker;
     // end Runtime state
 
     // start Update
@@ -204,4 +205,27 @@ public class Machine : MonoBehaviour, IInteractable
         }
     }
     // end LoadFromEntry
+
+    // start TryStaff
+    public bool TryStaff(MonoBehaviour who)
+    {
+        if (worker == null || worker == who)
+        {
+            worker = who;
+            return true;
+        }
+        return false;
+    }
+    // end TryStadd
+
+    // start Unstaff
+    public void Unstaff(MonoBehaviour who)
+    {
+        if (worker == who)
+        {
+            worker = null;
+        }
+    }
+    // end Unstaff
+
 }
