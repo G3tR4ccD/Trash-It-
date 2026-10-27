@@ -1,6 +1,7 @@
+using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
-using System.Collections.Generic;
 
 public class PlayerDigging : MonoBehaviour
 {
@@ -30,6 +31,7 @@ public class PlayerDigging : MonoBehaviour
     private float lastDigTime = 0f;
     private Animator animator;
     private bool nextPawRight = true;
+    [SerializeField] private float impactFraction = 0.4f;   // how far into the swing the paw lands
     // end Runtime state
 
     // start OnDig
@@ -57,35 +59,54 @@ public class PlayerDigging : MonoBehaviour
 
         if (isDigging && Time.time - lastDigTime >= EffectiveCooldown)
         {
-            Ray ray = playerCamera.ScreenPointToRay(new Vector3(Screen.width / 2, Screen.height / 2));
-            if (Physics.Raycast(ray, out RaycastHit hit, EffectiveReach))
+            if (TryGetDigHit(out RaycastHit hit))     // only swing if there's something to hit
             {
-                Vector3 worldHitPoint = hit.point - hit.normal * 0.5f;
-                Vector3 dropPosition = hit.point + hit.normal * 0.5f;
-
-                int[] dug = mountainManager.DigAt(worldHitPoint, EffectiveRadius, digStrength);
                 lastDigTime = Time.time;
                 if (animator != null)
                 {
                     animator.SetTrigger(nextPawRight ? "DigRight" : "DigLeft");
                     nextPawRight = !nextPawRight;
                 }
-
-                int total = 0;
-                foreach (int count in dug)
-                {
-                    total += count;
-                }
-
-                if (total > 0)
-                {
-                    GameManager.Instance.trashRemaining -= total * GameManager.Instance.bagsPerVoxel;
-                    GiveLoot(dug, dropPosition);
-                }
+                StartCoroutine(DigAfterDelay());
             }
         }
     }
     // end Update
+
+    // start TryGetDigHit
+    bool TryGetDigHit(out RaycastHit hit)
+    {
+        Ray ray = playerCamera.ScreenPointToRay(new Vector3(Screen.width / 2, Screen.height / 2));
+        return Physics.Raycast(ray, out hit, EffectiveReach);
+    }
+    // end TryGetDigHit
+
+    // start DigAfterDelay
+    IEnumerator DigAfterDelay()
+    {
+        yield return new WaitForSeconds(EffectiveCooldown * impactFraction);
+
+        if (TryGetDigHit(out RaycastHit hit))
+        {
+            Vector3 worldHitPoint = hit.point - hit.normal * 0.5f;
+            Vector3 dropPosition = hit.point + hit.normal * 0.5f;
+
+            int[] dug = mountainManager.DigAt(worldHitPoint, EffectiveRadius, digStrength);
+
+            int total = 0;
+            foreach (int count in dug)
+            {
+                total += count;
+            }
+
+            if (total > 0)
+            {
+                GameManager.Instance.trashRemaining -= total * GameManager.Instance.bagsPerVoxel;
+                GiveLoot(dug, dropPosition);
+            }
+        }
+    }
+    // end DigAfterDelay
 
     // start Awake
     public void Awake()

@@ -13,6 +13,7 @@ public class HUD : MonoBehaviour
     [Header("Backpack")]
     public Inventory playerInventory;
     public Image backpackFillImage;
+    public TextMeshProUGUI inventoryListText;
     // end Serialized fields
 
     // start Update
@@ -45,6 +46,16 @@ public class HUD : MonoBehaviour
 
         float fillAmount = (float)playerInventory.GetTotalItemCount() / playerInventory.maxCapacity;
         backpackFillImage.fillAmount = fillAmount;
+
+        if (inventoryListText != null)
+        {
+            string list = "";
+            foreach (var entry in playerInventory.GetAllItems())
+            {
+                list += $"{entry.Value} {entry.Key.displayName}\n";
+            }
+            inventoryListText.text = list;
+        }
 
     }
     // end UpdateBackpackDisplay

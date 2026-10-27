@@ -20,6 +20,7 @@ public class HelperBase : MonoBehaviour
         baseCapacity = load.maxCapacity;
         basePriority = Random.Range(30, 70);
         agent.avoidancePriority = basePriority;
+        agent.obstacleAvoidanceType = ObstacleAvoidanceType.NoObstacleAvoidance;
     }
     // end Awake
 

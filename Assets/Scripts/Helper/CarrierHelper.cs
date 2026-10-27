@@ -289,7 +289,10 @@ public class CarrierHelper : HelperBase
         if (load.GetTotalItemCount() == 0)
         {
             state = CarrierState.GoingToBin;
+            return;
         }
+
+        SendLoadOn(null);   // the barrel is full, so sell what's left
     }
     // end DeliverProduct
 
@@ -317,4 +320,23 @@ public class CarrierHelper : HelperBase
         state = next;
     }
     // end ReturnToBin
+
+    // start SendLoadOn
+    void SendLoadOn(Transform destination)
+    {
+        ReleaseMachine();
+        if (destination != null)
+        {
+            currentDestination = destination;
+            currentMachine = destination.GetComponentInParent<Machine>();
+            MoveTo(destination.position);
+            state = CarrierState.GoingToDestination;
+        }
+        else
+        {
+            MoveTo(sellPoint.position);
+            state = CarrierState.GoingToSell;
+        }
+    }
+    // end SendLoadOn
 }

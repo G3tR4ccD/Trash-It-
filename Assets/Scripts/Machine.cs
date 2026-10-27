@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 public class Machine : MonoBehaviour, IInteractable
@@ -74,13 +75,47 @@ public class Machine : MonoBehaviour, IInteractable
     // start GetDisplayName
     public string GetDisplayName()
     {
-        return $"{machine.displayName}";
+        switch (currentState)
+        {
+            case MachineState.Processing:
+                return $"{machine.displayName} ({Mathf.CeilToInt(timeRemaining)}s)\n{DescribeRecipe(currentRecipe)}";
+
+            case MachineState.Finished:
+                return $"{machine.displayName} (done)";
+
+            default:
+                string text = machine.displayName;
+                foreach (RecipeData r in machine.recipes)
+                {
+                    text += "\n" + DescribeRecipe(r);
+                }
+                return text;
+        }
     }
     // end GetDisplayName
+
+    // start DescribeRecipe
+    string DescribeRecipe(RecipeData r)
+    {
+        List<string> parts = new List<string>();
+        foreach (ItemData ingredient in r.ingredients)
+        {
+            parts.Add($"{r.ingredientsCount} {ingredient.displayName}");
+        }
+
+        float seconds = r.processingTime / GameManager.Instance.machineSpeedMultiplier;
+        return $"{string.Join(" + ", parts)} -> {r.resultItemCount} {r.resultItem.displayName} ({seconds:0.#}s)";
+    }
+    // end DescribeRecipe
 
     // start Interact
     public void Interact()
     {
+        if (autoProcess)
+        {
+            InteractAsCarrier();
+            return;
+        }
         switch (currentState)
         {
             case MachineState.Idle:
@@ -107,6 +142,40 @@ public class Machine : MonoBehaviour, IInteractable
         }
     }
     // end Interact
+
+    // start InteractAsCarrier
+    void InteractAsCarrier()
+    {
+        if (currentState == MachineState.Finished)
+        {
+            TakeOutput(playerInventory);
+            return;
+        }
+
+        var carried = new List<KeyValuePair<ItemData, int>>(playerInventory.GetAllItems());
+        foreach (var entry in carried)
+        {
+            if (!UsesIngredient(entry.Key)) continue;
+
+            int inserted = hopperInput.InsertItem(entry.Key, entry.Value);
+            playerInventory.RemoveItem(entry.Key, inserted);
+        }
+    }
+    // end InteractAsCarrier
+
+    // start UsesIngredient
+    bool UsesIngredient(ItemData item)
+    {
+        foreach (RecipeData r in machine.recipes)
+        {
+            foreach (ItemData ingredient in r.ingredients)
+            {
+                if (ingredient == item) return true;
+            }
+        }
+        return false;
+    }
+    // end UsesIngredient
 
     // start CanAfford
     private bool CanAfford(RecipeData recipe)
@@ -216,7 +285,7 @@ public class Machine : MonoBehaviour, IInteractable
         }
         return false;
     }
-    // end TryStadd
+    // end TryStaff
 
     // start Unstaff
     public void Unstaff(MonoBehaviour who)

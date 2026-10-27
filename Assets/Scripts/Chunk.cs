@@ -24,7 +24,6 @@ public class Chunk : MonoBehaviour
     public float[] layerhardness = { 1f, 2f, 3f, 4f, 7f };
 
     [Header("Island Cleanup")]
-    public int maxNeighborsToRemove = 2;
     public int maxIslandSize = 40;       // max voxel count for a disconnected chunk to be auto-removed
     public int islandSearchPadding = 4;  // how far beyond the dig box to look for floating debris
 
@@ -174,7 +173,7 @@ public class Chunk : MonoBehaviour
                     float inside = surfaceHeight - y;
 
                     // big smooth lumps
-                    float noise = Mathf.PerlinNoise(x * noiseScale, z * noiseScale);
+                    float noise = Mathf.PerlinNoise(worldX * noiseScale, worldZ * noiseScale);
                     noise = noise * 2 - 1;
                     inside += noise * noiseStrength;
 
@@ -318,6 +317,26 @@ public class Chunk : MonoBehaviour
                         {
                             voxels[voxel.x, voxel.y, voxel.z] = 0;
                         }
+                        changed = true;
+                    }
+                }
+            }
+        }
+        for (int x = Mathf.Max(minX - 1, 1); x <= Mathf.Min(maxX + 1, chunkSize - 1); x++)
+        {
+            for (int y = Mathf.Max(minY - 1, 1); y <= Mathf.Min(maxY + 1, chunkHeight - 2); y++)
+            {
+                for (int z = Mathf.Max(minZ - 1, 1); z <= Mathf.Min(maxZ + 1, chunkSize - 1); z++)
+                {
+                    if (!IsSolid(x, y, z)) continue;
+
+                    bool thinX = !IsSolid(x - 1, y, z) && !IsSolid(x + 1, y, z);
+                    bool thinY = !IsSolid(x, y - 1, z) && !IsSolid(x, y + 1, z);
+                    bool thinZ = !IsSolid(x, y, z - 1) && !IsSolid(x, y, z + 1);
+
+                    if (thinX || thinY || thinZ)
+                    {
+                        voxels[x, y, z] = 0;
                         changed = true;
                     }
                 }
